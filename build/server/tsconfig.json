@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "module"                 : "commonjs",
+        "target"                 : "ES5",
+        "lib"                    : ["esnext"],
+        "sourceMap"              : true,
+        "experimentalDecorators" : true,
+        "emitDecoratorMetadata"  : true,
+        "jsx"                    : "react",
+    },
+    "include": [
+        "./src/server/**/*",
+        "./config/*"
+    ]
+}

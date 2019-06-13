@@ -1,0 +1,6 @@
+
+
+
+type JWTUser = {
+    id : String
+}
