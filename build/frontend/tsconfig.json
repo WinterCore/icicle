@@ -2,12 +2,14 @@
     "compilerOptions": {
         "outDir"        : "./dist/frontend",
         "sourceMap"     : true,
-        "noImplicitAny" : true,
+        "noImplicitAny" : false,
         "module"        : "commonjs",
         "target"        : "es6",
         "jsx"           : "react"
     },
     "include": [
-        "./src/frontend/**/*"
+        "./src/frontend/**/*",
+        "./src/constants.ts",
+        "./config/frontend.ts"
     ]
 }

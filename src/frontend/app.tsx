@@ -1,13 +1,32 @@
-import * as React from "react";
+import * as React               from "react";
+import { Route, BrowserRouter } from "react-router-dom";
+import { hot }                  from "react-hot-loader/root";
 
-import Header from "./partials/Header";
+import AppProviders from "./contexts";
 
-class App extends React.Component {
-    render() {
-        return (
-            <Header />
-        );
-    }
+import Sidenav      from "./partials/Sidenav";
+import Search       from "./routes/Search"; 
+import People       from "./routes/People";
+import ConfirmLogin from "./routes/ConfirmLogin";
+
+import Player from "./components/Player";
+
+import "./styles/main.styl";
+
+function App() {
+    return (
+        <BrowserRouter>
+            <AppProviders>
+                    <Sidenav />
+                    <section className="main">
+                        <Route path="/search" component={ Search } />
+                        <Route path="/people" component={ People } />
+                        <Route path="/auth/google/callback" component={ ConfirmLogin } />
+                    </section>
+                    <Player />
+            </AppProviders>
+        </BrowserRouter>
+    );
 }
 
-export default App;
+export default hot(App);

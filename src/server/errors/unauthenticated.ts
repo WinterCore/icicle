@@ -4,5 +4,5 @@ export default class Unauthenticated extends Error {
 
         Object.setPrototypeOf(this, Unauthenticated.prototype);
     }
-    toString() { return "Unauthenticated : we couldn't authenticate you with the server"; }
+    toString(): string { return "Unauthenticated : we couldn't authenticate you with the server"; }
 }

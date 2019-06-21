@@ -1,16 +1,35 @@
-import { Router, Request, Response } from "express";
+// import { Router, Request, Response } from "express";
 
-import User from "../../database/models/user";
+// import User from "../../database/models/user";
 
-import { co } from "../helpers";
+// import validateLoved from "../middleware/validation/loved";
 
-const router: Router = Router();
+// import { co, timeStringToMilliseconds } from "../helpers";
 
-router.get("/", co(async (req: Request, res: Response) => {
-    const { loved }: Database.User = await User.findOne({ _id : req.userId });
+// const router: Router = Router();
 
-    res.json({ data : loved });
-}));
+// router.get("/", co(async (req: Request, res: Response) => {
+//     const { loved }: Database.User = await User.findOne({ _id : req.userId }, { loved : 1 });
 
+//     res.json({ data : loved });
+// }));
 
-export default router;
+// router.post("/", validateLoved, co(async (req: Request, res: Response) => {
+//     const data = {
+//         title : req.body.title,
+//         videoId : req.body.videoId,
+//         thumbnail : req.body.thumbnail,
+//         duration : timeStringToMilliseconds(req.body.duration)
+//     };
+//     await User.updateOne({ _id : req.userId }, { $push : { loved : { $each : [data], $position : 0 } } });
+
+//     res.json({ message : `${req.body.title} has been added successfully to your loved list` });
+// }));
+
+// router.delete("/", co(async (req: Request, res: Response) => {
+//     await User.updateOne({ _id : req.userId }, { $pull : { loved : { videoId : req.body.videoId } } });
+
+//     res.json({ message : `${req.body.title} has been added successfully to your loved list` });
+// }));
+
+// export default router;

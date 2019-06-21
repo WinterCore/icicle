@@ -11,9 +11,9 @@ module.exports = {
     devtool : "source-map",
     resolve : {
         extensions: [".ts", ".tsx", ".js", ".json"],
-        // alias: {
-        //     "react-dom": "@hot-loader/react-dom"
-        // }
+        alias: {
+            "react-dom": "@hot-loader/react-dom"
+        }
     },
 
     module: {
@@ -30,7 +30,11 @@ module.exports = {
                         configFile              : path.resolve(__dirname, "tsconfig.json")
                     }
                 }]
-            }
+            },
+            {
+				test : /\.styl$/,
+				use  : ["style-loader", "css-loader", "stylus-loader"]
+			}
         ]
     },
     devServer : {
@@ -38,7 +42,8 @@ module.exports = {
         hot                : true,
         historyApiFallback : true,
         proxy : {
-            "/antd.min.css" : { target : "http://localhost:8081" }
+            "/flexboxgrid.min.css" : { target : "http://localhost:8081" },
+            "/socket.io" : { target : "http://localhost:8081" }
         }
     },
     // externals: {

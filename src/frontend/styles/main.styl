@@ -1,3 +1,41 @@
+font-color          = #FFF
+main-color          = #0F1956
+accent-color        = #0C163A
+second-accent-color = #333
+sidenav-width       = 300px
+
+player-height = 100px
+
 @import "reset.styl"
-@import "header.styl"
+@import "sidenav.styl"
+
+@import "search.styl"
+@import "people.styl"
+
+@import "player.styl"
+@import "input.styl"
+@import "button.styl"
+    
 @import "helpers.styl"
+
+body
+    background #060e4d;
+    background -moz-linear-gradient(-45deg, #060e4d 0%, #223793 100%)
+    background -webkit-linear-gradient(-45deg, #060e4d 0%, #223793 100%)
+    background linear-gradient(135deg, #060e4d 0%, #223793 100%)
+    color font-color
+
+#root
+    display flex
+    width 100%
+
+.main
+    width 100%
+    flex 1
+    margin-left sidenav-width
+    padding-bottom player-height
+
+.icon
+    height 100%
+    cursor pointer
+    fill font-color

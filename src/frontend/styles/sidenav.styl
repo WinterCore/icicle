@@ -1,0 +1,45 @@
+sidenav-padding = 30px
+
+#sidenav
+    height 100vh
+    overflow-y auto
+    background accent-color
+    color font-color
+    width sidenav-width
+    position fixed
+    padding sidenav-padding sidenav-padding (player-height + 30px) sidenav-padding
+    .login-with-google
+        margin-bottom 20px
+    .user-card
+        display flex
+        margin-bottom 20px
+        align-items center
+        .profile-picture
+            max-width 48px
+            img
+                width 100%
+                border-radius 50%
+        .user-name
+            margin-left 20px
+            font-size 18px
+            font-weight bold
+            flex 1
+        .icon
+            fill font-color
+            width 30px
+            cursor pointer
+    .main-links
+        margin 20px 0
+        padding 0 15px
+        li
+            padding 12px 0
+            a
+                display flex
+                align-items center
+                font-size 14px
+                font-weight bold
+                text-transform uppercase
+                .icon
+                    margin-right 20px
+                    width 20px
+                    fill font-color

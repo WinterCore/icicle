@@ -1,21 +1,17 @@
 import { Schema, model } from "mongoose";
 
 const UserSchema: Schema = new Schema({
-    name     : String,
-    googleId : String,
-    email    : { type : String, unique : true },
-    picture  : String,
-    limit    : { type : Number, default : 2 },
-    isMod    : { type : Boolean, default : false },
-    loved    : {
-        type : [{
-            title     : String,
-            videoId   : String,
-            thumbnail : String,
-            duration  : Number
-        }],
-        default : []
-    }
+    name      : String,
+    googleId  : String,
+    email     : { type : String, unique : true },
+    picture   : String,
+    following : [Schema.Types.ObjectId],
+    queue     : [{
+        id        : String,
+        thumbnail : String,
+        title     : String,
+        duration  : Number
+    }]
 });
 
 
