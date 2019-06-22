@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 
-import { YOUTUBE_API_KEY } from "../../../config/frontend";
+import { YOUTUBE_API_KEY } from "../../../config/server";
 
 const youtube = google.youtube({
     auth    : YOUTUBE_API_KEY,

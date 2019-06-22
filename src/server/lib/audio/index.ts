@@ -16,13 +16,13 @@ export const download = (id: string) => {
             "vorbis",
             "-o",
             output
-        ], {}, function (err, output: string) {
+        ], {}, (err, stdout) => {
             if (err) {
                 reject();
                 logger.error(err);
             }
-            logger.info(`Youtube dl : ${id} ${output}`);
-            resolve();
+            logger.info(`Youtube dl : ${id} ${stdout}`);
+            resolve(`${id}.ogg`);
         });
     });
 };

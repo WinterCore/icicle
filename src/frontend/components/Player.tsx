@@ -4,9 +4,9 @@ import Previous from "../icons/Previous";
 import Play     from "../icons/Play";
 import Pause    from "../icons/Pause";
 import Next     from "../icons/Next";
-import Volume   from "../icons/Volume";
 
-import Trackbar from "../components/Trackbar";
+import Trackbar     from "../components/Trackbar";
+import VolumeRocker from "../components/VolumeRocker";
 
 import { usePlayer } from "../contexts/player";
 import { useUser }   from "../contexts/user";
@@ -33,34 +33,71 @@ const Placeholder: React.FunctionComponent = () => {
     );
 };
 
-const Player: React.FunctionComponent = (props) => {
+
+const ActualPlayer: React.FunctionComponent = () => {
     const { nowPlaying, onSeek, onPause, onPlay } = usePlayer();
     const { user } = useUser();
-    const playerRef = React.useRef(null);
+    const playerRef = React.useRef<HTMLAudioElement>(null);
     const [percentage, setPercentage] = React.useState(nowPlaying.startAt / nowPlaying.duration * 100);
+    const [isPaused, setIsPaused] = React.useState(nowPlaying.isPaused);
+    const [volume, setVolume] = React.useState(playerRef.current ? playerRef.current.volume : 0);
+    const isOwner = user ? nowPlaying.by._id === user._id : null;
+
+    const handleSeek = (percentage: number) => {
+        const currentTime = nowPlaying.duration * percentage;
+        if (playerRef.current) {
+            playerRef.current.currentTime = currentTime;
+            setPercentage(percentage * 100);
+        }
+    };
+
+    const handlePlayPause = () => {
+        if (isPaused) {
+            playerRef.current.play();
+            setIsPaused(false);
+        } else {
+            playerRef.current.pause();
+            setIsPaused(true);
+        }
+    };
+
+    const onVolumeChange = (percentage: number) => {
+        setVolume(percentage);
+        playerRef.current.volume = percentage;
+    };
 
     React.useEffect(() => {
         let progressInterval: NodeJS.Timeout;
         if (playerRef.current) {
             playerRef.current.onloadedmetadata = () => {
                 progressInterval = setInterval(() => {
-                    onSeek(playerRef.current.currentTime / playerRef.current.duration * 100);
+                    setPercentage(playerRef.current.currentTime / playerRef.current.duration * 100);
                 }, 1000);
+                // TODO: Virtually progress the bar if the player is paused to give the illusion that the player is only paused for the current user
             };
         }
         return () => clearInterval(progressInterval);
-    }, [nowPlaying ? nowPlaying.startAt : 0]);
-
+    }, [nowPlaying.startAt]);
 
     React.useEffect(() => {
         if (playerRef.current) {
-            if (Math.abs(nowPlaying.startAt - (playerRef.current)) > 5) {
-
-            }
+            playerRef.current.src = nowPlaying.url;
+            playerRef.current.currentTime = nowPlaying.startAt;
+            playerRef.current.play()
+            .then(() => {
+                setVolume(playerRef.current.volume);
+            }).catch(() => {
+                setIsPaused(true);
+            });
         }
-    }, [nowPlaying ? nowPlaying.startAt : 0]);
+    }, [nowPlaying.startAt, nowPlaying.url]);
     
-    if (!nowPlaying) return <Placeholder />;
+    // React.useEffect(() => {
+    //     if (playerRef.current) {
+
+    //     }
+    // }, [nowPlaying.id]);
+
     return (
         <div className="player-outer">
             <div className="player-info">
@@ -68,32 +105,34 @@ const Player: React.FunctionComponent = (props) => {
                 <div className="player-by">By { nowPlaying.by.name }</div>
             </div>
             <div className="player-controls">
-                <Previous />
-                <div className="play-pause">
+                { isOwner && <Previous /> } 
+                <div className="play-pause" onClick={ handlePlayPause }>
                     {
-                        nowPlaying.isPaused
-                            ? <Play onClick={ onPlay } />
-                            : <Pause onClick={ onPause } />
+                        isPaused
+                            ? <Play />
+                            : <Pause />
                     }
                 </div>
-                <Next />
+                { isOwner && <Next /> } 
             </div>
             <div className="player-trackbar">
-                <Trackbar percentage={ percentage } onSeek={ onSeek } seekable={ nowPlaying.by._id === user._id } />
+                <Trackbar percentage={ percentage } onSeek={ handleSeek } seekable={ isOwner } />
             </div>
             <div className="player-duration">
                 { secondsToTime(nowPlaying.duration) }
             </div>
             <div className="player-volume">
-                <Volume />
+                <VolumeRocker volume={ volume } onVolumeChange={ onVolumeChange } />
             </div>
-            {
-                <audio ref={ playerRef } autoPlay>
-                    <source src={ nowPlaying.url } type="audio/ogg" />
-                </audio>
-            }
+            { <audio ref={ playerRef } /> }
         </div>
     );
+};
+
+const Player: React.FunctionComponent = (props) => {
+    const { nowPlaying } = usePlayer();
+    if (!nowPlaying) return <Placeholder />;
+    else return <ActualPlayer />;
 };
 
 

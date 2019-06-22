@@ -4,6 +4,7 @@ import * as SocketIo from "socket.io-client";
 import { DOMAIN } from "../../../config/frontend";
 
 import { useUser } from "./user";
+import { SOCKET_ACTIONS } from "../../constants";
 
 const { useContext, createContext, useMemo } = React;
 
@@ -25,11 +26,13 @@ const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
         });
     }, [user]);
 
+    socket.emit(SOCKET_ACTIONS.CHECK);
+
     return <SocketContext.Provider value={ socket } { ...props } />;
 }
 
 function useSocket() {
-    const context = useContext(SocketContext);
+    const context = useContext<SocketIOClient.Socket>(SocketContext);
     if (!context) {
         throw new Error("useSocket must be used within a component that's rendered within the SocketProvider");
     }

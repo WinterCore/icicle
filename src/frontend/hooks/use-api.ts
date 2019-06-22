@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AxiosRequestConfig }  from "axios";
+import Axios, { AxiosRequestConfig } from "axios";
 
 import api from "../api";
 
@@ -9,15 +9,21 @@ const useApi = (config: AxiosRequestConfig, deps = []) => {
     const [error, setError]         = useState(false);
 
     useEffect(() => {
-        api(config)
+        const cancelTokenSource = Axios.CancelToken.source();
+        api({ ...config, cancelToken : cancelTokenSource.token })
             .then(({ data }) => {
                 setData(data);
                 setIsLoading(false);
             })
             .catch((err) => {
-                setError(err);
-                setIsLoading(false);
+                if (err.message !== "CANCELED") {
+                    setError(err);
+                    setIsLoading(false);
+                }
             });
+        return () => {
+            cancelTokenSource.cancel("CANCELED");
+        };
     }, deps);
 
     return { data, isLoading, error };

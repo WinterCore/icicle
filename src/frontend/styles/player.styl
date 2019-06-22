@@ -3,6 +3,13 @@ player-background = #14172B
 trackbar-active-area = 10px
 trackbar-height      = 2px
 
+trackbar-inactive-color = rgba(255, 255, 255, 0.2)
+trackbar-active-color   = #FFF
+
+volume-rocker-height = 250px
+volume-rocker-ball-radius = 10px
+volume-rocker-track-width = 4px
+
 .player-outer
     height player-height
     background player-background
@@ -49,14 +56,15 @@ trackbar-height      = 2px
             height trackbar-active-area
             position relative
             padding ((trackbar-active-area / 2) - (trackbar-height / 2)) 0
+            overflow hidden
             .trackbar-background
                 width 100%
-                background rgba(255, 255, 255, 0.2)
+                background trackbar-inactive-color
                 height trackbar-height
             .trackbar-progress
                 position absolute
                 top ((trackbar-active-area / 2) - (trackbar-height / 2))
-                background white
+                background trackbar-active-color
                 height trackbar-height
         
     .player-duration
@@ -67,5 +75,52 @@ trackbar-height      = 2px
         flex-direction column
         align-items center
         justify-content center
+        position relative
         .icon
             width 24px
+            height 24px
+        .volume-bar-outer
+            &.visible
+                opacity 1
+                pointer-events all
+                bottom 100%
+                transform translateY(0)
+            transform translateY(-15px)
+            opacity 0
+            transition opacity 200ms ease-in-out, transform 200ms ease-in-out
+            pointer-events none
+            height volume-rocker-height
+            width 50px
+            background player-background
+            box-shadow 1px 1px 10px player-background
+            position absolute
+            bottom 95%
+            margin-bottom 20px
+            border-radius 25px
+            display flex
+            justify-content center
+            left -50%
+            align-items center
+            .volume-track-outer
+                height volume-rocker-height - 50px
+                width volume-rocker-track-width
+                background trackbar-inactive-color
+                border-radius (volume-rocker-track-width / 2)
+                position relative
+                .volume-track
+                    position absolute
+                    bottom 0
+                    width 100%
+                    background trackbar-active-color
+                    cursor pointer
+                    border-radius (volume-rocker-track-width / 2)
+                    &:before
+                        content ""
+                        position absolute
+                        width volume-rocker-ball-radius * 2
+                        height volume-rocker-ball-radius * 2
+                        background white
+                        border-radius 50%
+                        top - volume-rocker-ball-radius
+                        right - volume-rocker-ball-radius + (volume-rocker-track-width / 2)
+

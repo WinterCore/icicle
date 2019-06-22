@@ -3,17 +3,17 @@ import * as React from "react";
 
 const Trackbar: React.FunctionComponent<TrackbarProps> = (props) => {
     const { percentage, onSeek, seekable } = props;
+    const trackbarRef = React.useRef(null);
 
-    const handleSeek = ({ clientX, target }) => {
-        console.log(target, clientX);
+    const handleSeek = ({ clientX }) => {
         if (seekable) {
-            const { x, width } = target.getBoundingClientRect();
-            onSeek((clientX - x) / width)
+            const { left, width } = trackbarRef.current.getBoundingClientRect();
+            onSeek((clientX - left) / width)
         }
     };
 
     return (
-        <div className="trackbar" onClick={ handleSeek } style={{ cursor : "pointer" }}>
+        <div className="trackbar" ref={ trackbarRef } onClick={ handleSeek } style={{ cursor : "pointer" }}>
             <div className="trackbar-background" />
             <div className="trackbar-progress" style={{ width : `${percentage}%` }} />
         </div >

@@ -13,11 +13,10 @@ import { SOCKET_ACTIONS } from "../../constants";
 const Video: React.FunctionComponent<VideoProps> = (props) => {
     const { id, title, thumbnail, duration } = props;
 
-    const socket         = useSocket();
-    const { onRoomJoin } = usePlayer();
+    const socket = useSocket();
 
     const onPlayNow = () => {
-        socket.emit(SOCKET_ACTIONS.PLAY_NOW, id, (data: PlayerData) => { onRoomJoin(data); });
+        socket.emit(SOCKET_ACTIONS.PLAY_NOW, id);
     };
 
     return (

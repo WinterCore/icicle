@@ -2,13 +2,12 @@
 
 class Store {
     connections: Map<SocketIO.Socket, SocketData> = new Map();
-    // rooms       = {};
 
     registerSocket(socket: SocketIO.Socket, data: SocketData) {
         this.connections.set(socket, data);
     }
 
-    getSocketData(socket: SocketIO.Socket) {
+    getSocketData(socket: SocketIO.Socket): SocketData {
         return this.connections.get(socket);
     }
 
