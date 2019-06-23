@@ -14,8 +14,6 @@ const SocketContext = createContext(null);
 
 const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
     const { user } = useUser();
-
-
     const socket = useMemo(() => {
         return SocketIo(DOMAIN, {
             transportOptions : {
@@ -25,8 +23,6 @@ const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
             }
         });
     }, [user]);
-
-    socket.emit(SOCKET_ACTIONS.CHECK);
 
     return <SocketContext.Provider value={ socket } { ...props } />;
 }

@@ -10,11 +10,11 @@ const Button: React.FunctionComponent<ButtonProps> = (props) => {
 };
 
 interface ButtonProps {
-    children   : React.ReactNode,
-    isLoading? : boolean,
-    type?      : string,
-    onClick?   : React.EventHandler<React.SyntheticEvent>,
-    disabled?  : boolean
+    children   : React.ReactNode;
+    isLoading? : boolean;
+    type?      : string;
+    onClick?   : React.EventHandler<React.SyntheticEvent>;
+    disabled?  : boolean;
 }
 
 Button.defaultProps = {

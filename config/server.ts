@@ -20,8 +20,8 @@ export const GOOGLE_CONFIG = {
 export const JWT_SECRET = "NYAN_CAT";
 export const AUDIO_PATH = "public/audio";
 
-export const YOUTUBE_API_KEY = "AIzaSyBJs5mQIA9dK72XOvTc6mi5kbV9YrLMBjw"; // icicle
-// export const YOUTUBE_API_KEY = "AIzaSyDfXXP1CXawPt6Pwb0EQRIxbAfMu2NVkjU"; // random one
+// export const YOUTUBE_API_KEY = "AIzaSyBJs5mQIA9dK72XOvTc6mi5kbV9YrLMBjw"; // icicle
+export const YOUTUBE_API_KEY = "AIzaSyDfXXP1CXawPt6Pwb0EQRIxbAfMu2NVkjU"; // random one
 
 // export default {
 //     // used by API

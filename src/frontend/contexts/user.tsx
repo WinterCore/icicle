@@ -7,10 +7,10 @@ const { useState, useContext, createContext, useMemo } = React;
 const UserContext = createContext(null);
 
 interface UserProvider {
-    login (user: Entities.User) : void
-    logout()                    : void
+    login (user: Entities.User) : void;
+    logout()                    : void;
 
-    user : Entities.User
+    user : Entities.User;
 }
 
 const UserProvider: React.FunctionComponent = (props): React.ReactElement => {

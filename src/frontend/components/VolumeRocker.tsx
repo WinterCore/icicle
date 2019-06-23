@@ -31,14 +31,14 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
         const handleClick = ({ clientY }) => {
             const { top, height } = volumeRockerRef.current.getBoundingClientRect();
             const volume = Math.min(1, 1 - ((clientY - top) / height));
-            onVolumeChange(volume);
+            onVolumeChange(volume < 0.01 ? 0 : volume);
         };
 
 
         const handleMouseDownMovement = ({ clientY }) => {
             const { top, height } = volumeRockerRef.current.getBoundingClientRect();
             const volume = Math.min(1, 1 - ((clientY - top) / height));
-            onVolumeChange(volume);
+            onVolumeChange(volume < 0.01 ? 0 : volume);
         };
         return {
             handleMouseEnter,
@@ -74,9 +74,9 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
 };
 
 interface VolumeRockerProps {
-    volume: number
+    volume: number;
 
-    onVolumeChange(percentage: number): void
+    onVolumeChange(percentage: number): void;
 }
 
 export default VolumeRocker;

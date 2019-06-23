@@ -12,12 +12,9 @@ import { SOCKET_ACTIONS } from "../../constants";
 
 const Video: React.FunctionComponent<VideoProps> = (props) => {
     const { id, title, thumbnail, duration } = props;
+    const { startStream } = usePlayer();
 
-    const socket = useSocket();
-
-    const onPlayNow = () => {
-        socket.emit(SOCKET_ACTIONS.PLAY_NOW, id);
-    };
+    const onPlayNow = () => startStream(id);
 
     return (
         <div className="video">
@@ -40,10 +37,10 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
 
 
 interface VideoProps {
-    id        : string,
-    title     : string,
-    thumbnail : string,
-    duration  : number
+    id        : string;
+    title     : string;
+    thumbnail : string;
+    duration  : number;
 }
 
 export default Video;

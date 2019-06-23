@@ -17,7 +17,7 @@ const AppProviders: React.SFC<AppProvidersProps> = ({ children }): React.ReactEl
 };
 
 interface AppProvidersProps {
-    children : React.ReactNode[]
+    children : React.ReactNode[];
 }
 
 export default AppProviders;

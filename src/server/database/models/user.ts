@@ -6,21 +6,31 @@ const UserSchema: Schema = new Schema({
     email         : { type : String, unique : true },
     picture       : String,
     following     : [Schema.Types.ObjectId],
-    liveListeners : Number,
+    liveListeners : { type : Number, default : 0 },
     nowPlaying    : {
         title     : String,
         url       : String,
         duration  : Number,
-        startedAt : Date,
-        pausedAt  : Date
+        startedAt : Date
     }
 });
 
 UserSchema.methods.getNowPlayingCurrentTime = function getNowPlayingCurrentTime(this: Database.User): number {
-    if (this.nowPlaying.pausedAt) {
-        return (this.nowPlaying.startedAt.getTime() - (Date.now() - this.nowPlaying.pausedAt.getTime())) / 1000;
-    }
     return (Date.now() - this.nowPlaying.startedAt.getTime()) / 1000;
+};
+
+UserSchema.methods.isStreaming = function isStreaming(this: Database.User): boolean {
+    return this.nowPlaying && !!this.nowPlaying.url;
+};
+
+UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.User) {
+    return {
+        title    : this.nowPlaying.title,
+        duration : this.nowPlaying.duration,
+        startAt  : this.getNowPlayingCurrentTime(),
+        url      : this.nowPlaying.url,
+        by       : { _id : this._id, name : this.name }
+    };
 };
 
 export default model<Database.User>("user", UserSchema);

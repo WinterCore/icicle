@@ -7,26 +7,24 @@ import User from "../../../database/models/user";
 
 import Store from "../store";
 
-import { DOMAIN }         from "../../../../../config/server";
 import { SOCKET_ACTIONS } from "../../../../constants";
 
 export default async function playNow(socket: socketio.Socket, videoId: string) {
     try {
         const { items : [data] } = await info([videoId]);
-        const filename = await download(videoId);
-        const url = `${DOMAIN}/audio/${filename}`;
+        const url = await download(videoId);
         const { type, id } = Store.getSocketData(socket);
+        socket.leaveAll();
         if (type === "USER") {
             const user = await User.findOne({ _id : id });
             user.nowPlaying = {
                 title     : data.title,
                 duration  : data.duration,
                 startedAt : new Date(),
-                pausedAt  : null,
                 url
             };
             await user.save();
-            socket.emit(SOCKET_ACTIONS.PLAY_NOW, { ...data, url, startAt : 0, by : { _id : user._id, name : user.name } });
+            socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
         } else {
             socket.emit(SOCKET_ACTIONS.PLAY_NOW, { ...data, url, startAt : 0, by : { _id : null, name : "Unknown" } });
         }

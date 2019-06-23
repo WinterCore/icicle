@@ -27,12 +27,12 @@ const Input: React.FunctionComponent<InputProps> = ({
 };
 
 interface InputProps {
-    onChange     : React.ChangeEventHandler,
-    onEnter?     : Function,
-    value        : string,
-    type?        : string,
-    placeholder? : string,
-    icon?        : React.ReactNode
+    onChange     : React.ChangeEventHandler;
+    onEnter?     : Function;
+    value        : string;
+    type?        : string;
+    placeholder? : string;
+    icon?        : React.ReactNode;
 }
 
 Input.defaultProps = {

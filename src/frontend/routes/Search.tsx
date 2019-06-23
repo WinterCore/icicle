@@ -1,15 +1,15 @@
-import * as React             from "react";
-import { parse }              from "query-string";
+import { parse } from "query-string";
+import * as React from "react";
 import { RouteChildrenProps } from "react-router";
-
-import Video  from "../components/Video";
-import Loader from "../components/Loader";
-import Error  from "../components/Error";
-import Button from "../components/Button";
-
 import { SEARCH } from "../api";
-
+import Error from "../components/Error";
+import Video from "../components/Video";
 import useApi from "../hooks/use-api";
+import Loader from "../icons/Loader";
+
+
+
+
 
 type Video = {
     id        : string,
@@ -23,9 +23,8 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
     const { location : { search } } = props;
     const { q } = parse(search);
     const { data : responseData, isLoading, error } = useApi({ ...SEARCH(), params : { q } }, [q]);
-
-    if (isLoading) return <Loader />;
-    if (error) return <Error />;
+    if (isLoading) return <div className="flex-middle"><Loader /></div>;
+    if (error) return <div className="flex-middle"><Error /></div>;
     const { nextPageToken, data: videos } = responseData;
     return (
         <div className="search-grid row">

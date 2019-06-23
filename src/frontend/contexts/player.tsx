@@ -2,52 +2,60 @@ import * as React    from "react";
 
 import { useSocket } from "./socket";
 import { SOCKET_ACTIONS } from "../../constants";
-import { useUser } from "./user";
 
 const { useContext, createContext, useState, useMemo, useEffect } = React;
 
 const PlayerContext = createContext(null);
 
 interface PlayerProvider {
-    onRoomJoin (data: PlayerData) : void
-    onRoomLeave()                 : void
-    onSeek     (seconds: number)  : void
-    onPause    ()                 : void
-    onPlay     ()                 : void
+    onRoomJoin  (data: PlayerData) : void;
+    onRoomLeave()                  : void;
+    seek        (seconds: number)  : void;
+    startStream (id: string)       : void;
+    leaveStream (id: string)       : void;
+    joinStream  (id: string)       : void;
 
-    nowPlaying : PlayerData
+    nowPlaying : PlayerData;
 }
 
 const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [data, setData] = useState<PlayerData | null>(null);
-    const { user }        = useUser();
-    const socket = useSocket();
+    const socket          = useSocket();
 
     const context = useMemo<PlayerProvider>(() => {
-        const onRoomJoin  = (data: PlayerData) => { setData({ ...data }); };
-        const onRoomLeave = ()                 => { setData(null); };
-        const onSeek      = (seconds: number)  => {
-            socket.emit(SOCKET_ACTIONS.SEEK, seconds);
+        const onRoomJoin  = (data: PlayerData) => {
+            setData({ ...data });
         };
-        const onPause     = ()                 => { setData({ ...data, isPaused : true }); };
-        const onPlay      = ()                 => { setData({ ...data, isPaused : false }); };
+        const onRoomLeave = () => {
+            setData(null);
+            window.localStorage.removeItem("last_stream");
+        };
+        const seek        = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
+        const leaveStream = (id: string)       => socket.emit(SOCKET_ACTIONS.LEAVE, id);
+        const joinStream  = (id: string)       => {
+            window.localStorage.setItem("last_stream", id);
+            socket.emit(SOCKET_ACTIONS.JOIN, id);
+        };
+        const startStream = (videoId: string)       => {
+            socket.emit(SOCKET_ACTIONS.PLAY_NOW, videoId);
+            window.localStorage.removeItem("last_stream");
+        };
 
         return {
             onRoomJoin,
             onRoomLeave,
-            onSeek,
-            onPause,
-            onPlay,
+            seek,
+            joinStream,
+            startStream,
+            leaveStream,
             nowPlaying : data
         };
     }, [data]);
 
     useEffect(() => {
         socket.on(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
-
-        return () => {
-            socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
-        };
+        socket.emit(SOCKET_ACTIONS.CHECK, window.localStorage.getItem("last_stream"));
+        return () => socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
     }, []);
 
 

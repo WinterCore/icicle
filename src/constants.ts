@@ -4,5 +4,7 @@ export const SOCKET_ACTIONS = {
     SEEK           : "SEEK",
     PAUSE          : "PAUSE",
     PLAY           : "PLAY",
-    CHECK          : "CHECK"
+    CHECK          : "CHECK",
+    JOIN           : "JOIN",
+    LEAVE          : "LEAVE",
 };

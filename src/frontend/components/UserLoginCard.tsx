@@ -27,7 +27,7 @@ const UserLoginForm: React.FunctionComponent<UserLoginFormProps> = ({ isLoggedIn
 };
 
 interface UserLoginFormProps {
-    isLoggedIn: boolean
+    isLoggedIn: boolean;
 }
 
 const UserLoginCard: React.FunctionComponent = () => {

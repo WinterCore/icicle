@@ -10,6 +10,7 @@
     "include": [
         "./src/frontend/**/*",
         "./src/constants.ts",
+        "./src/shared.d.ts",
         "./config/frontend.ts"
     ]
 }

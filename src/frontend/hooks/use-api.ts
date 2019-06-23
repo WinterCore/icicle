@@ -10,6 +10,8 @@ const useApi = (config: AxiosRequestConfig, deps = []) => {
 
     useEffect(() => {
         const cancelTokenSource = Axios.CancelToken.source();
+        setIsLoading(true);
+        setError(false);
         api({ ...config, cancelToken : cancelTokenSource.token })
             .then(({ data }) => {
                 setData(data);

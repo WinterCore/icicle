@@ -1,3 +1,3 @@
 interface IconProps {
-    onClick? : React.EventHandler<React.SyntheticEvent>
+    onClick? : React.EventHandler<React.SyntheticEvent>;
 }
