@@ -30,6 +30,7 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
         const removeMouseMoveListener = () => window.removeEventListener("mousemove", handleMouseDownMovement);
         const handleClick = ({ clientY }) => {
             const { top, height } = volumeRockerRef.current.getBoundingClientRect();
+            // TODO: calculate the exact position of the mouse on the knob
             const volume = Math.min(1, 1 - ((clientY - top) / height));
             onVolumeChange(volume < 0.01 ? 0 : volume);
         };

@@ -5,6 +5,8 @@ import { verify }    from "jsonwebtoken";
 import Blacklist from "../../database/models/blacklist";
 import Store     from "./store";
 
+import User from "../../database/models/user";
+
 import { JWT_SECRET }     from "../../../../config/server";
 import { SOCKET_ACTIONS } from "../../../constants";
 
@@ -12,6 +14,8 @@ import playNow from "./actions/playnow";
 import seek    from "./actions/seek";
 import check   from "./actions/check";
 import join    from "./actions/join";
+
+import logger from "../../logger";
 
 export default function init(server: Server) {
     const io = socketio(server);
@@ -21,24 +25,22 @@ export default function init(server: Server) {
         if (token) {
             Blacklist.countDocuments({ token })
                 .then((count: number) => {
-                    if (count) Store.registerSocket(socket, { type : "GUEST" });
+                    if (count) Store.setSocketData(socket, { type : "GUEST" });
                     verify(token, JWT_SECRET, function verifyToken(err, decoded: JWTUser) {
                         if (decoded) {
-                            Store.registerSocket(socket, { type : "USER", id : decoded.id })
+                            Store.setSocketData(socket, { type : "USER", id : decoded.id })
                         } else {
-                            Store.registerSocket(socket, { type : "GUEST" })
+                            Store.setSocketData(socket, { type : "GUEST" })
                         }
                     });
                 }).catch(console.log);
             
         } else {
-            Store.registerSocket(socket, { type : "GUEST" });
+            Store.setSocketData(socket, { type : "GUEST" });
         }
 
 
-        socket.on("error", (err) => {
-            console.log(err);
-        });
+        socket.on("error", (err) => logger.error(err));
 
         socket.on(SOCKET_ACTIONS.PLAY_NOW, data => playNow(socket, data));
         socket.on(SOCKET_ACTIONS.SEEK, data => seek(socket, data));
@@ -55,10 +57,13 @@ export default function init(server: Server) {
 
 
         socket.on("disconnect", () => {
-            const data = Store.getSocketData(socket);
-            if (data.id) {
-                socket.to(data.id).emit(SOCKET_ACTIONS.ROOM_DESTROYED)
+            const { id, currentRoomId } = Store.getSocketData(socket);
+            if (id) {
+                // socket.to(id).emit(SOCKET_ACTIONS.STREAM_ENDED);
                 Store.deleteSocket(socket);
+            }
+            if (currentRoomId) {
+                User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } }).catch(logger.error);
             }
         });
     });

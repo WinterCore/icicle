@@ -8,9 +8,10 @@ import streamerResource from "../resources/streamer-resource";
 const router = Router();
 
 const projection = {
-    name       : 1,
-    picture    : 1,
-    nowPlaying : 1
+    name          : 1,
+    picture       : 1,
+    nowPlaying    : 1,
+    liveListeners : 1
 };
 
 router.get("/", co(async (req: Request, res: Response) => {

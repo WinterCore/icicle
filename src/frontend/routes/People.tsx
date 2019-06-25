@@ -10,7 +10,7 @@ import { SOCKET_ACTIONS } from "../../constants";
 import { usePlayer } from "../contexts/player";
 
 const Person: React.FunctionComponent<PersonProps> = (props) => {
-    const { _id, name, picture, nowPlaying } = props;
+    const { _id, name, picture, nowPlaying, liveListeners } = props;
     const { joinStream } = usePlayer();
 
     const [secondsPlayed, setSecondsPlayed] = React.useState(nowPlaying.startAt);
@@ -21,6 +21,7 @@ const Person: React.FunctionComponent<PersonProps> = (props) => {
     }, []);
 
     const onPlay = () => joinStream(_id);
+    console.log(secondsPlayed, nowPlaying.duration);
 
     return (
         <div className="person-outer">
@@ -29,6 +30,13 @@ const Person: React.FunctionComponent<PersonProps> = (props) => {
                 <div className="person-middle-outer">
                     <div className="person-info">
                         <span className="person-name">{ name }</span>&nbsp;<span className="washed-out">is listening to</span>&nbsp;<span className="person-listening-to">{ nowPlaying.title }</span>
+                        { liveListeners > 0 && (
+                            <>
+                                &nbsp;<span className="washed-out">with</span>
+                                &nbsp;{ liveListeners }&nbsp;
+                                <span className="washed-out">{ liveListeners > 2 ? "others" : "other person" }</span>
+                            </>
+                        ) }
                     </div>
                     <Trackbar seekable={ false } percentage={ (secondsPlayed / nowPlaying.duration) * 100 }  />
                     <div className="person-music-bar">
@@ -46,10 +54,11 @@ const Person: React.FunctionComponent<PersonProps> = (props) => {
 
 
 interface PersonProps {
-    _id        : string;
-    name       : string;
-    picture    : string;
-    nowPlaying : {
+    _id           : string;
+    name          : string;
+    picture       : string;
+    liveListeners : number;
+    nowPlaying    : {
         picture  : string;
         title    : string;
         url      : string;

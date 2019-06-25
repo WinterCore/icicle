@@ -29,17 +29,13 @@ interface NowPlaying {
     startedAt : Date;
 }
 
-interface Request extends Document {
+interface Queue extends Document {
     title     : string;
     videoId   : string;
     thumbnail : string;
     duration  : number;
     date      : Date;
-    didPlay   : boolean;
-    by        : {
-        name : string;
-        id   : string | User;
-    }
+    by        : string | User;
 }
 
 interface BlacklistItem extends Document {

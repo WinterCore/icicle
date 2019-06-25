@@ -6,30 +6,31 @@ import Store from "../store";
 
 import { SOCKET_ACTIONS } from "../../../../constants";
 
+import logger from "../../../logger";
+
 export default async function check(socket: socketio.Socket, roomId: string) {
     try {
+        const socketData = Store.getSocketData(socket);
         if (roomId) {
             const user: Database.User = await User.findOne({ _id : roomId });
             if (user && user.isStreaming()) {
-                socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
+                if (socketData.id !== roomId) { // if the socket is not the owner of the stream (roomId) increment the stream's liveListeners
+                    await User.updateOne({ _id : roomId }, { $inc : { liveListeners : 1 } });
+                    Store.setSocketData(socket, { ...socketData, currentRoomId : roomId });
+                }
                 socket.join(roomId);
+                socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
             }
         } else {
-            const socketData = Store.getSocketData(socket);
-
             if (socketData.id) {
                 const user: Database.User = await User.findOne({ _id : socketData.id });
                 if (user && user.isStreaming()) {
                     socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
-
-                    /*
-                        TODO: Check if the user is the owner of the stream
-                            - If the user is not the owner he will be joined to the room and sent the nowplaying data
-                    */
                 }
             }
         }
     } catch(e) {
-        console.log(e);
+        logger.error(e);
+
     }
 }

@@ -1,6 +1,8 @@
 import * as React    from "react";
 
 import { useSocket } from "./socket";
+import { useUser } from "./user";
+
 import { SOCKET_ACTIONS } from "../../constants";
 
 const { useContext, createContext, useState, useMemo, useEffect } = React;
@@ -21,10 +23,11 @@ interface PlayerProvider {
 const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [data, setData] = useState<PlayerData | null>(null);
     const socket          = useSocket();
+    const { user }        = useUser();
 
     const context = useMemo<PlayerProvider>(() => {
         const onRoomJoin  = (data: PlayerData) => {
-            setData({ ...data });
+            setData(data ? { ...data } : null);
         };
         const onRoomLeave = () => {
             setData(null);
@@ -56,7 +59,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         socket.on(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
         socket.emit(SOCKET_ACTIONS.CHECK, window.localStorage.getItem("last_stream"));
         return () => socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
-    }, []);
+    }, [user]);
 
 
     return <PlayerContext.Provider value={ context } { ...props } />;

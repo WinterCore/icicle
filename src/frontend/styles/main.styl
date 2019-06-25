@@ -43,5 +43,20 @@ body
     cursor pointer
     fill font-color
     transition fill 200ms ease-in-out
-    &:hover
+    &:not(.loader):hover
         fill #9D3154
+.trackbar
+    width 100%
+    height trackbar-active-area
+    position relative
+    padding ((trackbar-active-area / 2) - (trackbar-height / 2)) 0
+    overflow hidden
+    .trackbar-background
+        width 100%
+        background trackbar-inactive-color
+        height trackbar-height
+    .trackbar-progress
+        position absolute
+        top ((trackbar-active-area / 2) - (trackbar-height / 2))
+        background trackbar-active-color
+        height trackbar-height

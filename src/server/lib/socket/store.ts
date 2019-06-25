@@ -3,7 +3,7 @@
 class Store {
     connections: Map<SocketIO.Socket, SocketData> = new Map();
 
-    registerSocket(socket: SocketIO.Socket, data: SocketData) {
+    setSocketData(socket: SocketIO.Socket, data: SocketData) {
         this.connections.set(socket, data);
     }
 

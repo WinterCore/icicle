@@ -23,16 +23,13 @@ export default async function initializeServer() {
     app.use(express.static(path.resolve("./node_modules/flexboxgrid/dist")));
     app.use("/api", Api);
 
-    // app.get("/bundle.js", (_, res: Response) => res.sendFile(path.resolve("./dist/store/bundle.js")));
-    // app.get("/bundle.js.map", (_, res: Response) => res.sendFile(path.resolve("./dist/store/bundle.js.map")));
+    app.get("/bundle.js", (_, res: Response) => res.sendFile(path.resolve("./dist/frontend/bundle.js")));
+    app.get("/bundle.js.map", (_, res: Response) => res.sendFile(path.resolve("./dist/frontend/bundle.js.map")));
 
     initSocket(server);
 
     app.get("*", (_, res: Response) => {
-        res.render("index", {
-            title       : "test",
-            headerTags  : ""
-        });
+        res.render("index");
     });
     
     app.use(errorHandler);

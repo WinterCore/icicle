@@ -52,6 +52,7 @@ const ActualPlayer: React.FunctionComponent = () => {
     const handlePlayPause = () => {
         if (isPaused) {
             playerRef.current.play();
+            playerRef.current.currentTime = secondsPlayed;
             setVolume(playerRef.current.volume);
             setIsPaused(false);
         } else {
@@ -90,7 +91,7 @@ const ActualPlayer: React.FunctionComponent = () => {
         <div className="player-outer">
             <div className="player-info">
                 <div className="player-title" title={ nowPlaying.title }>{ nowPlaying.title }</div>
-                <div className="player-by">By { nowPlaying.by.name }</div>
+                <div className="player-by">Listening to { nowPlaying.by.name }</div>
             </div>
             <div className="player-controls">
                 { isOwner && <Previous /> } 
@@ -119,6 +120,7 @@ const ActualPlayer: React.FunctionComponent = () => {
 
 const Player: React.FunctionComponent = (props) => {
     const { nowPlaying } = usePlayer();
+    console.log(nowPlaying);
     if (!nowPlaying) return <Placeholder />;
     else return <ActualPlayer />;
 };
