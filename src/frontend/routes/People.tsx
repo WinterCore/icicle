@@ -21,7 +21,6 @@ const Person: React.FunctionComponent<PersonProps> = (props) => {
     }, []);
 
     const onPlay = () => joinStream(_id);
-    console.log(secondsPlayed, nowPlaying.duration);
 
     return (
         <div className="person-outer">

@@ -1,5 +1,3 @@
-player-background = #14172B
-
 trackbar-active-area = 10px
 trackbar-height      = 2px
 
@@ -16,10 +14,14 @@ volume-rocker-track-width = 4px
     position fixed
     bottom 0
     width 100%
-    z-index 10
+    z-index 103
     display flex
+    justify-content space-between
     align-items center
     padding 0 36px
+    .player-far-right
+        display flex
+        align-items center
     .player-info
         font-size 14px
         max-width 200px
@@ -51,7 +53,11 @@ volume-rocker-track-width = 4px
                 width 18px
     .player-trackbar
         flex 1
-        
+        @media (max-width mobile-breakpoint)
+            top (-((trackbar-active-area / 2) - trackbar-height))
+            position absolute
+            left 0
+            width 100%
     .player-duration
         font-size 12px
         margin 0 40px

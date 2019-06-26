@@ -24,7 +24,7 @@ const Placeholder: React.FunctionComponent = () => {
                 <div className="play-pause"><Play /></div>
             </div>
             <div className="player-trackbar">
-                <Trackbar seekable={ false } onSeek={ () => null } percentage={ 0 } />
+                <Trackbar seekable={ false } onSeek={ () => null } percentage={ 0 } disabled={ true } />
             </div>
             <div className="player-duration">
                 
@@ -94,7 +94,6 @@ const ActualPlayer: React.FunctionComponent = () => {
                 <div className="player-by">Listening to { nowPlaying.by.name }</div>
             </div>
             <div className="player-controls">
-                { isOwner && <Previous /> } 
                 <div className="play-pause" onClick={ handlePlayPause }>
                     {
                         isPaused
@@ -107,11 +106,13 @@ const ActualPlayer: React.FunctionComponent = () => {
             <div className="player-trackbar">
                 <Trackbar percentage={ (secondsPlayed / nowPlaying.duration) * 100 } onSeek={ handleSeek } seekable={ isOwner } />
             </div>
-            <div className="player-duration">
-                { secondsToTime(nowPlaying.duration) }
-            </div>
-            <div className="player-volume">
-                <VolumeRocker volume={ volume } onVolumeChange={ onVolumeChange } />
+            <div className="player-far-right">
+                <div className="player-duration">
+                    { secondsToTime(nowPlaying.duration) }
+                </div>
+                <div className="player-volume">
+                    <VolumeRocker volume={ volume } onVolumeChange={ onVolumeChange } />
+                </div>
             </div>
             { <audio ref={ playerRef } /> }
         </div>
@@ -120,7 +121,6 @@ const ActualPlayer: React.FunctionComponent = () => {
 
 const Player: React.FunctionComponent = (props) => {
     const { nowPlaying } = usePlayer();
-    console.log(nowPlaying);
     if (!nowPlaying) return <Placeholder />;
     else return <ActualPlayer />;
 };

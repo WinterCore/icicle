@@ -25,8 +25,12 @@ const Trackbar: React.FunctionComponent<TrackbarProps> = (props) => {
 interface TrackbarProps {
     percentage : number;
     seekable   : boolean;
-
-    onSeek ?: {(current: number): void};
+    disabled?  : boolean;
+    onSeek    ?: {(current: number): void};
 }
+
+Trackbar.defaultProps = {
+    disabled : false
+};
 
 export default Trackbar;

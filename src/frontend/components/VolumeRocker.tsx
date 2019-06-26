@@ -4,7 +4,7 @@ import * as React from "react";
 import Volume   from "../icons/Volume";
 
 const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChange, volume }) => {
-    const [isVisible, setIsVisible] = React.useState();
+    const [isVisible, setIsVisible] = React.useState(false);
     const volumeRockerRef = React.useRef<HTMLDivElement>(null);
 
     const {
@@ -51,7 +51,7 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
     }, []);
 
 
-
+    const toggleVisibility = () => setIsVisible(!isVisible);
     
     React.useEffect(() => {
         window.addEventListener("mouseup", removeMouseMoveListener);
@@ -59,7 +59,6 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
             window.removeEventListener("mouseup", removeMouseMoveListener);
         };
     });
-
     return (
         <>
             <div onMouseEnter={ handleMouseEnter } onMouseLeave={ handleMouseLeave } className={`volume-bar-outer${isVisible ? " visible" : ""}`}>
@@ -67,7 +66,7 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
                     <div className="volume-track" style={{ height : `${volume * 100}%` }}></div>
                 </div>
             </div>
-            <div onMouseEnter={ handleMouseEnter } onMouseLeave={ handleMouseLeave }>
+            <div style={{ display : "flex", alignItems : "center" }} onClick={ toggleVisibility } onMouseEnter={ handleMouseEnter } onMouseLeave={ handleMouseLeave }>
                 <Volume />
             </div>
         </>
