@@ -12,7 +12,7 @@ export default function authenticated(req: Request, res: Response, next: Functio
     if (!token) return next(new Unauthenticated());
 
     Blacklist.countDocuments({ token })
-        .then((count: Number) => {
+        .then((count: number) => {
             if (count) return next(new Unauthenticated());
             verify(token, JWT_SECRET, function verifyToken(err, decoded: JWTUser) {
                 if (err) return next(new Unauthenticated());

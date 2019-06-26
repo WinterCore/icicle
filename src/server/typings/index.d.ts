@@ -2,5 +2,5 @@
 
 
 type JWTUser = {
-    id : String
+    id : string
 }

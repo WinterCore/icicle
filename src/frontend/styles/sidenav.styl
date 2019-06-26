@@ -1,0 +1,70 @@
+sidenav-padding = 30px
+
+.icon.hamburger
+    width 24px
+    height 24px
+    position fixed
+    top 16px
+    left 16px
+    z-index 100
+    transition left 350ms cubic-bezier(0.12, 0.8, 0.68, 1.01)
+    display none
+    @media (max-width mobile-breakpoint)
+        display block
+
+#sidenav
+    a
+        text-decoration none
+    .logo
+        margin-bottom 20px
+        height 30px
+    height 100vh
+    overflow-y auto
+    background accent-color
+    color font-color
+    width sidenav-width
+    @media (max-width mobile-breakpoint)
+        left (- sidenav-width)
+    &.visible
+        left 0
+    &.visible + .hamburger
+        left (sidenav-width + 16px)
+    transition left 350ms cubic-bezier(0.12, 0.8, 0.68, 1.01)
+    position fixed
+    z-index 101
+    padding sidenav-padding sidenav-padding (player-height + 30px) sidenav-padding
+    .login-with-google
+        margin-bottom 20px
+    .user-card
+        display flex
+        margin-bottom 20px
+        align-items center
+        .profile-picture
+            max-width 48px
+            img
+                width 100%
+                border-radius 50%
+        .user-name
+            margin-left 20px
+            font-size 18px
+            font-weight bold
+            flex 1
+        .icon
+            fill font-color
+            width 30px
+            cursor pointer
+    .main-links
+        margin 20px 0
+        padding 0 15px
+        li
+            padding 12px 0
+            a
+                display flex
+                align-items center
+                font-size 14px
+                font-weight bold
+                text-transform uppercase
+                .icon
+                    margin-right 20px
+                    width 20px
+                    fill font-color

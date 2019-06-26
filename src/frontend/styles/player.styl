@@ -1,0 +1,117 @@
+trackbar-active-area = 10px
+trackbar-height      = 2px
+
+trackbar-inactive-color = rgba(255, 255, 255, 0.2)
+trackbar-active-color   = #FFF
+
+volume-rocker-height = 250px
+volume-rocker-ball-radius = 10px
+volume-rocker-track-width = 4px
+
+.player-outer
+    height player-height
+    background player-background
+    position fixed
+    bottom 0
+    width 100%
+    z-index 103
+    display flex
+    justify-content space-between
+    align-items center
+    padding 0 36px
+    .player-far-right
+        display flex
+        align-items center
+    .player-info
+        font-size 14px
+        max-width 200px
+        overflow hidden
+        .player-title
+            white-space nowrap
+            font-weight bold
+        .player-by
+            font-size 90%
+            color #999
+    .player-controls
+        display flex
+        align-items center
+        justify-content center
+        width 200px
+        .icon
+            width 16px
+        .play-pause
+            cursor pointer
+            background #20557F
+            border-radius 50%
+            width 48px
+            height 48px
+            margin 0 16px
+            padding 10px
+            text-align center
+            .icon
+                margin-left 1px
+                width 18px
+    .player-trackbar
+        flex 1
+        @media (max-width mobile-breakpoint)
+            top (-((trackbar-active-area / 2) - trackbar-height))
+            position absolute
+            left 0
+            width 100%
+    .player-duration
+        font-size 12px
+        margin 0 40px
+    .player-volume
+        display flex
+        flex-direction column
+        align-items center
+        justify-content center
+        position relative
+        .icon
+            width 24px
+            height 24px
+        .volume-bar-outer
+            &.visible
+                opacity 1
+                pointer-events all
+                bottom 100%
+                transform translateY(0)
+            transform translateY(-15px)
+            opacity 0
+            transition opacity 200ms ease-in-out, transform 200ms ease-in-out
+            pointer-events none
+            height volume-rocker-height
+            width 50px
+            background player-background
+            box-shadow 1px 1px 10px player-background
+            position absolute
+            bottom 95%
+            margin-bottom 20px
+            border-radius 25px
+            display flex
+            justify-content center
+            left -50%
+            align-items center
+            .volume-track-outer
+                height volume-rocker-height - 50px
+                width volume-rocker-track-width
+                background trackbar-inactive-color
+                border-radius (volume-rocker-track-width / 2)
+                position relative
+                .volume-track
+                    position absolute
+                    bottom 0
+                    width 100%
+                    background trackbar-active-color
+                    cursor pointer
+                    border-radius (volume-rocker-track-width / 2)
+                    &:before
+                        content ""
+                        position absolute
+                        width volume-rocker-ball-radius * 2
+                        height volume-rocker-ball-radius * 2
+                        background white
+                        border-radius 50%
+                        top - volume-rocker-ball-radius
+                        right - volume-rocker-ball-radius + (volume-rocker-track-width / 2)
+

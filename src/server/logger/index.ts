@@ -6,7 +6,12 @@ const { combine, timestamp, label, printf } = format;
 const logger = createLogger({
     format : combine(
         timestamp(),
-        printf(({ message, timestamp, level, stack }) => `${timestamp} ${level}: ${message}\n${"-".repeat(100)}\n${stack}\n${"-".repeat(100)}`)
+        printf(({ message, timestamp, level, stack }) => {
+            if (stack) {
+                return `${timestamp} ${level}: ${message}\n${"-".repeat(100)}\n${stack}\n${"-".repeat(100)}`;
+            }
+            return `${timestamp} ${level}: ${message}\n`
+        })
     ),
     transports : [
         new transports.Console(),

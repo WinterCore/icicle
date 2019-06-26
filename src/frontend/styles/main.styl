@@ -1,3 +1,69 @@
+font-color          = #FFF
+main-color          = #0F1956
+accent-color        = #0C163A
+player-background   = #14172B
+second-accent-color = #333
+sidenav-width       = 300px
+mobile-breakpoint   = 800px
+player-height       = 100px
+
 @import "reset.styl"
-@import "header.styl"
+@import "sidenav.styl"
+
+@import "search.styl"
+@import "changelog.styl"
+@import "people.styl"
+
+@import "player.styl"
+@import "input.styl"
+@import "button.styl"
+    
 @import "helpers.styl"
+
+body
+    background #060e4d;
+    background -moz-linear-gradient(-45deg, #060e4d 0%, #223793 100%)
+    background -webkit-linear-gradient(-45deg, #060e4d 0%, #223793 100%)
+    background linear-gradient(135deg, #060e4d 0%, #223793 100%)
+    color font-color
+
+#root
+    display flex
+    width 100%
+a
+    text-decoration underline
+
+.main
+    width 100%
+    flex 1
+    padding-top 16px
+    margin-left sidenav-width
+    @media (max-width mobile-breakpoint)
+        margin-left 0
+    padding-bottom player-height
+    min-height 100vh
+    .loader
+        width 50px
+
+.icon
+    height 100%
+    cursor pointer
+    fill font-color
+    transition fill 200ms ease-in-out
+    &:not(.loader):hover
+        fill #9D3154
+.trackbar
+    width 100%
+    height trackbar-active-area
+    position relative
+    padding ((trackbar-active-area / 2) - (trackbar-height / 2)) 0
+    overflow hidden
+    .trackbar-background
+        width 100%
+        background trackbar-inactive-color
+        height trackbar-height
+    .trackbar-progress
+        position absolute
+        top ((trackbar-active-area / 2) - (trackbar-height / 2))
+        background trackbar-active-color
+        height trackbar-height

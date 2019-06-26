@@ -19,6 +19,7 @@ const defaultScopes = [
 ];
 
 const userProperties = [
+    "_id",
     "name",
     "email",
     "picture",
@@ -66,7 +67,7 @@ router.get("/google/callback", co(async (req: Request, res: Response) => {
         });
         user.save();
     }
-    const token = await sign({ id : user._id, expiresIn : "7 days" }, JWT_SECRET);
+    const token: string = await sign({ id : user._id, expiresIn : "7 days" }, JWT_SECRET);
     res.json({ data : { ...pick(userProperties, user.toObject()), token } });
 }));
 
