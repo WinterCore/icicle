@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "frontend:dev": "webpack-dev-server --hot --config build/frontend/webpack.config.js",
-    "frontend:build:watch": "webpack --watch --progress --config build/frontend/webpack.config.js",
-    "frontend:build": "webpack --mode production --config build/frontend/webpack.config.js",
+    "frontend:dev": "cross-env NODE_ENV=development webpack-dev-server --hot --config build/frontend/webpack.config.js",
+    "frontend:build:watch": "cross-env NODE_ENV=development webpack --watch --progress --config build/frontend/webpack.config.js",
+    "frontend:build": "cross-env NODE_ENV=production webpack --mode production --config build/frontend/webpack.config.js",
     "frontend:css:build:watch": "stylus -w src/frontend/styles/main.styl -o public/main.css",
     "frontend:css:build": "stylus --mode production --config build/frontend/webpack.config.js",
-    "server:dev": "nodemon --ignore dist/frontend dist/server/index.min.js",
-    "server:build:watch": "webpack --watch --progress --config build/server/webpack.config.js",
-    "server:build": "wepback --mode production build/server/webpack.config.js"
+    "server:dev": "cross-env NODE_ENV=development nodemon --ignore dist/frontend dist/server/index.min.js",
+    "server:build:watch": "cross-env NODE_ENV=development webpack --watch --progress --config build/server/webpack.config.js",
+    "server:build": "cross-env NODE_ENV=production wepback --mode production build/server/webpack.config.js"
   },
   "repository": {
     "type": "git",

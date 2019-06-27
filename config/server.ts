@@ -17,7 +17,7 @@ export const GOOGLE_CONFIG = {
   redirect: `${CLIENT_DOMAIN}/auth/google/callback`
 };
 
-export const JWT_SECRET = "NYAN_CAT" || process.env.JWT_SECRET;
+export const JWT_SECRET = process.env.JWT_SECRET || "NYAN_CAT";
 export const AUDIO_PATH = "public/audio";
 
-export const YOUTUBE_API_KEY = "AIzaSyBJs5mQIA9dK72XOvTc6mi5kbV9YrLMBjw"; // icicle
+export const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || "";

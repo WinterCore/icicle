@@ -1,4 +1,4 @@
 import { DOMAIN as SERVER_DOMAIN } from "./server";
 export const API_URL = `${SERVER_DOMAIN}/api`;
-export const DOMAIN =  process.env.DOMAIN || "http://localhost:8080";
+export const DOMAIN =  process.env.NODE_ENV === "development" ? "http://localhost:8080" : "https://icicle.wintercore.dev";
 // TODO: Add api key in the future
