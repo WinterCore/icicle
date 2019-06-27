@@ -8,7 +8,7 @@ const dbPass = process.env.DB_PASS || "";
 const dbCred = dbUser.length > 0 || dbPass.length > 0 ? `${dbUser}:${dbPass}@` : "";
 
 
-export const mongodbServerUrl = process.env.DB_URL || `mongodb://${dbCred}${dbHost}:${dbPort}/${dbName}`;
+export const mongodbServerUrl = process.env.DB_URL || `mongodb://${dbCred}${dbHost}:${dbPort}/${dbName}${dbCred ? "?authSource=admin" : ""}`;
 
 export const DOMAIN = process.env.DOMAIN || "http://localhost:8081";
 export const GOOGLE_CONFIG = {
