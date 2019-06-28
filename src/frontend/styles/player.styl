@@ -23,6 +23,8 @@ volume-rocker-track-width = 4px
         display flex
         align-items center
     .player-info
+        @media (max-width mobile-breakpoint)
+            order 2
         font-size 14px
         max-width 200px
         overflow hidden
@@ -33,10 +35,13 @@ volume-rocker-track-width = 4px
             font-size 90%
             color #999
     .player-controls
+        @media (max-width mobile-breakpoint)
+            order 1
         display flex
         align-items center
         justify-content center
-        width 200px
+        margin 0 20px
+        // width 200px
         .icon
             width 16px
         .play-pause
@@ -54,11 +59,14 @@ volume-rocker-track-width = 4px
     .player-trackbar
         flex 1
         @media (max-width mobile-breakpoint)
+            order 4
             top (-((trackbar-active-area / 2) - trackbar-height))
             position absolute
             left 0
             width 100%
     .player-duration
+        @media (max-width mobile-breakpoint)
+            order 4
         font-size 12px
         margin 0 40px
     .player-volume
