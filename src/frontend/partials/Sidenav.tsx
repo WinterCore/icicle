@@ -30,7 +30,7 @@ const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location
                     onChange={ setSearchInputValue }
                     value={ search }
                     onEnter={ onSearch }
-                    icon={ <SearchIcon /> }
+                    icon={ <SearchIcon onClick={ onSearch } /> }
                     placeholder="Search for youtube videos"
                 />
                 <ul className="main-links">
