@@ -47,7 +47,16 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         socket.on(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
         socket.emit(SOCKET_ACTIONS.CHECK, window.localStorage.getItem("last_stream"));
         return () => socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
-    }, [user]);
+    }, [
+        user, // Request nowplaying data after user login/logout
+    ]);
+
+    const onReconnect = () => socket.emit(SOCKET_ACTIONS.CHECK, window.localStorage.getItem("last_stream"));
+
+    useEffect(() => {
+        socket.on("reconnect", onReconnect);
+        return () => socket.off("reconnect", onReconnect);
+    });
 
 
     const context = {
