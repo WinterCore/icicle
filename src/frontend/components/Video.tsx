@@ -4,12 +4,9 @@ import WatchIcon from "../icons/Watch";
 import PlayIcon  from "../icons/Play";
 import Loader    from "../icons/Loader";
 
-import { useSocket } from "../contexts/socket";
 import { usePlayer } from "../contexts/player";
 
 import { secondsToTime } from "../helpers";
-
-import { SOCKET_ACTIONS } from "../../constants";
 
 import api, { ADD_TO_QUEUE } from "../api";
 
