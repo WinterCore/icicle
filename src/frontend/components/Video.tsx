@@ -11,23 +11,29 @@ import { secondsToTime } from "../helpers";
 import api, { ADD_TO_QUEUE } from "../api";
 
 const Video: React.FunctionComponent<VideoProps> = (props) => {
-    const { id, title, thumbnail, duration } = props;
-    const { startStream, nowPlaying } = usePlayer();
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [isDone, setIsDone] = React.useState(false);
+    const { id, title, thumbnail, duration }            = props;
+    const { startStream, nowPlaying }                   = usePlayer();
+    const [isAddToQueueLoading, setIsAddToQueueLoading] = React.useState(false);
+    const [isAddToQueueDone, setIsAddToQueueDone]       = React.useState(false);
+    const [isPlayNowLoading, setIsPlayNowLoading]       = React.useState(false);
 
     const onPlayNow = () => {
         if (nowPlaying ? nowPlaying.title !== title : true) {
+            setIsPlayNowLoading(true);
             startStream(id);
         }
     };
     const addToQueue = React.useCallback(async (e) => {
         e.preventDefault();
-        setIsLoading(true);
+        setIsAddToQueueLoading(true);
         await api({ ...ADD_TO_QUEUE(), data : { id } });
         alert("Added to the queue successfully");
-        setIsDone(true);
+        setIsAddToQueueDone(true);
     }, []);
+
+    React.useEffect(() => {
+        if (nowPlaying && title === nowPlaying.title) setIsPlayNowLoading(false);
+    }, [nowPlaying && nowPlaying.title]);
 
     return (
         <div className="video">
@@ -35,8 +41,8 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                 <img className="video-thumbnail" src={ thumbnail } />
                 <span className="video-duration">{ secondsToTime(duration) }</span>
                 <div className="video-floating-actions">
-                    { isDone ? <div /> : (!isLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />) }
-                    <PlayIcon onClick={ onPlayNow } />
+                    { isAddToQueueDone ? <div /> : (!isAddToQueueLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />) }
+                    { isPlayNowLoading ? <Loader /> : <PlayIcon onClick={ onPlayNow } /> }
                     <div />
                 </div>
             </div>
