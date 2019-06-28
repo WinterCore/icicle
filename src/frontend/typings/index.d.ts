@@ -8,3 +8,7 @@ type PlayerData = {
         _id  : string;
     }
 };
+
+interface Window {
+    socket : SocketIOClient.Socket;
+}
