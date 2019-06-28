@@ -74,8 +74,6 @@ const ActualPlayer: React.FunctionComponent = () => {
         if (playerRef.current) {
             playerRef.current.src = nowPlaying.url;
             playerRef.current.currentTime = nowPlaying.startAt;
-            playerRef.current.volume = 0.3;
-            setVolume(0.3);
             setSecondsPlayed(nowPlaying.startAt);
             playerRef.current.play()
                 .then(() => {
@@ -86,6 +84,11 @@ const ActualPlayer: React.FunctionComponent = () => {
                 });
         }
     }, [nowPlaying.startAt, nowPlaying.url]);
+
+    React.useEffect(() => {
+        playerRef.current.volume = 0.3;
+        setVolume(0.3); 
+    }, []);
 
     return (
         <div className="player-outer">
