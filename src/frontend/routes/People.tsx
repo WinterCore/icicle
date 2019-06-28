@@ -33,7 +33,7 @@ const Person: React.FunctionComponent<PersonProps> = (props) => {
                             <>
                                 &nbsp;<span className="washed-out">with</span>
                                 &nbsp;{ liveListeners }&nbsp;
-                                <span className="washed-out">{ liveListeners > 2 ? "others" : "other person" }</span>
+                                <span className="washed-out">{ liveListeners > 1 ? "others" : "other person" }</span>
                             </>
                         ) }
                     </div>
