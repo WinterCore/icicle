@@ -1,9 +1,12 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const isDevelopment = process.env.NODE_ENV === "development";
 
 module.exports = {
     entry  : "./src/frontend/index.tsx",
     output : {
-        filename   : "bundle.js",
+        filename   : isDevelopment ? "bundle.js" : "[name].[contenthash].js",
         publicPath : "/",
         path       : path.resolve("./dist/frontend")
     },
@@ -43,9 +46,15 @@ module.exports = {
         historyApiFallback : true,
         proxy : {
             "/flexboxgrid.min.css" : { target : "http://localhost:8081" },
-            "/socket.io" : { target : "http://localhost:8081" }
+            "/socket.io"           : { target : "http://localhost:8081" }
         }
     },
+    plugins : [
+        new HtmlWebpackPlugin({
+            filename : "index.html",
+            template : path.resolve("./public/index-template.html")
+        })
+    ]
     // externals: {
     //     "react"     : "React",
     //     "react-dom" : "ReactDOM"
