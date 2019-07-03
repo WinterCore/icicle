@@ -21,6 +21,7 @@ interface PlayerProvider {
     startStream (id: string)       : void;
     leaveStream (id: string)       : void;
     joinStream  (id: string)       : void;
+    skip        ()                 : void;
     roomData   : RoomData;
     nowPlaying : PlayerData;
 }
@@ -44,9 +45,10 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     };
     const seek        = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
     const leaveStream = (id: string)       => socket.emit(SOCKET_ACTIONS.LEAVE, id);
-    const joinStream  = (id: string)       => {
-        socket.emit(SOCKET_ACTIONS.JOIN, id);
-    };
+    const joinStream  = (id: string)       => socket.emit(SOCKET_ACTIONS.JOIN, id);
+    const skip        = ()                 => socket.emit(SOCKET_ACTIONS.SKIP);
+
+
     const startStream = (videoId: string) => {
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, videoId);
         window.localStorage.removeItem("last_stream");
@@ -80,6 +82,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         startStream,
         leaveStream,
         roomData,
+        skip,
         nowPlaying : data,
     };
 

@@ -7,4 +7,5 @@ export const SOCKET_ACTIONS = {
     CHECK        : "CHECK",
     JOIN         : "JOIN",
     LEAVE        : "LEAVE",
+    SKIP         : "SKIP"
 };

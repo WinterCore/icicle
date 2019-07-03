@@ -14,6 +14,7 @@ import playNow from "./actions/playnow";
 import seek    from "./actions/seek";
 import check   from "./actions/check";
 import join    from "./actions/join";
+import skip    from "./actions/skip";
 
 import logger from "../../logger";
 
@@ -46,6 +47,7 @@ export default function init(server: Server) {
         socket.on(SOCKET_ACTIONS.SEEK, data => seek(socket, data));
         socket.on(SOCKET_ACTIONS.CHECK, data => check(socket, data));
         socket.on(SOCKET_ACTIONS.JOIN, data => join(socket, data));
+        socket.on(SOCKET_ACTIONS.SKIP, data => skip(socket, data));
         // let i = 0;
         // const testData = [
         //     { id : "9wqpfFI3EVE", title : "What the hell is this", by : { name : "WinterCore", _id : "5d027c76603e434cb01a3df4" }, duration : 500, url : "http://localhost:8080/audio/0YF8vecQWYs.ogg" },

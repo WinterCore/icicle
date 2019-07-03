@@ -35,7 +35,7 @@ const Placeholder: React.FunctionComponent = () => {
 
 
 const ActualPlayer: React.FunctionComponent = () => {
-    const { nowPlaying, seek }              = usePlayer();
+    const { nowPlaying, seek, skip }        = usePlayer();
     const { user }                          = useUser();
     const playerRef                         = React.useRef<HTMLAudioElement>(null);
     const [secondsPlayed, setSecondsPlayed] = React.useState(nowPlaying.startAt);
@@ -104,7 +104,7 @@ const ActualPlayer: React.FunctionComponent = () => {
                             : <Pause />
                     }
                 </div>
-                { isOwner && <Next /> } 
+                { isOwner && <Next onClick={ skip } /> } 
             </div>
             <div className="player-trackbar">
                 <Trackbar percentage={ (secondsPlayed / nowPlaying.duration) * 100 } onSeek={ handleSeek } seekable={ isOwner } />
