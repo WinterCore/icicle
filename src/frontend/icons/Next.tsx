@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const Next: React.FunctionComponent<IconProps> = ({ onClick }) => (
+const NextIcon: React.FunctionComponent<IconProps> = ({ onClick }) => (
     <svg onClick={ onClick } version="1.1" className="icon" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 405.457 405.457" xmlSpace="preserve">
         <g>
@@ -12,8 +12,8 @@ const Next: React.FunctionComponent<IconProps> = ({ onClick }) => (
     </svg>
 );
 
-Next.defaultProps = {
+NextIcon.defaultProps = {
     onClick : () => null
 };
 
-export default Next;
+export default NextIcon;

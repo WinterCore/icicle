@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const Watch: React.FunctionComponent<IconProps> = ({ onClick }) => {
+const WatchIcon: React.FunctionComponent<IconProps> = ({ onClick }) => {
     return (
         <svg onClick={ onClick } viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" className="icon">
             <g>
@@ -10,8 +10,8 @@ const Watch: React.FunctionComponent<IconProps> = ({ onClick }) => {
     );
 };
 
-Watch.defaultProps = {
+WatchIcon.defaultProps = {
     onClick : () => null
 };
 
-export default Watch;
+export default WatchIcon;

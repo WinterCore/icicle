@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const Logout: React.FunctionComponent<IconProps> = ({ onClick }) => (
+const LogoutIcon: React.FunctionComponent<IconProps> = ({ onClick }) => (
     <svg onClick={ onClick } className="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xmlSpace="preserve">
         <g>
             <g>
@@ -22,8 +22,8 @@ const Logout: React.FunctionComponent<IconProps> = ({ onClick }) => (
 );
 
 
-Logout.defaultProps = {
+LogoutIcon.defaultProps = {
     onClick : () => null
 };
 
-export default Logout;
+export default LogoutIcon;

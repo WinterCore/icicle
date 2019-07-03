@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const Previous: React.FunctionComponent<IconProps> = ({ onClick }) => (
+const PreviousIcon: React.FunctionComponent<IconProps> = ({ onClick }) => (
     <svg version="1.1" onClick={ onClick } className="icon" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 405.456 405.456" xmlSpace="preserve">
         <g>
@@ -12,8 +12,8 @@ const Previous: React.FunctionComponent<IconProps> = ({ onClick }) => (
     </svg>
 );
 
-Previous.defaultProps = {
+PreviousIcon.defaultProps = {
     onClick : () => null
 };
 
-export default Previous;
+export default PreviousIcon;

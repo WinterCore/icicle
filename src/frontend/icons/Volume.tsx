@@ -1,7 +1,7 @@
 
 import * as React from "react";
 
-const Volume: React.FunctionComponent<IconProps> = ({ onClick }) => (
+const VolumeIcon: React.FunctionComponent<IconProps> = ({ onClick }) => (
     <svg version="1.1" className="icon" onClick={ onClick } xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 115.3 115.3" xmlSpace="preserve"
 	>
         <g>
@@ -16,8 +16,8 @@ const Volume: React.FunctionComponent<IconProps> = ({ onClick }) => (
     </svg>
 );
 
-Volume.defaultProps = {
+VolumeIcon.defaultProps = {
     onClick : () => null
 };
 
-export default Volume;
+export default VolumeIcon;

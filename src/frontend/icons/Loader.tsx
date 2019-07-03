@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const Loader: React.FunctionComponent = () => (
+const LoaderIcon: React.FunctionComponent = () => (
     <svg viewBox="0 0 135 140" className="icon loader" xmlns="http://www.w3.org/2000/svg">
         <rect y="10" width="15" height="120" rx="6">
             <animate attributeName="height"
@@ -56,4 +56,4 @@ const Loader: React.FunctionComponent = () => (
 );
 
 
-export default Loader;
+export default LoaderIcon;

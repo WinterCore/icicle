@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const Search: React.FunctionComponent<IconProps> = ({ onClick }) => {
+const SearchIcon: React.FunctionComponent<IconProps> = ({ onClick }) => {
     return (
         <svg className="icon" onClick={ onClick } xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 50 50" version="1.1">
             <g id="surface1">
@@ -10,8 +10,8 @@ const Search: React.FunctionComponent<IconProps> = ({ onClick }) => {
     );
 };
 
-Search.defaultProps = {
-    onClick() {  }
+SearchIcon.defaultProps = {
+    onClick() { }
 };
 
-export default Search;
+export default SearchIcon;

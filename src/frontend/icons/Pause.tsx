@@ -1,7 +1,7 @@
 
 import * as React from "react";
 
-const Pause: React.FunctionComponent<IconProps> = ({ onClick }) => {
+const PauseIcon: React.FunctionComponent<IconProps> = ({ onClick }) => {
     return (
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                 viewBox="0 0 70 70" xmlSpace="preserve" className="icon" onClick={ onClick }>
@@ -19,4 +19,4 @@ const Pause: React.FunctionComponent<IconProps> = ({ onClick }) => {
     );
 }
 
-export default Pause;
+export default PauseIcon;
