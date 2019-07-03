@@ -7,17 +7,18 @@ import Queue from "../../database/models/queue";
 import authenticated from "../middleware/authenticated";
 import validateQueue from "../middleware/validation/queue";
 
-import { co } from "../helpers";
+import queueResource from "../resources/queue-resource";
 
+import { co } from "../helpers";
 
 const router = Router();
 
-const projection = {
-    name          : 1,
-    picture       : 1,
-    nowPlaying    : 1,
-    liveListeners : 1
-};
+router.get("/:room", co(async (req: Request, res: Response) => {
+    const { room } = req.params;
+    // TODO: Prevent adding the same song twice
+    const queueItems: Database.Queue[] = await Queue.find({ by : room }).sort({ date : 1 }).limit(8);
+    return res.json({ data : queueItems.map(queueResource(req)) });
+}));
 
 router.post("/", [authenticated, validateQueue], co(async (req: Request, res: Response) => {
     const { id } = req.body;
@@ -32,9 +33,18 @@ router.post("/", [authenticated, validateQueue], co(async (req: Request, res: Re
         by        : req.userId
     });
 
-    queueItem.save();
+    queueItem.save(); 
 
     return res.json({ message : "Added successfully" });
+}));
+
+router.delete("/", [authenticated], co(async (req: Request, res: Response) => {
+    const { id } = req.query;
+
+    await Queue.deleteOne({ by : req.userId, videoId : id });
+
+    const queueItems: Database.Queue[] = await Queue.find({ by : req.userId }).sort({ date : 1 }).limit(8);
+    return res.json({ data : queueItems.map(queueResource(req)) });
 }));
 
 export default router;

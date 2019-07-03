@@ -7,6 +7,7 @@ import AppProviders from "./contexts";
 import Sidenav      from "./partials/Sidenav";
 import Search       from "./routes/Search"; 
 import People       from "./routes/People";
+import Home         from "./routes/Home";
 import ConfirmLogin from "./routes/ConfirmLogin";
 
 import Player    from "./components/Player";
@@ -21,6 +22,7 @@ function App() {
                     <ChangeLog />
                     <Sidenav />
                     <section className="main">
+                        <Route exact path="/" component={ Home } />
                         <Route path="/search" component={ Search } />
                         <Route path="/people" component={ People } />
                         <Route path="/auth/google/callback" component={ ConfirmLogin } />

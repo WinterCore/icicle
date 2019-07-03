@@ -9,49 +9,62 @@ const { useContext, createContext, useState, useMemo, useEffect } = React;
 
 const PlayerContext = createContext(null);
 
+type RoomData = {
+    _id  : string;
+    name : string;
+}
+
 interface PlayerProvider {
     onRoomJoin  (data: PlayerData) : void;
-    onRoomLeave()                  : void;
+    leaveRoom()                    : void;
     seek        (seconds: number)  : void;
     startStream (id: string)       : void;
     leaveStream (id: string)       : void;
     joinStream  (id: string)       : void;
-
+    roomData   : RoomData;
     nowPlaying : PlayerData;
 }
 
 const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
-    const [data, setData]       = useState<PlayerData | null>(null);
-    const { socket, isLoading } = useSocket();
-    const { user }              = useUser();
+    const [data, setData]         = useState<PlayerData | null>(null);
+    const [roomData, setRoomData] = useState<RoomData | null>(null);
+    const { socket }   = useSocket();
+    const { user }                = useUser();
 
     const onRoomJoin  = (data: PlayerData) => {
+        const tempRoomData = data ? data.by : null;
+        setRoomData(tempRoomData);
+        window.localStorage.setItem("last_stream", JSON.stringify(tempRoomData));
         setData(data ? { ...data } : null);
     };
-    const onRoomLeave = () => {
+    const leaveRoom = () => {
         setData(null);
+        setRoomData(null);
         window.localStorage.removeItem("last_stream");
     };
     const seek        = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
     const leaveStream = (id: string)       => socket.emit(SOCKET_ACTIONS.LEAVE, id);
     const joinStream  = (id: string)       => {
-        window.localStorage.setItem("last_stream", id);
         socket.emit(SOCKET_ACTIONS.JOIN, id);
     };
-    const startStream = (videoId: string)       => {
+    const startStream = (videoId: string) => {
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, videoId);
         window.localStorage.removeItem("last_stream");
     };
 
     useEffect(() => {
+        const data = JSON.parse(window.localStorage.getItem("last_stream")) || {};
         socket.on(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
-        socket.emit(SOCKET_ACTIONS.CHECK, window.localStorage.getItem("last_stream"));
+        socket.emit(SOCKET_ACTIONS.CHECK, data._id);
         return () => socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
     }, [
         user, // Request nowplaying data after user login/logout
     ]);
 
-    const onReconnect = () => socket.emit(SOCKET_ACTIONS.CHECK, window.localStorage.getItem("last_stream"));
+    const onReconnect = () => {
+        const data = JSON.parse(window.localStorage.getItem("last_stream")) || {};
+        socket.emit(SOCKET_ACTIONS.CHECK, data._id);
+    };
 
     useEffect(() => {
         socket.on("reconnect", onReconnect);
@@ -61,16 +74,17 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
 
     const context = {
         onRoomJoin,
-        onRoomLeave,
+        leaveRoom,
         seek,
         joinStream,
         startStream,
         leaveStream,
-        nowPlaying : data
+        roomData,
+        nowPlaying : data,
     };
 
     return <PlayerContext.Provider value={ context } { ...props } />;
-}
+};
 
 function usePlayer(): PlayerProvider {
     const context = useContext<PlayerProvider>(PlayerContext);

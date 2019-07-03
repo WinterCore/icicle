@@ -3,17 +3,15 @@ person-row-height = 80px + (person-row-padding * 2)
 
 person-height = 92px
 
-.people-section
-    margin 10px
-.person-outer
-    height person-row-height
-    padding person-row-padding
+.queue-item-outer
     @media (max-width mobile-breakpoint)
         padding (person-row-padding / 2)
     background transparent
-    .person > *
+    .queue-item > *
         height 100%
-    .person
+    .queue-item
+        .queue-item-time-remaining
+            font-size 12px
         &:hover
             background card-hover-background
         padding 20px
@@ -21,21 +19,29 @@ person-height = 92px
         height person-height
         border-radius (person-height / 2)
         display flex
-        .person-info
+        .queue-item-info
             font-size 14px
-            .person-name
+            .queue-item-name
                 font-size 16px
                 font-weight bold
-        .person-image img
-            height 100%
+        .queue-item-image
+            background-size cover
+            background-position center center
+            height (person-height - 40px)
+            width (person-height - 40px)
             border-radius 50%
-        .person-middle-outer
+        .queue-item-middle-outer
             flex 1
-            margin 0 20px
+            margin-left 20px
             display flex
             flex-direction column
             justify-content space-around
-        .person-actions
+        .queue-item-duration
+            margin 0 30px
+            display flex
+            justify-content center
+            align-items center
+        .queue-item-actions
             margin-right 10px
             display flex
             align-items center
