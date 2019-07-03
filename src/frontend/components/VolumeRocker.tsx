@@ -56,9 +56,11 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
     React.useEffect(() => {
         window.addEventListener("mouseup", removeMouseMoveListener);
         return () => {
+            removeMouseMoveListener();
             window.removeEventListener("mouseup", removeMouseMoveListener);
         };
-    });
+    }, []);
+
     return (
         <>
             <div onMouseEnter={ handleMouseEnter } onMouseLeave={ handleMouseLeave } className={`volume-bar-outer${isVisible ? " visible" : ""}`}>
