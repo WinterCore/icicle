@@ -5,6 +5,7 @@ import PlayIcon  from "../icons/Play";
 import Loader    from "../icons/Loader";
 
 import { usePlayer } from "../contexts/player";
+import { useNotification } from "../contexts/notification";
 
 import { secondsToTime } from "../helpers";
 
@@ -16,6 +17,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
     const [isAddToQueueLoading, setIsAddToQueueLoading] = React.useState(false);
     const [isAddToQueueDone, setIsAddToQueueDone]       = React.useState(false);
     const [isPlayNowLoading, setIsPlayNowLoading]       = React.useState(false);
+    const { addNotification }                           = useNotification();
 
     const onPlayNow = () => {
         if (nowPlaying ? nowPlaying.title !== title : true) {
@@ -26,9 +28,26 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
     const addToQueue = React.useCallback(async (e) => {
         e.preventDefault();
         setIsAddToQueueLoading(true);
-        await api({ ...ADD_TO_QUEUE(), data : { id } });
-        alert("Added to the queue successfully");
-        setIsAddToQueueDone(true);
+        try {
+            await api({ ...ADD_TO_QUEUE(), data : { id } });
+            addNotification({
+                id :`${Date.now()}`,
+                message : `${title} has been added to the queue.`,
+                type : "success",
+                time : 5000
+            });
+            setIsAddToQueueDone(true);
+        } catch(e) {
+            if (e.response && e.response.status === 422) {
+                addNotification({
+                    id :`${Date.now()}`,
+                    message : e.response.data.errors,
+                    type : "error",
+                    time : 5000
+                });
+            }
+            setIsAddToQueueDone(true);
+        }
     }, []);
 
     React.useEffect(() => {
