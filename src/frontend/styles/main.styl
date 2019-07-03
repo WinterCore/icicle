@@ -69,3 +69,38 @@ a
         top ((trackbar-active-area / 2) - (trackbar-height / 2))
         background trackbar-active-color
         height trackbar-height
+
+
+.notification-container
+    position fixed
+    top 0
+    right 0
+    max-width 70vh
+    padding 30px
+    display flex
+    flex-direction column-reverse
+    align-items center
+    @media (max-width mobile-breakpoint)
+        width 100vh
+        max-width 100vh
+    .notification-outer
+        display flex
+        background player-background
+        margin 8px 0
+        padding 20px
+        animation fade-in 200ms ease-in-out forwards
+        font-size 14px
+        box-shadow 0 10px 20px rgba(0,0,0,0.14), 0 6px 6px rgba(0,0,0,0.18)
+        transition opacity 200ms ease-in-out
+        &.fade-out
+            opacity 0
+        .notification-icon .icon
+            margin-right 8px
+            width 16px
+@keyframes fade-in
+    0%
+        transform translateX(100px)
+        opacity 0
+    100%
+        transform translateX(0)
+        opacity 1

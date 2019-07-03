@@ -10,8 +10,9 @@ import People       from "./routes/People";
 import Home         from "./routes/Home";
 import ConfirmLogin from "./routes/ConfirmLogin";
 
-import Player    from "./components/Player";
-import ChangeLog from "./components/ChangeLog";
+import Player       from "./components/Player";
+import ChangeLog    from "./components/ChangeLog";
+import Notification from "./components/Notification";
 
 import "./styles/main.styl";
 
@@ -28,6 +29,7 @@ function App() {
                         <Route path="/auth/google/callback" component={ ConfirmLogin } />
                     </section>
                     <Player />
+                    <Notification />
             </AppProviders>
         </BrowserRouter>
     );
