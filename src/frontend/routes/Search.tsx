@@ -28,7 +28,7 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
     const [isLoading, setIsLoading]         = React.useState(true);
     const [error, setError]                 = React.useState(null);
 
-    const containerRef = React.createRef<HTMLDivElement>();
+    const containerRef = React.useRef<HTMLDivElement>();
 
 
     // TODO: refactor the api calls into a hook
@@ -61,6 +61,7 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
     });
 
     React.useEffect(() => {
+        setIsLoading(true);
         const cancelTokenSource = Axios.CancelToken.source();
         api({
             ...SEARCH(),
