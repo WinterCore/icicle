@@ -15,7 +15,6 @@ export default async function initializeServer() {
     const app: Application = express();
     const server           = http.createServer(app);
 
-    app.set("view engine", "ejs");
     app.set("trust proxy", 1);
     app.use(morgan("tiny"));
     app.set("views", path.resolve("./src/server/views"));
@@ -27,7 +26,7 @@ export default async function initializeServer() {
     initSocket(server);
 
     app.get("*", (_, res: Response) => {
-        res.render("index");
+        res.sendFile(path.resolve("./dist/frontend/index.html"));
     });
     
     app.use(errorHandler);
