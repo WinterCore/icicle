@@ -21,10 +21,8 @@ export default async function initializeServer() {
     app.set("views", path.resolve("./src/server/views"));
     app.use(express.static(path.resolve("./public")));
     app.use(express.static(path.resolve("./node_modules/flexboxgrid/dist")));
+    app.use(express.static(path.resolve("./dist/frontend")));
     app.use("/api", Api);
-
-    app.get("/bundle.js", (_, res: Response) => res.sendFile(path.resolve("./dist/frontend/bundle.js")));
-    app.get("/bundle.js.map", (_, res: Response) => res.sendFile(path.resolve("./dist/frontend/bundle.js.map")));
 
     initSocket(server);
 
