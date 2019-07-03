@@ -4,13 +4,10 @@ import * as SocketIo from "socket.io-client";
 import { DOMAIN } from "../../../config/frontend";
 
 import { useUser } from "./user";
-import { SOCKET_ACTIONS } from "../../constants";
 
-const { useContext, createContext, useEffect, useState } = React;
+const { useContext, createContext, useState } = React;
 
 const SocketContext = createContext(null);
-
-// TODO: Refresh the socket connection on user signin
 
 const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
     const { user }                  = useUser();
