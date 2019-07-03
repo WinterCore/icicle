@@ -22,7 +22,9 @@ const ConfirmLogin: React.FunctionComponent<RouteChildrenProps> = ({ location : 
     }, []);
 
     return (
-        <h1>Loading...</h1>
+        <div className="flex-middle">
+            <h1>Confirming your login...</h1>
+        </div>
     );
 };
 
