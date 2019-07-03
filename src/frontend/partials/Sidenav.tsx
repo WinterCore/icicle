@@ -18,7 +18,7 @@ const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location
     const [isVisible, setIsVisible] = React.useState(false);
 
     const setSearchInputValue  = ({ target }: React.ChangeEvent<HTMLInputElement>) => setSearch(target.value);
-    const onSearch             = () => history.push(`/search?q=${search}`);
+    const onSearch             = () => search && history.push(`/search?q=${search}`);
     const handleHamburgerClick = () => setIsVisible(!isVisible);
 
     return (
