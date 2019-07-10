@@ -7,6 +7,8 @@ import { secondsToTime } from "../../helpers";
 import { useUser }   from "../../contexts/user";
 import { usePlayer } from "../../contexts/player";
 
+import TextRoller from "../TextRoller";
+
 import api, { DELETE_QUEUE_ITEM } from "../../api";
 
 import LoaderIcon from "../../icons/Loader";
@@ -38,7 +40,11 @@ const QueueItem: React.FunctionComponent<QueueItemProps> = (props) => {
                 <div className="queue-item-image" style={{ backgroundImage : `url(${thumbnail})` }}></div>
                 <div className="queue-item-middle-outer">
                     <div className="queue-item-info">
-                        <div className="queue-item-name">{ title }</div>
+                        <div className="queue-item-name">
+                            <TextRoller>
+                                { title }
+                            </TextRoller>
+                        </div>
                         {/* <div className="queue-item-time-remaining washed-out">Plays in 5 mins</div> */}
                     </div>
                 </div>

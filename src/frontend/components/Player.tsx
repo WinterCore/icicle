@@ -5,8 +5,9 @@ import Play     from "../icons/Play";
 import Pause    from "../icons/Pause";
 import Next     from "../icons/Next";
 
-import Trackbar     from "../components/Trackbar";
-import VolumeRocker from "../components/VolumeRocker";
+import Trackbar     from "./Trackbar";
+import VolumeRocker from "./VolumeRocker";
+import TextRoller   from "./TextRoller";
 
 import { usePlayer } from "../contexts/player";
 import { useUser }   from "../contexts/user";
@@ -17,8 +18,16 @@ const Placeholder: React.FunctionComponent = () => {
     return (
         <div className="player-outer">
             <div className="player-info">
-                <div className="player-title">Nothing is currently playing</div>
-                <div className="player-by">Join a room to start listening</div>
+                <div className="player-title">
+                    <TextRoller>
+                        Nothing is currently playing
+                    </TextRoller>
+                </div>
+                <div className="player-by">
+                    <TextRoller>
+                        Join a room to start listening
+                    </TextRoller>
+                </div>
             </div>
             <div className="player-controls">
                 <div className="play-pause"><Play /></div>
@@ -93,8 +102,16 @@ const ActualPlayer: React.FunctionComponent = () => {
     return (
         <div className="player-outer">
             <div className="player-info">
-                <div className="player-title" title={ nowPlaying.title }>{ nowPlaying.title }</div>
-                <div className="player-by">Listening to { nowPlaying.by.name }</div>
+                <div className="player-title" title={ nowPlaying.title }>
+                    <TextRoller uid={ nowPlaying.title }>
+                        { nowPlaying.title }
+                    </TextRoller>
+                </div>
+                <div className="player-by">
+                    <TextRoller uid={ nowPlaying.by.name }>
+                        Listening to { nowPlaying.by.name }
+                    </TextRoller>
+                </div>
             </div>
             <div className="player-controls">
                 <div className="play-pause" onClick={ handlePlayPause }>

@@ -6,8 +6,8 @@ import Error from "../components/Error";
 import Trackbar from "../components/Trackbar";
 import Loader from "../icons/Loader";
 import PlayIcon from "../icons/Play";
-import { SOCKET_ACTIONS } from "../../constants";
 import { usePlayer } from "../contexts/player";
+import TextRoller from "../components/TextRoller";
 
 const Person: React.FunctionComponent<PersonProps> = (props) => {
     const { _id, name, picture, nowPlaying, liveListeners } = props;
@@ -28,14 +28,16 @@ const Person: React.FunctionComponent<PersonProps> = (props) => {
                 <div className="person-image"><img src={ picture } /></div>
                 <div className="person-middle-outer">
                     <div className="person-info">
-                        <span className="person-name">{ name }</span>&nbsp;<span className="washed-out">is listening to</span>&nbsp;<span className="person-listening-to">{ nowPlaying.title }</span>
-                        { liveListeners > 0 && (
-                            <>
-                                &nbsp;<span className="washed-out">with</span>
-                                &nbsp;{ liveListeners }&nbsp;
-                                <span className="washed-out">{ liveListeners > 1 ? "others" : "other person" }</span>
-                            </>
-                        ) }
+                        <TextRoller uid={ nowPlaying.title }>
+                            <span className="person-name">{ name }</span>&nbsp;<span className="washed-out">is listening to</span>&nbsp;<span className="person-listening-to">{ nowPlaying.title }</span>
+                            { liveListeners > 0 && (
+                                <>
+                                    &nbsp;<span className="washed-out">with</span>
+                                    &nbsp;{ liveListeners }&nbsp;
+                                    <span className="washed-out">{ liveListeners > 1 ? "others" : "other person" }</span>
+                                </>
+                            ) }
+                        </TextRoller>
                     </div>
                     <Trackbar seekable={ false } percentage={ (secondsPlayed / nowPlaying.duration) * 100 }  />
                     <div className="person-music-bar">
