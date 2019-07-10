@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { UserProvider }   from "./user";
-import { SocketProvider } from "./socket";
-import { PlayerProvider } from "./player";
+import { UserProvider }         from "./user";
+import { SocketProvider }       from "./socket";
+import { PlayerProvider }       from "./player";
 import { NotificationProvider } from "./notification";
 
 const AppProviders: React.SFC<AppProvidersProps> = ({ children }): React.ReactElement => {
