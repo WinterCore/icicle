@@ -13,7 +13,7 @@ import IcicleIcon    from "../icons/Icicle";
 import Input         from "../components/Input";
 import UserLoginCard from "../components/UserLoginCard";
 
-const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location : { search : query } }) => {
+const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location : { search : query, pathname } }) => {
     const [search, setSearch]       = React.useState((parse(query).q || "") as string);
     const [isVisible, setIsVisible] = React.useState(false);
 
@@ -34,8 +34,8 @@ const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location
                     placeholder="Search for youtube videos"
                 />
                 <ul className="main-links">
-                    <li><Link to="/"><HomeIcon />Home</Link></li>
-                    <li><Link to="/people"><PersonIcon />People</Link></li>
+                    <li className={ pathname === "/" ? "active" : "" }><Link to="/"><HomeIcon />Home</Link></li>
+                    <li className={ pathname === "/people" ? "active" : "" }><Link to="/people"><PersonIcon />People</Link></li>
                 </ul>
             </nav>
             <HamburgerIcon onClick={ handleHamburgerClick } />
