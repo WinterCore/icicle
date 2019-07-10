@@ -13,7 +13,7 @@ const Trackbar: React.FunctionComponent<TrackbarProps> = (props) => {
     };
 
     return (
-        <div className="trackbar" ref={ trackbarRef } onClick={ handleSeek } style={{ cursor : "pointer" }}>
+        <div className="trackbar" ref={ trackbarRef } onClick={ handleSeek } style={ seekable ? { cursor : "pointer" } : {}}>
             <div className="trackbar-background">
                 <div className="trackbar-progress" style={{ width : `${percentage}%` }} />
             </div>
