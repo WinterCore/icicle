@@ -19,14 +19,20 @@ volume-rocker-track-width = 4px
     justify-content space-between
     align-items center
     padding 0 36px
+    @media (max-width mobile-breakpoint)
+        padding 0 18px
     .player-far-right
         display flex
         align-items center
+        @media (max-width mobile-breakpoint)
+            order 3
+            margin-left 20px
     .player-info
         @media (max-width mobile-breakpoint)
-            order 2
+            order 1
         font-size 14px
-        max-width 200px
+        min-width 0
+        max-width 220px
         overflow hidden
         .player-title
             white-space nowrap
@@ -36,7 +42,7 @@ volume-rocker-track-width = 4px
             color #999
     .player-controls
         @media (max-width mobile-breakpoint)
-            order 1
+            order 0
         display flex
         align-items center
         justify-content center
@@ -50,7 +56,7 @@ volume-rocker-track-width = 4px
             border-radius 50%
             width 48px
             height 48px
-            margin 0 16px
+            margin-right 16px
             padding 10px
             text-align center
             .icon
@@ -67,8 +73,9 @@ volume-rocker-track-width = 4px
     .player-duration
         @media (max-width mobile-breakpoint)
             order 4
+            margin 0 10px 0 20px
         font-size 12px
-        margin 0 40px
+        margin 0 30px
     .player-volume
         display flex
         flex-direction column

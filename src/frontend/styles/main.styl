@@ -36,7 +36,7 @@ a
     text-decoration underline
 
 .main
-    width 100%
+    width calc(100% - 300px)
     flex 1
     padding-top 16px
     margin-left sidenav-width
@@ -81,11 +81,13 @@ a
     flex-direction column-reverse
     align-items center
     @media (max-width mobile-breakpoint)
-        width 100vh
-        max-width 100vh
+        width 100%
+        max-width 100%
+        padding 10px
     .notification-outer
         display flex
         background player-background
+        max-width 100%
         margin 8px 0
         padding 20px
         animation fade-in 200ms ease-in-out forwards

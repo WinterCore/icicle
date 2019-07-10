@@ -5,7 +5,7 @@ person-height = 92px
 
 .queue-item-outer
     @media (max-width mobile-breakpoint)
-        padding (person-row-padding / 2)
+        padding 0
     background transparent
     .queue-item > *
         height 100%
@@ -17,6 +17,11 @@ person-height = 92px
         padding 20px
         transition background 200ms ease-in-out
         height person-height
+        
+        @media (max-width mobile-breakpoint)
+            padding 20px 0
+            &:hover
+                background card-hover-background
         border-radius (person-height / 2)
         display flex
         .queue-item-info
@@ -27,19 +32,21 @@ person-height = 92px
         .queue-item-image
             background-size cover
             background-position center center
-            height (person-height - 40px)
-            width (person-height - 40px)
+            min-height (person-height - 40px)
+            min-width (person-height - 40px)
             border-radius 50%
         .queue-item-middle-outer
             flex 1
+            min-width 0
             margin-left 20px
             display flex
             flex-direction column
             justify-content space-around
         .queue-item-duration
-            margin 0 30px
+            margin 0 18px
             display flex
             justify-content center
+            font-size 14px
             align-items center
         .queue-item-actions
             margin-right 10px
