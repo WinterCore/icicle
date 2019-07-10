@@ -13,6 +13,7 @@ import { usePlayer } from "../contexts/player";
 import { useUser }   from "../contexts/user";
 
 import { secondsToTime } from "../helpers";
+import TrackbarV2 from "./TrackbarV2";
 
 const Placeholder: React.FunctionComponent = () => {
     return (
@@ -33,7 +34,8 @@ const Placeholder: React.FunctionComponent = () => {
                 <div className="play-pause"><Play /></div>
             </div>
             <div className="player-trackbar">
-                <Trackbar seekable={ false } onSeek={ () => null } percentage={ 0 } disabled={ true } />
+                
+                <TrackbarV2 uid={ 0 } percentage={ 0 } onSeek={ () => null } seekable={ false } />
             </div>
             <div className="player-duration">
                 
@@ -124,7 +126,7 @@ const ActualPlayer: React.FunctionComponent = () => {
                 { isOwner && <Next onClick={ skip } /> } 
             </div>
             <div className="player-trackbar">
-                <Trackbar percentage={ (secondsPlayed / nowPlaying.duration) * 100 } onSeek={ handleSeek } seekable={ isOwner } />
+                <TrackbarV2 uid={ nowPlaying.title } percentage={ (secondsPlayed / nowPlaying.duration) * 100 } onSeek={ handleSeek } seekable={ isOwner } />
             </div>
             <div className="player-far-right">
                 <div className="player-duration">

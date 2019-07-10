@@ -5,3 +5,7 @@ export const secondsToTime = (s: number) => {
     const seconds = s % 60;
     return `${hours ? hours + ":" : ""}${prefix(minutes)}:${prefix(seconds)}`; 
 };
+
+export const randomRange = (min: number, max: number): number => {
+    return Math.random() * (max - min) + min;
+};
