@@ -23,7 +23,7 @@ const Notification: React.FunctionComponent = () => {
                 notifications.map(not => (
                     <div key={ not.id } className="notification-outer">
                         <div className="notification-icon">{ not.type === "error" ? <CrossIcon /> : <CheckIcon /> }</div>
-                        <div className="notification-messsage">{ not.message }</div>
+                        <div className="notification-messsage" dangerouslySetInnerHTML={{ __html : not.message }}></div>
                     </div>
                 ))
             }
