@@ -12,7 +12,8 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
         handleMouseLeave,
         handleMouseDown,
         handleClick,
-        removeMouseMoveListener
+        removeMouseMoveListener,
+        handleTouchStart
     } = React.useMemo(() => {
 
         let hideTimeout: NodeJS.Timeout;
@@ -26,8 +27,17 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
             }, 1500);
         };
 
-        const handleMouseDown = () => window.addEventListener("mousemove", handleMouseDownMovement);
-        const removeMouseMoveListener = () => window.removeEventListener("mousemove", handleMouseDownMovement);
+        const handleMouseDown = () => {
+            window.addEventListener("mousemove", handleMouseDownMovement);
+        };
+
+        const handleTouchStart = () => {
+            window.addEventListener("touchmove", handleTouchStartMovement);
+        };
+        const removeMouseMoveListener = () => {
+            window.removeEventListener("mousemove", handleMouseDownMovement)
+            window.removeEventListener("touchmove", handleTouchStartMovement)
+        };
         const handleClick = ({ clientY }) => {
             const { top, height } = volumeRockerRef.current.getBoundingClientRect();
             // TODO: calculate the exact position of the mouse on the knob
@@ -35,10 +45,16 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
             onVolumeChange(volume < 0.01 ? 0 : volume);
         };
 
-
-        const handleMouseDownMovement = ({ clientY }) => {
+        const handleMouseDownMovement = (evt: MouseEvent) => {
+            evt.preventDefault();
             const { top, height } = volumeRockerRef.current.getBoundingClientRect();
-            const volume = Math.min(1, 1 - ((clientY - top) / height));
+            const volume = Math.min(1, 1 - ((evt.clientY - top) / height));
+            onVolumeChange(volume < 0.01 ? 0 : volume);
+        };
+        const handleTouchStartMovement = (evt: TouchEvent) => {
+            evt.preventDefault();
+            const { top, height } = volumeRockerRef.current.getBoundingClientRect();
+            const volume = Math.min(1, 1 - ((evt.touches[0].clientY - top) / height));
             onVolumeChange(volume < 0.01 ? 0 : volume);
         };
         return {
@@ -46,6 +62,7 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
             handleMouseLeave,
             handleClick,
             handleMouseDown,
+            handleTouchStart,
             removeMouseMoveListener
         };
     }, []);
@@ -55,16 +72,22 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
     
     React.useEffect(() => {
         window.addEventListener("mouseup", removeMouseMoveListener);
+        window.addEventListener("touchend", removeMouseMoveListener);
         return () => {
             removeMouseMoveListener();
-            window.removeEventListener("mouseup", removeMouseMoveListener);
         };
     }, []);
 
     return (
         <>
             <div onMouseEnter={ handleMouseEnter } onMouseLeave={ handleMouseLeave } className={`volume-bar-outer${isVisible ? " visible" : ""}`}>
-                <div onMouseDown={ handleMouseDown } onClick={ handleClick } className="volume-track-outer" ref={ volumeRockerRef }>
+                <div
+                    onMouseDown={ handleMouseDown }
+                    onTouchStart={ handleTouchStart }
+                    onClick={ handleClick }
+                    className="volume-track-outer"
+                    ref={ volumeRockerRef }
+                >
                     <div className="volume-track" style={{ height : `${volume * 100}%` }}></div>
                 </div>
             </div>
