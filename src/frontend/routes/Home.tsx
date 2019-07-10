@@ -23,8 +23,18 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
                                     nowPlaying
                                         ? (
                                             <>
-                                            <span className="washed-out">Listening to</span>
-                                            &nbsp;{ nowPlaying.title }
+                                                <span className="washed-out">Listening to</span>
+                                                &nbsp;{ nowPlaying.title }
+                                                {
+                                                    nowPlaying.liveListeners > 0
+                                                    ? (
+                                                        <>
+                                                            &nbsp;<span className="washed-out">with</span>
+                                                            &nbsp;{ nowPlaying.liveListeners }
+                                                            &nbsp;{ nowPlaying.liveListeners > 1 ? "others" : "other person" }
+                                                        </>
+                                                    ) : null
+                                                }
                                             </>
                                         ) : "Nothing is currently playing"
                                 }
