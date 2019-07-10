@@ -23,6 +23,9 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             await User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } });
         if (type === "USER") {
             const user = await User.findOne({ _id : id });
+            if (!user.nowPlaying) { // if the user is creating a room make him join it
+                socket.join(user._id);
+            }
             user.nowPlaying = {
                 title     : data.title,
                 duration  : data.duration,

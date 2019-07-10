@@ -26,6 +26,7 @@ export default async function check(socket: socketio.Socket, roomId: string) {
                 const user: Database.User = await User.findOne({ _id : socketData.id });
                 if (user && user.isStreaming()) {
                     socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
+                    socket.join(user._id);
                 }
             }
         }
