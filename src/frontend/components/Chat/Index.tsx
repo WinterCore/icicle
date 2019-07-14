@@ -50,8 +50,14 @@ const Chat: React.FunctionComponent = () => {
                     { messages.map(message => <ChatMessage key={ message.date } { ...message } />) }
                 </div>
                 <div className="chat-footer">
-                    <Input onChange={ onTextChange } value={ text } onEnter={ sendMessage } />
-                    <SendIcon onClick={ sendMessage } />
+                    {
+                        user ? (
+                            <>
+                                <Input onChange={ onTextChange } value={ text } onEnter={ sendMessage } />
+                                <SendIcon onClick={ sendMessage } />
+                            </>
+                        ) : <div>You need to be logged in before you can chat</div>
+                    }
                 </div>
             </div>
         </>
