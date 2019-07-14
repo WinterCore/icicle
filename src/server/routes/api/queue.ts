@@ -38,10 +38,10 @@ router.post("/", [authenticated, validateQueue], co(async (req: Request, res: Re
     return res.json({ message : "Added successfully" });
 }));
 
-router.delete("/", [authenticated], co(async (req: Request, res: Response) => {
-    const { id } = req.query;
+router.delete("/:id", [authenticated], co(async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-    await Queue.deleteOne({ by : req.userId, videoId : id });
+    await Queue.deleteOne({ by : req.userId, _id : id });
 
     const queueItems: Database.Queue[] = await Queue.find({ by : req.userId }).sort({ date : 1 }).limit(8);
     return res.json({ data : queueItems.map(queueResource(req)) });

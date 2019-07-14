@@ -14,7 +14,7 @@ import api, { DELETE_QUEUE_ITEM } from "../../api";
 import LoaderIcon from "../../icons/Loader";
 
 const QueueItem: React.FunctionComponent<QueueItemProps> = (props) => {
-    const { thumbnail, title, duration, videoId, onDelete } = props;
+    const { _id, thumbnail, title, duration, videoId, onDelete } = props;
     const { user }       = useUser();
     const { nowPlaying } = usePlayer();
     const [isLoading, setIsLoading] = React.useState(false);
@@ -23,7 +23,7 @@ const QueueItem: React.FunctionComponent<QueueItemProps> = (props) => {
         setIsLoading(true);
         api({
             ...DELETE_QUEUE_ITEM(),
-            params : { id : videoId }
+            params : { id : _id }
         }).then((response) => {
             setIsLoading(false);
             onDelete(response.data.data);
