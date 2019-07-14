@@ -6,12 +6,14 @@ import Queue  from "../components/Queue/Index";
 import Button from "../components/Button";
 
 import { usePlayer }    from "../contexts/player";
+import { useUser }      from "../contexts/user";
 import { usePlaylists } from "../contexts/playlists";
 
 import Chat from "../components/Chat/Index";
 
 const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
     const { roomData, nowPlaying } = usePlayer();
+    const { user }                 = useUser();
     const { openModal }            = usePlaylists();
 
     return (
@@ -43,7 +45,7 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
                                 }
                             </h4>
                             {
-                                nowPlaying &&
+                                nowPlaying && user &&
                                     <div>
                                         <Button onClick={ () => openModal(nowPlaying.videoId) }>Add to playlist</Button>
                                     </div>
@@ -52,7 +54,7 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
                     ) : <h2 className="col-xs-12">Please join a room to start listening to music</h2>
             }
             <div className="col-xs-12 col-md-6 chat-section">
-                 <Chat />
+                <Chat />
             </div>
             <div className="col-xs-12 col-md-6 queue-section">
                 <Queue />
