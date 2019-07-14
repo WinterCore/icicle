@@ -1,6 +1,7 @@
 import * as socketio from "socket.io";
 
-import User from "../../../database/models/user";
+import User  from "../../../database/models/user";
+import Queue from "../../../database/models/user";
 
 import Store from "../store";
 
@@ -21,6 +22,7 @@ export default async function join(socket: socketio.Socket, streamerId: string) 
         ) {
             // Terminate the socket's current stream
             await User.updateOne({ _id : id }, { $set : { nowPlaying : null, liveListeners : 0 } });
+            await Queue.deleteMany({ by : id }); // Clear his queue 
             socket.in(id).emit(SOCKET_ACTIONS.STREAM_ENDED); // Notify all the listeners to the socket that the stream has ended
         }
 
