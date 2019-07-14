@@ -23,6 +23,9 @@ sidenav-padding = 30px
     background accent-color
     color font-color
     width sidenav-width
+    .search-input
+        input, input:focus
+            border-bottom none
     @media (max-width mobile-breakpoint)
         left (- sidenav-width)
     &.visible
@@ -39,6 +42,9 @@ sidenav-padding = 30px
         margin-right sidenav-padding
     .login-with-google
         margin-bottom 20px
+        button
+            width 100%
+            padding 10px 0
     .user-card
         display flex
         margin-bottom 20px
@@ -57,7 +63,12 @@ sidenav-padding = 30px
             fill font-color
             width 30px
             cursor pointer
-    .main-links
+    .section-divider
+        color secondary-color
+        text-transform uppercase
+        font-size 18px
+        font-weight bold
+    .links
         margin 20px 0
         li
             padding 12px sidenav-padding

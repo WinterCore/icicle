@@ -52,7 +52,7 @@ a
     height 100%
     cursor pointer
     fill font-color
-    transition fill 200ms ease-in-out
+    transition fill 150ms ease-in-out
     &:not(.loader):hover
         fill secondary-color
 .trackbar
@@ -81,13 +81,15 @@ a
 
 .notification-container
     position fixed
+    z-index 130
+    pointer-events none
     top 0
     right 0
     max-width 70vh
     padding 30px
     display flex
     flex-direction column-reverse
-    align-items center
+    align-items flex-end
     @media (max-width mobile-breakpoint)
         width 100%
         max-width 100%

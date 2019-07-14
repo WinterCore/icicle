@@ -20,9 +20,11 @@ unfocused-color     = #FFF;
         width 100%
         color unfocused-color
         font-size 16px
-        
+        border-bottom 1px solid rgba(255, 255, 255, 0.4)
+        transition border-bottom 150ms linear
         &:focus
             outline 0
+            border-bottom 1px solid focused-color
             color focused-color
         &:focus + .icon
             fill focused-color
