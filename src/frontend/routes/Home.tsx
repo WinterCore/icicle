@@ -2,14 +2,16 @@ import * as React             from "react";
 import Axios                  from "axios";
 import { RouteChildrenProps } from "react-router";
 
-import Queue from "../components/Queue/Index";
+import Queue  from "../components/Queue/Index";
+import Button from "../components/Button";
 
-import { usePlayer } from "../contexts/player";
+import { usePlayer }    from "../contexts/player";
+import { usePlaylists } from "../contexts/playlists";
 
 
 const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
     const { roomData, nowPlaying } = usePlayer();
-
+    const { openModal } = usePlaylists();
 
     return (
         <div className="row" style={{ margin : "10px 20px" }}>
@@ -39,6 +41,9 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
                                         ) : "Nothing is currently playing"
                                 }
                             </h4>
+                            <div>
+                                <Button onClick={ () => openModal(nowPlaying.videoId) }>Add to playlist</Button>
+                            </div>
                         </div>
                     ) : <h2>Please join a room to start listening to music</h2>
             }
