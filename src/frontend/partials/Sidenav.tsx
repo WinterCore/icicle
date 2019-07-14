@@ -26,6 +26,7 @@ const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location
             <nav id="sidenav" className={ isVisible ? "visible" : "" }>
                 <IcicleIcon />
                 <UserLoginCard />
+                <div className="search-input">
                 <Input
                     onChange={ setSearchInputValue }
                     value={ search }
@@ -33,7 +34,8 @@ const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location
                     icon={ <SearchIcon onClick={ onSearch } /> }
                     placeholder="Search for youtube videos"
                 />
-                <ul className="main-links">
+                </div>
+                <ul className="links">
                     <li className={ pathname === "/" ? "active" : "" }><Link to="/"><HomeIcon />Home</Link></li>
                     <li className={ pathname === "/people" ? "active" : "" }><Link to="/people"><PersonIcon />People</Link></li>
                 </ul>
