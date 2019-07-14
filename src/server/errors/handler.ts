@@ -10,6 +10,7 @@ import logger from "../logger";
 export default function errorHandler(err: any, req: Request, res: Response, next: Function): void {
     if (err instanceof Unauthenticated) {
         res.sendStatus(401);
+        res.json({ errors : [err.toString()] })
     } else if (err instanceof Validation) {
         res.status(422);
         res.json({ errors : err.errors });
