@@ -38,7 +38,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                 startStream(id);
                 addNotification({
                     id :`${Date.now()}`,
-                    message : "Your queue is empty, the video will play immediately.",
+                    message : "Your queue is empty, the video will be played immediately.",
                     type : "success",
                     time : 5000
                 });
