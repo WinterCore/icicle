@@ -44,7 +44,7 @@ const UserProvider: React.FunctionComponent = (props): React.ReactElement => {
 }
 
 function useUser() {
-    const context = useContext(UserContext);
+    const context = useContext<UserProvider>(UserContext);
     if (!context) {
         throw new Error("useUser must be used within a component that's rendered within the UserProvider");
     }
