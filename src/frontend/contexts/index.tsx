@@ -4,6 +4,7 @@ import { UserProvider }         from "./user";
 import { SocketProvider }       from "./socket";
 import { PlayerProvider }       from "./player";
 import { NotificationProvider } from "./notification";
+import { PlaylistsProvider }    from "./playlists";
 
 const AppProviders: React.SFC<AppProvidersProps> = ({ children }): React.ReactElement => {
     return (
@@ -11,7 +12,9 @@ const AppProviders: React.SFC<AppProvidersProps> = ({ children }): React.ReactEl
             <UserProvider>
                 <SocketProvider>
                     <PlayerProvider>
-                        { children }
+                        <PlaylistsProvider>
+                            { children }
+                        </PlaylistsProvider>
                     </PlayerProvider>
                 </SocketProvider>
             </UserProvider>

@@ -1,0 +1,78 @@
+
+.playlist-modal-backdrop
+    height 100vh
+    width 100vw
+    background hsla(0, 0%, 0%, 0.6)
+    position fixed
+    z-index 104
+    display flex
+    justify-content center
+    align-items center
+    .playlist-modal-outer
+        &.active
+            animation appear-in 150ms linear forwards
+        width 270px
+        height 400px
+        background player-background
+        box-shadow 0 10px 20px rgba(0, 0, 0, 0.14), 0 6px 6px rgba(0, 0, 0, 0.18)
+        display flex
+        flex-direction column
+        justify-content flex-start
+        align-items stretch
+        align-content stretch
+        .playlist-modal-header
+            display flex
+            justify-content space-between
+            align-items center
+            padding 14px 24px
+            border-bottom 1px solid hsla(232, 37%, 100%, 0.3)
+            h4
+                margin 0
+            .icon
+                width 14px
+                &:hover
+                    cursor pointer
+        .playlist-modal-playlists
+            user-select none
+            padding 14px 24px
+            flex 1
+            overflow-y auto
+            .playlist-modal-playlist
+                display flex
+                align-items center
+                margin-bottom 10px
+                input[type="checkbox"]
+                    margin 0 14px 0 0
+                    width 16px
+                    height 16px
+                    background transparent
+        .playlist-modal-footer
+            border-top 1px solid hsla(232, 37%, 100%, 0.3)
+            .playlist-modal-create-button
+                padding 14px 24px
+                &:hover svg
+                    fill secondary-color
+                &:hover
+                    color secondary-color
+                display flex
+                align-items center
+                cursor pointer
+                span
+                    transition color 150ms ease-in-out
+                    margin-left 20px
+                .icon
+                    height 14px
+            .playlist-modal-create
+                padding 14px 24px
+                .input-outer
+                    height auto
+                .playlist-modal-create-submit-button
+                    user-select none
+                    display flex
+                    justify-content flex-end
+                    margin-top 18px
+@keyframes appear-in
+    0%
+        opacity 0
+    100%
+        opacity 1                    

@@ -38,9 +38,31 @@ interface Queue extends Document {
     by        : string | User;
 }
 
+
+interface Song extends Queue {
+    title     : string;
+    videoId   : string;
+    thumbnail : string;
+    duration  : number;
+    date      : Date;
+    playlists : string[];
+    by        : string | User;
+}
+
 interface BlacklistItem extends Document {
     user  : string | User;
     token : string;
+}
+
+interface BasicUser {
+    _id     : string;
+    name    : string;
+    picture : string;
+}
+
+interface Playlist extends Document {
+    name : string;
+    user : BasicUser;
 }
 
 export as namespace Database;

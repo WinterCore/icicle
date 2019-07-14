@@ -10,12 +10,14 @@ import HamburgerIcon from "../icons/Hamburger";
 import PersonIcon    from "../icons/Person";
 import IcicleIcon    from "../icons/Icicle";
 
-import Input         from "../components/Input";
-import UserLoginCard from "../components/UserLoginCard";
+import Input            from "../components/Input";
+import UserLoginCard    from "../components/UserLoginCard";
+import { usePlaylists } from "../contexts/playlists";
 
 const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location : { search : query, pathname } }) => {
     const [search, setSearch]       = React.useState((parse(query).q || "") as string);
     const [isVisible, setIsVisible] = React.useState(false);
+    const { playlists }             = usePlaylists();
 
     const setSearchInputValue  = ({ target }: React.ChangeEvent<HTMLInputElement>) => setSearch(target.value);
     const onSearch             = () => search && history.push(`/search?q=${search}`);
@@ -27,17 +29,27 @@ const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location
                 <IcicleIcon />
                 <UserLoginCard />
                 <div className="search-input">
-                <Input
-                    onChange={ setSearchInputValue }
-                    value={ search }
-                    onEnter={ onSearch }
-                    icon={ <SearchIcon onClick={ onSearch } /> }
-                    placeholder="Search for youtube videos"
-                />
+                    <Input
+                        onChange={ setSearchInputValue }
+                        value={ search }
+                        onEnter={ onSearch }
+                        icon={ <SearchIcon onClick={ onSearch } /> }
+                        placeholder="Search for youtube videos"
+                    />
                 </div>
                 <ul className="links">
                     <li className={ pathname === "/" ? "active" : "" }><Link to="/"><HomeIcon />Home</Link></li>
                     <li className={ pathname === "/people" ? "active" : "" }><Link to="/people"><PersonIcon />People</Link></li>
+                </ul>
+                <div className="section-divider">Playlists</div>
+                <ul className="links">
+                    {
+                        playlists.map(({ _id, name }) => (
+                            <li className={ pathname === `/playlist/${_id}` ? "active" : "" } key={ _id }>
+                                <Link to={ `/playlist/${_id}` }>{ name }</Link>
+                            </li>
+                        ))
+                    }
                 </ul>
             </nav>
             <HamburgerIcon onClick={ handleHamburgerClick } />

@@ -9,10 +9,12 @@ import Search       from "./routes/Search";
 import People       from "./routes/People";
 import Home         from "./routes/Home";
 import ConfirmLogin from "./routes/ConfirmLogin";
+import Playlist     from "./routes/Playlist";
 
-import Player       from "./components/Player";
-import ChangeLog    from "./components/ChangeLog";
-import Notification from "./components/Notification";
+import Player        from "./components/Player";
+import ChangeLog     from "./components/ChangeLog";
+import Notification  from "./components/Notification";
+import PlaylistModal from "./components/PlaylistModal";
 
 import "./styles/main.styl";
 
@@ -27,9 +29,11 @@ function App() {
                         <Route path="/search" component={ Search } />
                         <Route path="/people" component={ People } />
                         <Route path="/auth/google/callback" component={ ConfirmLogin } />
+                        <Route path="/playlist/:id" component={ Playlist } />
                     </section>
                     <Player />
                     <Notification />
+                    <PlaylistModal />
             </AppProviders>
         </BrowserRouter>
     );

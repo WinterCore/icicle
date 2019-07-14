@@ -1,11 +1,14 @@
 import * as React from "react";
 
-import WatchIcon from "../icons/Watch";
-import PlayIcon  from "../icons/Play";
-import Loader    from "../icons/Loader";
+import WatchIcon          from "../icons/Watch";
+import PlayIcon           from "../icons/Play";
+import Loader             from "../icons/Loader";
+import AddToPlaylistIcon  from "../icons/AddToPlaylist";
 
-import { usePlayer } from "../contexts/player";
+import { usePlayer }       from "../contexts/player";
+import { useUser }         from "../contexts/user";
 import { useNotification } from "../contexts/notification";
+import { usePlaylists }    from "../contexts/playlists";
 
 import { secondsToTime } from "../helpers";
 
@@ -13,12 +16,12 @@ import api, { ADD_TO_QUEUE } from "../api";
 
 const Video: React.FunctionComponent<VideoProps> = (props) => {
     const { id, title, thumbnail, duration }            = props;
-    const { startStream, nowPlaying }                   = usePlayer();
     const [isAddToQueueLoading, setIsAddToQueueLoading] = React.useState(false);
     const [isAddToQueueDone, setIsAddToQueueDone]       = React.useState(false);
     const [isPlayNowLoading, setIsPlayNowLoading]       = React.useState(false);
     const { startStream, nowPlaying }                   = usePlayer();
     const { addNotification }                           = useNotification();
+    const { openModal }                                 = usePlaylists();
     const { user }                                      = useUser();
 
     const onPlayNow = () => {
@@ -40,13 +43,13 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                     time : 5000
                 });
             } else {
-            await api({ ...ADD_TO_QUEUE(), data : { id } });
-            addNotification({
-                id :`${Date.now()}`,
-                message : `${title} has been added to the queue.`,
-                type : "success",
-                time : 5000
-            });
+                await api({ ...ADD_TO_QUEUE(), data : { id } });
+                addNotification({
+                    id :`${Date.now()}`,
+                    message : `${title} has been added to the queue.`,
+                    type : "success",
+                    time : 5000
+                });
             }
             setIsAddToQueueDone(true);
         } catch(e) {
@@ -74,7 +77,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                 <div className="video-floating-actions">
                     { isAddToQueueDone ? <div /> : (!isAddToQueueLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />) }
                     { isPlayNowLoading ? <Loader /> : <PlayIcon onClick={ onPlayNow } /> }
-                    <div />
+                    { user ? <AddToPlaylistIcon onClick={ () => openModal(id) } /> : <div /> }
                 </div>
             </div>
             <div className="video-title" dangerouslySetInnerHTML={{ __html : title }} />

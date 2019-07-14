@@ -1,11 +1,18 @@
 
 declare namespace Entities {
-    export interface User extends Document {
+    export interface User {
+        _id        : string;
         name       : string;
         googleId   : string;
         picture    : string;
         email      : string;
         token      : string;
-        following? : string[];
     }
+    export interface Song {
+        _id       : string;
+        title     : string;
+        videoId   : string;
+        thumbnail : string;
+        duration  : number;
+    };
 }
