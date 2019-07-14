@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import Unauthenticated from "./unauthenticated";
+import Unauthorized    from "./unauthorized";
 import NotFound        from "./notfound";
 import Validation      from "./validation";
 
@@ -14,7 +15,10 @@ export default function errorHandler(err: any, req: Request, res: Response, next
         res.json({ errors : err.errors });
     } else if (err instanceof NotFound) {
         res.status(404);
-        res.json({ errors : ["We couldn't find what you were looking for!"] });
+        res.json({ errors : [err.toString()] });
+    } else if (err instanceof Unauthorized) {
+        res.status(403);
+        res.json({ errors : [err.toString()] });
     } else {
         logger.error(err.stack);
         res.sendStatus(500);
