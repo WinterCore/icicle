@@ -51,7 +51,7 @@ const ActualPlayer: React.FunctionComponent = () => {
     const playerRef                                 = React.useRef<HTMLAudioElement>(null);
     const [secondsPlayed, setSecondsPlayed]         = React.useState(nowPlaying.startAt);
     const [isPaused, setIsPaused]                   = React.useState<boolean>(true);
-    const [isPausedOnPurpose, setIsPausedOnPurpose] = React.useState<boolean>(true);
+    const [isPausedOnPurpose, setIsPausedOnPurpose] = React.useState<boolean>(false);
     const [volume, setVolume]                       = React.useState<number>(playerRef.current ? playerRef.current.volume : 0);
     const isOwner                                   = user ? nowPlaying.by._id === user._id : null;
     const handleSeek                                = (percentage: number) => {
