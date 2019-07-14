@@ -1,0 +1,35 @@
+.chat-outer
+    background accent-color
+    .chat-messages
+        padding 20px
+        min-height 400px
+        max-height 400px
+        overflow-y auto
+        .chat-message
+            & + .chat-message
+                margin-top 20px
+            display flex
+            img
+                border-radius 50%
+                height 48px
+                width 48px
+            .chat-message-content
+                margin-left 20px
+                .chat-message-user-name
+                    font-weight bold
+                .chat-message-message
+                    color washed-out-color
+                    word-break break-all
+                    font-size 14px
+    .chat-footer
+        padding 18px 20px
+        background player-background
+        display flex
+        align-items center
+        .input-outer
+            flex 1
+            height 36px
+        .icon
+            margin-left 10px
+            height 28px
+            width 28px

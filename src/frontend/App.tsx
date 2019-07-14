@@ -10,6 +10,7 @@ import People       from "./routes/People";
 import Home         from "./routes/Home";
 import ConfirmLogin from "./routes/ConfirmLogin";
 import Playlist     from "./routes/Playlist";
+import About        from "./routes/About";
 
 import Player        from "./components/Player";
 import ChangeLog     from "./components/ChangeLog";
@@ -28,6 +29,7 @@ function App() {
                         <Route exact path="/" component={ Home } />
                         <Route path="/search" component={ Search } />
                         <Route path="/people" component={ People } />
+                        <Route path="/about" component={ About } />
                         <Route path="/auth/google/callback" component={ ConfirmLogin } />
                         <Route path="/playlist/:id" component={ Playlist } />
                     </section>

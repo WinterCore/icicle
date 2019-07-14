@@ -8,6 +8,7 @@ import Button from "../components/Button";
 import { usePlayer }    from "../contexts/player";
 import { usePlaylists } from "../contexts/playlists";
 
+import Chat from "../components/Chat/Index";
 
 const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
     const { roomData, nowPlaying } = usePlayer();
@@ -47,6 +48,9 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
                         </div>
                     ) : <h2>Please join a room to start listening to music</h2>
             }
+            <div className="col-xs-12 col-md-6 chat-section">
+                 <Chat />
+            </div>
             <div className="col-xs-12 col-md-6 queue-section">
                 <Queue />
             </div>
