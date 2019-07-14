@@ -34,6 +34,7 @@ export default async function join(socket: socketio.Socket, streamerId: string) 
         Store.setSocketData(socket, { id, type, currentRoomId : streamerId });
 
         // Notify the socket
+        socket.in(streamerId).emit(SOCKET_ACTIONS.SOCKET_JOINED);
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, streamer.getNowPlayingData());
     } catch(e) {
         logger.error(e);

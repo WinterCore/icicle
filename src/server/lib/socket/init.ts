@@ -55,11 +55,13 @@ export default function init(server: Server) {
         socket.on("disconnect", () => {
             const { id, currentRoomId } = Store.getSocketData(socket);
             if (id) {
-                // socket.to(id).emit(SOCKET_ACTIONS.STREAM_ENDED);
                 Store.deleteSocket(socket);
             }
             if (currentRoomId) {
-                User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } }).catch(logger.error);
+                socket.in(currentRoomId).emit(SOCKET_ACTIONS.SOCKET_LEFT);
+                if (currentRoomId !== id) { // if the user is in a room other than his decrement its live listeners
+                    User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } }).catch(logger.error);
+                }
             }
         });
     });

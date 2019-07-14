@@ -16,6 +16,7 @@ export default async function check(socket: socketio.Socket, roomId: string) {
             if (user && user.isStreaming()) {
                 if (socketData.id !== roomId) { // if the socket is not the owner of the stream (roomId) increment the stream's liveListeners
                     await User.updateOne({ _id : roomId }, { $inc : { liveListeners : 1 } });
+                    socket.in(roomId).emit(SOCKET_ACTIONS.SOCKET_JOINED);
                 }
                 socket.join(roomId);
                 Store.setSocketData(socket, { ...socketData, currentRoomId : roomId });

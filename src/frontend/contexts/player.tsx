@@ -43,24 +43,41 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         setRoomData(null);
         window.localStorage.removeItem("last_stream");
     };
-    const seek        = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
-    const leaveStream = (id: string)       => socket.emit(SOCKET_ACTIONS.LEAVE, id);
-    const joinStream  = (id: string)       => socket.emit(SOCKET_ACTIONS.JOIN, id);
-    const skip        = ()                 => socket.emit(SOCKET_ACTIONS.SKIP);
-
+    const seek              = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
+    const leaveStream       = (id: string)       => socket.emit(SOCKET_ACTIONS.LEAVE, id);
+    const joinStream        = (id: string)       => socket.emit(SOCKET_ACTIONS.JOIN, id);
+    const skip              = ()                 => socket.emit(SOCKET_ACTIONS.SKIP);
+    const handleSocketJoin  = ()                 => setData(data => ({ ...data, liveListeners : data.liveListeners + 1 }));
+    const handleSocketLeave = ()                 => setData(data => ({ ...data, liveListeners : data.liveListeners - 1 }));
 
     const startStream = (videoId: string) => {
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, videoId);
         window.localStorage.removeItem("last_stream");
     };
 
+    const context = {
+        onRoomJoin,
+        leaveRoom,
+        seek,
+        joinStream,
+        startStream,
+        leaveStream,
+        roomData,
+        skip,
+        nowPlaying : data
+    };
+
+
     useEffect(() => {
         const data = JSON.parse(window.localStorage.getItem("last_stream")) || {};
         socket.on(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
+        socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
+        socket.on(SOCKET_ACTIONS.SOCKET_JOINED, () => console.log("Joined"));
+        socket.on(SOCKET_ACTIONS.SOCKET_LEFT, handleSocketLeave);
         socket.emit(SOCKET_ACTIONS.CHECK, data._id);
         return () => socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
     }, [
-        user, // Request nowplaying data after user login/logout
+        user // Request nowplaying data after user login/logout
     ]);
 
     const onReconnect = () => {
@@ -74,17 +91,6 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     });
 
 
-    const context = {
-        onRoomJoin,
-        leaveRoom,
-        seek,
-        joinStream,
-        startStream,
-        leaveStream,
-        roomData,
-        skip,
-        nowPlaying : data
-    };
 
     return <PlayerContext.Provider value={ context } { ...props } />;
 };

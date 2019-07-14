@@ -8,5 +8,7 @@ export const SOCKET_ACTIONS = {
     JOIN          : "JOIN",
     LEAVE         : "LEAVE",
     SKIP          : "SKIP",
+    SOCKET_JOINED : "SOCKET_JOINED",
+    SOCKET_LEFT   : "SOCKET_LEFT",
     NEW_MESSAGE   : "NEW_MESSAGE"
 };
