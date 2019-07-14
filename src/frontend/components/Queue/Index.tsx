@@ -10,17 +10,18 @@ import api, { GET_QUEUE_ITEMS } from "../../api";
 import QueueItem from "./QueueItem";
 
 const Queue: React.FunctionComponent = () => {
-    const { nowPlaying }            = usePlayer();
+    const { nowPlaying, roomData } = usePlayer();
 
-    const [data, setData]           = React.useState<QueueItem[] | null>(null);
-    const [isLoading, setIsLoading] = React.useState<boolean>(true);
+    const [data, setData]           = React.useState<QueueItem[]>([]);
+    const [isLoading, setIsLoading] = React.useState<boolean>(!!nowPlaying);
     const [error, setError]         = React.useState(null);
 
     const fetchQueue = () => {
-        setIsLoading(true);
         const cancelTokenSource = Axios.CancelToken.source();
+        if (!roomData || !nowPlaying) return cancelTokenSource;
+        setIsLoading(true);
         api({
-            ...GET_QUEUE_ITEMS(nowPlaying.by._id),
+            ...GET_QUEUE_ITEMS(roomData._id),
             cancelToken : cancelTokenSource.token
         }).then((response) => {
             setData(response.data.data);
@@ -37,13 +38,7 @@ const Queue: React.FunctionComponent = () => {
     React.useEffect(() => {
         const cancelTokenSource = fetchQueue();
         return () => cancelTokenSource.cancel("CANCELED");
-    }, []);
-
-    React.useEffect(() => {
-        if (data) {
-            setData(data.filter((item: QueueItem) => nowPlaying.title !== item.title));
-        }
-    }, [nowPlaying.title]);
+    }, [nowPlaying ? nowPlaying.title : null]);
 
     return (
         <>
@@ -67,11 +62,4 @@ const Queue: React.FunctionComponent = () => {
     );
 };
 
-const IfQueue: React.FunctionComponent = () => {
-    const { nowPlaying } = usePlayer();
-
-    if (!nowPlaying) return null;
-    return <Queue />
-};
-
-export default IfQueue;
+export default Queue;
