@@ -16,9 +16,9 @@ export default async function check(socket: socketio.Socket, roomId: string) {
             if (user && user.isStreaming()) {
                 if (socketData.id !== roomId) { // if the socket is not the owner of the stream (roomId) increment the stream's liveListeners
                     await User.updateOne({ _id : roomId }, { $inc : { liveListeners : 1 } });
-                    Store.setSocketData(socket, { ...socketData, currentRoomId : roomId });
                 }
                 socket.join(roomId);
+                Store.setSocketData(socket, { ...socketData, currentRoomId : roomId });
                 socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
             }
         } else {
@@ -26,6 +26,7 @@ export default async function check(socket: socketio.Socket, roomId: string) {
                 const user: Database.User = await User.findOne({ _id : socketData.id });
                 if (user && user.isStreaming()) {
                     socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
+                    Store.setSocketData(socket, { ...socketData, currentRoomId : socketData.id });
                     socket.join(user._id);
                 }
             }
