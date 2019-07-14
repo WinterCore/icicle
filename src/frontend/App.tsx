@@ -23,7 +23,6 @@ function App() {
     return (
         <BrowserRouter>
             <AppProviders>
-                    <ChangeLog />
                     <Sidenav />
                     <section className="main">
                         <Route exact path="/" component={ Home } />
