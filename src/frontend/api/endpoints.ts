@@ -6,7 +6,7 @@ export const SEARCH                    = (): AxiosRequestConfig => ({ method : "
 export const GET_PEOPLE                = (): AxiosRequestConfig => ({ method : "GET", url : "/people" });
 export const ADD_TO_QUEUE              = (): AxiosRequestConfig => ({ method : "POST", url : "/queue" });
 export const GET_QUEUE_ITEMS           = (id: string): AxiosRequestConfig => ({ method : "GET", url : `/queue/${id}` });
-export const DELETE_QUEUE_ITEM         = (): AxiosRequestConfig => ({ method : "DELETE", url : "/queue" });
+export const DELETE_QUEUE_ITEM         = (id: string): AxiosRequestConfig => ({ method : "DELETE", url : `/queue/${id}` });
 export const GET_PLAYLISTS             = (): AxiosRequestConfig => ({ method : "GET", url : "/playlist" });
 export const DELETE_PLAYLIST           = (id: string): AxiosRequestConfig => ({ method : "DELETE", url : `/playlist/${id}` });
 export const QUEUE_PLAYLIST            = (id: string): AxiosRequestConfig => ({ method : "POST", url : `/playlist/${id}/queue` });

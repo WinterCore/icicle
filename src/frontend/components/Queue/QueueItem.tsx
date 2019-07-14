@@ -22,8 +22,7 @@ const QueueItem: React.FunctionComponent<QueueItemProps> = (props) => {
     const deleteQueueItem = () => {
         setIsLoading(true);
         api({
-            ...DELETE_QUEUE_ITEM(),
-            params : { id : _id }
+            ...DELETE_QUEUE_ITEM(_id)
         }).then((response) => {
             setIsLoading(false);
             onDelete(response.data.data);
