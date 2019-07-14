@@ -18,7 +18,7 @@ const Queue: React.FunctionComponent = () => {
 
     const fetchQueue = () => {
         const cancelTokenSource = Axios.CancelToken.source();
-        if (!roomData || !nowPlaying) return cancelTokenSource;
+        if (!roomData || !nowPlaying || !nowPlaying.by._id) return cancelTokenSource;
         setIsLoading(true);
         api({
             ...GET_QUEUE_ITEMS(roomData._id),
