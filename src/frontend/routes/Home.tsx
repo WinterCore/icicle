@@ -57,9 +57,6 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
             <div className="col-xs-12 col-md-6 queue-section">
                 <Queue />
             </div>
-            <div className="col-xs-12 col-md-6 chat-section">
-                 
-            </div>
         </div>
     );
 };
