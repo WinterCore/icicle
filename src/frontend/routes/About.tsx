@@ -32,7 +32,7 @@ const About: React.FunctionComponent<RouteChildrenProps> = ({ location }) => {
                 <h4>Version 0.2</h4>
                 <ul className="change-log-version washed-out">
                     <li>The player's trackbar is now rainbow colored</li>
-                    <li>Added chat section for the current room : Enjoy talking to other people listening with you, and trash talk all you want</li>
+                    <li>Added chat section for the current room : Enjoy talking to other people that are listening with you, and trash talk all you want</li>
                     <li>Added playlists support : Now you can create/delete playlists, add/delete vidoes from playlists, add entire playlists to the queue</li>
                     <li>Added text roller : Overflowing text will now scroll in a nice elegant way <div style={{ width : 100 }}><TextRoller>Wooooo this is very cool</TextRoller></div></li>
                     <li>Search section : Make 4 videos appear per row instead of 3 on larger screens</li>
