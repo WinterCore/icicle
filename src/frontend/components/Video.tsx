@@ -73,7 +73,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
         <div className="video">
             <div className="video-thumbnail-outer">
                 <img className="video-thumbnail" src={ thumbnail } />
-                <span className="video-duration">{ secondsToTime(duration) }</span>
+                {/* <span className="video-duration">{ secondsToTime(duration) }</span> */}
                 <div className="video-floating-actions">
                     { user ? (isAddToQueueDone ? <div /> : (!isAddToQueueLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />)) : <div /> }
                     { isPlayNowLoading ? <Loader /> : <PlayIcon onClick={ onPlayNow } /> }
@@ -82,7 +82,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
             </div>
             <div className="video-title" dangerouslySetInnerHTML={{ __html : title }} />
         </div>
-    )
+    );
 };
 
 
@@ -93,7 +93,7 @@ interface VideoProps {
     id        : string;
     title     : string;
     thumbnail : string;
-    duration  : number;
+    duration ?: number;
 }
 
 export default Video;

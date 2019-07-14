@@ -29,14 +29,18 @@ async function searchSnippet({ q, nextPageToken : token }) {
 
 async function search(params) {
 	const { items : videosSnippet, nextPageToken } = await searchSnippet(params);
-	const ids = videosSnippet.map(video => video.id.videoId).join(",");
-	const videosDetails = await contentDetails(ids);
+	// const ids = videosSnippet.map(video => video.id.videoId).join(",");
+	// const videosDetails = await contentDetails(ids);
 
-	const videos = mergeVideosInfo(videosSnippet, videosDetails);
+	// const videos = mergeVideosInfo(videosSnippet, videosDetails);
 
 	return {
-		data          : videos,
-		nextPageToken : nextPageToken
+		data : videosSnippet.map(snippetItem => ({
+			id        : snippetItem.id.videoId || snippetItem.id,
+			thumbnail : snippetItem.snippet.thumbnails.medium.url,
+			title     : snippetItem.snippet.title
+		})),
+		nextPageToken
 	};
 }
 
