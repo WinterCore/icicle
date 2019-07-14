@@ -13,7 +13,6 @@ const About: React.FunctionComponent<RouteChildrenProps> = ({ location }) => {
                 <ul>
                     <li>This app is still in development, so don't expect everything to work perfectly</li>
                     <li>Report bugs using the <a target="_blank" href="https://github.com/WinterCore/icicle">github repo</a></li>
-                    <li>The skip button is currently not working</li>
                     <li>
                         Made with Love,&nbsp;
                         <a href="https://nodejs.org/" target="_blank">Node</a>,&nbsp;
