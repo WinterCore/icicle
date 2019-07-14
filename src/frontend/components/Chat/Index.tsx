@@ -58,4 +58,18 @@ const Chat: React.FunctionComponent = () => {
     );
 };
 
-export default Chat;
+const IfChat: React.FunctionComponent = () => {
+    
+    const { roomData } = usePlayer();
+
+    if (!roomData) return (
+        <>
+            <h2>Chat</h2>
+            <h4>Please join a room first</h4>
+        </>
+    );
+
+    return <Chat />
+};
+
+export default IfChat;
