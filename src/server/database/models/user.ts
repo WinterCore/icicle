@@ -10,6 +10,7 @@ const UserSchema: Schema = new Schema({
     nowPlaying    : {
         title     : String,
         url       : String,
+        videoId   : String,
         duration  : Number,
         startedAt : Date
     }
@@ -29,6 +30,7 @@ UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.Use
         duration      : this.nowPlaying.duration,
         startAt       : this.getNowPlayingCurrentTime(),
         url           : this.nowPlaying.url,
+        videoId       : this.nowPlaying.videoId,
         by            : { _id : this._id, name : this.name },
         liveListeners : this.liveListeners
     };

@@ -27,6 +27,7 @@ interface NowPlaying {
     url       : string;
     duration  : number;
     startedAt : Date;
+    videoId   : string;
 }
 
 interface Queue extends Document {

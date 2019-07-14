@@ -9,6 +9,7 @@ const streamerResource = curry((req: Request, user) => ({
     nowPlaying    : {
         title    : user.nowPlaying.title,
         url      : user.nowPlaying.url,
+        videoId  : user.nowPlaying.videoId,
         duration : user.nowPlaying.duration,
         startAt  : user.getNowPlayingCurrentTime()
     }

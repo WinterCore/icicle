@@ -30,6 +30,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
                 title     : data.title,
                 duration  : data.duration,
                 startedAt : new Date(),
+                videoId,
                 url
             };
             await user.save();

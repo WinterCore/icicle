@@ -27,6 +27,7 @@ class Scheduler extends EventEmitter {
                             title     : queueItem.title,
                             duration  : queueItem.duration,
                             startedAt : new Date(),
+                            videoId   : queueItem.videoId,
                             url
                         };
                         await user.save();

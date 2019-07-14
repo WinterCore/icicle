@@ -3,6 +3,7 @@ type PlayerData = {
     url           : string;
     duration      : number;
     startAt       : number;
+    videoId       : string;
     liveListeners : number;
     by            : {
         name : string;
