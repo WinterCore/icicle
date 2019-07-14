@@ -61,7 +61,8 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
     });
 
     React.useEffect(() => {
-        if (!isLoading) updatePosition();
+        const t = setTimeout(() => updatePosition(), 4000);
+        return () => clearTimeout(t);
     }, [isLoading]);
 
     React.useEffect(() => {
