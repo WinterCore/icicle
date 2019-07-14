@@ -30,7 +30,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
             startStream(id);
         }
     };
-    const addToQueue = React.useCallback(async (e) => {
+    const addToQueue = async (e) => {
         e.preventDefault();
         setIsAddToQueueLoading(true);
         try {
@@ -63,7 +63,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
             }
             setIsAddToQueueDone(true);
         }
-    }, []);
+    };
 
     React.useEffect(() => {
         if (nowPlaying && title === nowPlaying.title) setIsPlayNowLoading(false);
