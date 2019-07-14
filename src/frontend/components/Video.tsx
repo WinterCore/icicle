@@ -17,7 +17,9 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
     const [isAddToQueueLoading, setIsAddToQueueLoading] = React.useState(false);
     const [isAddToQueueDone, setIsAddToQueueDone]       = React.useState(false);
     const [isPlayNowLoading, setIsPlayNowLoading]       = React.useState(false);
+    const { startStream, nowPlaying }                   = usePlayer();
     const { addNotification }                           = useNotification();
+    const { user }                                      = useUser();
 
     const onPlayNow = () => {
         if (nowPlaying ? nowPlaying.title !== title : true) {
@@ -29,6 +31,15 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
         e.preventDefault();
         setIsAddToQueueLoading(true);
         try {
+            if (!nowPlaying || nowPlaying.by._id !== user._id) { // Start a stream if the user is not already in one or if the current stream is not the user's
+                startStream(id);
+                addNotification({
+                    id :`${Date.now()}`,
+                    message : "Your queue is empty, the video will play immediately.",
+                    type : "success",
+                    time : 5000
+                });
+            } else {
             await api({ ...ADD_TO_QUEUE(), data : { id } });
             addNotification({
                 id :`${Date.now()}`,
@@ -36,6 +47,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                 type : "success",
                 time : 5000
             });
+            }
             setIsAddToQueueDone(true);
         } catch(e) {
             if (e.response && e.response.status === 422) {
