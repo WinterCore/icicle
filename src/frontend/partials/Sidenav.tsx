@@ -9,6 +9,7 @@ import HomeIcon      from "../icons/Home";
 import HamburgerIcon from "../icons/Hamburger";
 import PersonIcon    from "../icons/Person";
 import IcicleIcon    from "../icons/Icicle";
+import InfoIcon      from "../icons/Info";
 
 import Input            from "../components/Input";
 import UserLoginCard    from "../components/UserLoginCard";
@@ -43,6 +44,7 @@ const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location
                 <ul className="links">
                     <li className={ pathname === "/" ? "active" : "" }><Link to="/"><HomeIcon />Home</Link></li>
                     <li className={ pathname === "/people" ? "active" : "" }><Link to="/people"><PersonIcon />People</Link></li>
+                    <li className={ pathname === "/about" ? "active" : "" }><Link to="/about"><InfoIcon />About</Link></li>
                 </ul>
                 {
                     user && (
