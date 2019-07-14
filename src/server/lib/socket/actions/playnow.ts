@@ -33,6 +33,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
                 url
             };
             await user.save();
+            Store.setSocketData(socket, { id, type, currentRoomId : user._id });
             socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData()); // Notify the owner
             socket.in(id).emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData()); // Notify all the listeners
             Scheduler.emit("schedule-next", { user, socket, duration : data.duration });
