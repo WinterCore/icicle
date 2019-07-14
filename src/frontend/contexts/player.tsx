@@ -28,14 +28,13 @@ interface PlayerProvider {
 
 const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [data, setData]         = useState<PlayerData | null>(null);
-    const [roomData, setRoomData] = useState<RoomData | null>(null);
+    const [roomData, setRoomData] = useState<RoomData | null>(() => JSON.parse(window.localStorage.getItem("last_stream")));
     const { socket }              = useSocket();
     const { user }                = useUser();
 
     const onRoomJoin  = (data: PlayerData) => {
-        const tempRoomData = data ? data.by : null;
-        setRoomData(tempRoomData);
-        window.localStorage.setItem("last_stream", JSON.stringify(tempRoomData));
+        setRoomData(roomData => data ? data.by : roomData);
+        if (data) window.localStorage.setItem("last_stream", JSON.stringify(data.by));
         setData(data ? { ...data } : null);
     };
     const leaveRoom = () => {
