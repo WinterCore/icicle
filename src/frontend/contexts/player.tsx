@@ -29,7 +29,7 @@ interface PlayerProvider {
 const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [data, setData]         = useState<PlayerData | null>(null);
     const [roomData, setRoomData] = useState<RoomData | null>(null);
-    const { socket }   = useSocket();
+    const { socket }              = useSocket();
     const { user }                = useUser();
 
     const onRoomJoin  = (data: PlayerData) => {
