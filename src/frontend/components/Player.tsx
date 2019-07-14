@@ -46,14 +46,15 @@ const Placeholder: React.FunctionComponent = () => {
 
 
 const ActualPlayer: React.FunctionComponent = () => {
-    const { nowPlaying, seek, skip }        = usePlayer();
-    const { user }                          = useUser();
-    const playerRef                         = React.useRef<HTMLAudioElement>(null);
-    const [secondsPlayed, setSecondsPlayed] = React.useState(nowPlaying.startAt);
-    const [isPaused, setIsPaused]           = React.useState(true);
-    const [volume, setVolume]               = React.useState(playerRef.current ? playerRef.current.volume : 0);
-    const isOwner                           = user ? nowPlaying.by._id === user._id : null;
-    const handleSeek = (percentage: number) => {
+    const { nowPlaying, seek, skip }                = usePlayer();
+    const { user }                                  = useUser();
+    const playerRef                                 = React.useRef<HTMLAudioElement>(null);
+    const [secondsPlayed, setSecondsPlayed]         = React.useState(nowPlaying.startAt);
+    const [isPaused, setIsPaused]                   = React.useState<boolean>(true);
+    const [isPausedOnPurpose, setIsPausedOnPurpose] = React.useState<boolean>(true);
+    const [volume, setVolume]                       = React.useState<number>(playerRef.current ? playerRef.current.volume : 0);
+    const isOwner                                   = user ? nowPlaying.by._id === user._id : null;
+    const handleSeek                                = (percentage: number) => {
         const currentTime = nowPlaying.duration * percentage;
         seek(currentTime);
         playerRef.current.currentTime = currentTime;
@@ -66,9 +67,11 @@ const ActualPlayer: React.FunctionComponent = () => {
             playerRef.current.currentTime = secondsPlayed;
             setVolume(playerRef.current.volume);
             setIsPaused(false);
+            setIsPausedOnPurpose(false);
         } else {
             playerRef.current.pause();
             setIsPaused(true);
+            setIsPausedOnPurpose(true);
         }
     };
 
@@ -86,7 +89,7 @@ const ActualPlayer: React.FunctionComponent = () => {
             playerRef.current.src = nowPlaying.url;
             playerRef.current.currentTime = nowPlaying.startAt;
             setSecondsPlayed(nowPlaying.startAt);
-            if (!isPaused) {
+            if (!isPausedOnPurpose) {
                 playerRef.current.play()
                     .then(() => {
                         setIsPaused(false);
