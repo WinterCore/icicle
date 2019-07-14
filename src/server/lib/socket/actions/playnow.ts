@@ -40,6 +40,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             Scheduler.emit("schedule-next", { user, socket, duration : data.duration });
         } else {
             socket.emit(SOCKET_ACTIONS.PLAY_NOW, { ...data, url, startAt : 0, by : { _id : null, name : "Unknown" } });
+            Store.setSocketData(socket, { id, type, currentRoomId : null });
         }
     } catch(e) { logger.error(e); }
 }
