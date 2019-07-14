@@ -35,26 +35,26 @@ const QueueItem: React.FunctionComponent<QueueItemProps> = (props) => {
     };
 
     return (
-        <div className="queue-item-outer">
-            <div className="queue-item">
-                <div className="queue-item-image" style={{ backgroundImage : `url(${thumbnail})` }}></div>
-                <div className="queue-item-middle-outer">
-                    <div className="queue-item-info">
-                        <div className="queue-item-name">
+        <div className="song-outer">
+            <div className="song">
+                <div className="song-image" style={{ backgroundImage : `url(${thumbnail})` }}></div>
+                <div className="song-middle-outer">
+                    <div className="song-info">
+                        <div className="song-name">
                             <TextRoller>
                                 { title }
                             </TextRoller>
                         </div>
-                        {/* <div className="queue-item-time-remaining washed-out">Plays in 5 mins</div> */}
+                        {/* <div className="song-time-remaining washed-out">Plays in 5 mins</div> */}
                     </div>
                 </div>
-                <div className="queue-item-duration">
+                <div className="song-duration">
                     { secondsToTime(duration) }
                 </div>
                 {
                     user && nowPlaying.by._id === user._id
                         ? (
-                            <div className="queue-item-actions">
+                            <div className="song-actions">
                                 { isLoading ? <LoaderIcon /> : <CrossIcon onClick={ deleteQueueItem } /> }
                             </div>
                         ) : null

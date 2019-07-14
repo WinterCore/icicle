@@ -3,14 +3,14 @@ person-row-height = 80px + (person-row-padding * 2)
 
 person-height = 92px
 
-.queue-item-outer
+.song-outer
     @media (max-width mobile-breakpoint)
         padding 0
     background transparent
-    .queue-item > *
+    .song > *
         height 100%
-    .queue-item
-        .queue-item-time-remaining
+    .song
+        .song-time-remaining
             font-size 12px
         &:hover
             background card-hover-background
@@ -21,34 +21,34 @@ person-height = 92px
         @media (max-width mobile-breakpoint)
             padding 20px 0
             &:hover
-                background card-hover-background
+                background transparent
         border-radius (person-height / 2)
         display flex
-        .queue-item-info
+        .song-info
             font-size 14px
-            .queue-item-name
+            .song-name
                 font-size 16px
                 font-weight bold
-        .queue-item-image
+        .song-image
             background-size cover
             background-position center center
             min-height (person-height - 40px)
             min-width (person-height - 40px)
             border-radius 50%
-        .queue-item-middle-outer
+        .song-middle-outer
             flex 1
             min-width 0
             margin-left 20px
             display flex
             flex-direction column
             justify-content space-around
-        .queue-item-duration
+        .song-duration
             margin 0 18px
             display flex
             justify-content center
             font-size 14px
             align-items center
-        .queue-item-actions
+        .song-actions
             margin-right 10px
             display flex
             align-items center

@@ -48,7 +48,7 @@ const Queue: React.FunctionComponent = () => {
     return (
         <>
             <h2>Queue</h2>
-            <div className="queue-outer">
+            <div className="song-outer">
                 {
                     error
                     ? <div className="flex-middle"><Error /></div>
