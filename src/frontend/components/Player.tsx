@@ -86,13 +86,15 @@ const ActualPlayer: React.FunctionComponent = () => {
             playerRef.current.src = nowPlaying.url;
             playerRef.current.currentTime = nowPlaying.startAt;
             setSecondsPlayed(nowPlaying.startAt);
-            playerRef.current.play()
-                .then(() => {
-                    setIsPaused(false);
-                    setVolume(playerRef.current.volume);
-                }).catch(() => {
-                    setIsPaused(true);
-                });
+            if (!isPaused) {
+                playerRef.current.play()
+                    .then(() => {
+                        setIsPaused(false);
+                        setVolume(playerRef.current.volume);
+                    }).catch(() => {
+                        setIsPaused(true);
+                    });
+            }
         }
     }, [nowPlaying.startAt, nowPlaying.url]);
 
