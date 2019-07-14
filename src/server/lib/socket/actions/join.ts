@@ -23,7 +23,7 @@ export default async function join(socket: socketio.Socket, streamerId: string) 
             // Terminate the socket's current stream
             await User.updateOne({ _id : id }, { $set : { nowPlaying : null, liveListeners : 0 } });
             await Queue.deleteMany({ by : id }); // Clear his queue 
-            socket.in(id).emit(SOCKET_ACTIONS.STREAM_ENDED); // Notify all the listeners to the socket that the stream has ended
+            socket.in(id).emit(SOCKET_ACTIONS.PLAY_NOW, null); // Notify all the listeners to the socket that the stream has ended
         }
 
         const streamer: Database.User = await User.findOne({ _id : streamerId });
