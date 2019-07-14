@@ -75,7 +75,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                 <img className="video-thumbnail" src={ thumbnail } />
                 <span className="video-duration">{ secondsToTime(duration) }</span>
                 <div className="video-floating-actions">
-                    { isAddToQueueDone ? <div /> : (!isAddToQueueLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />) }
+                    { user ? (isAddToQueueDone ? <div /> : (!isAddToQueueLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />)) : <div /> }
                     { isPlayNowLoading ? <Loader /> : <PlayIcon onClick={ onPlayNow } /> }
                     { user ? <AddToPlaylistIcon onClick={ () => openModal(id) } /> : <div /> }
                 </div>
