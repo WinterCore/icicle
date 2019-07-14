@@ -42,9 +42,12 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
                                         ) : "Nothing is currently playing"
                                 }
                             </h4>
+                            {
+                                nowPlaying &&
                             <div>
                                 <Button onClick={ () => openModal(nowPlaying.videoId) }>Add to playlist</Button>
                             </div>
+                            }
                         </div>
                     ) : <h2 className="col-xs-12">Please join a room to start listening to music</h2>
             }
