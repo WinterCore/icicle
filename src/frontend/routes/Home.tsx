@@ -12,7 +12,7 @@ import Chat from "../components/Chat/Index";
 
 const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
     const { roomData, nowPlaying } = usePlayer();
-    const { openModal } = usePlaylists();
+    const { openModal }            = usePlaylists();
 
     return (
         <div className="row" style={{ margin : "10px 20px" }}>
