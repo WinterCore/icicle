@@ -28,7 +28,7 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
     const [isLoading, setIsLoading]         = React.useState(true);
     const [error, setError]                 = React.useState(null);
 
-    const containerRef = React.useRef<HTMLDivElement>();
+    const containerRef = React.useRef<HTMLDivElement>(null);
 
 
     // TODO: refactor the api calls into a hook
@@ -61,6 +61,10 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
     });
 
     React.useEffect(() => {
+        if (!isLoading) updatePosition();
+    }, [isLoading]);
+
+    React.useEffect(() => {
         setIsLoading(true);
         const cancelTokenSource = Axios.CancelToken.source();
         api({
@@ -89,7 +93,7 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
                     <Video { ...item } />
                 </div>
             )) }
-            <div className="flex-middle col-xs-12">
+            <div className="flex-middle col-xs-12" style={{ marginTop : 20 }}>
                 { isLoadingMore && <Loader /> }
             </div>
         </div>
