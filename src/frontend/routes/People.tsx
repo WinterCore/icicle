@@ -1,13 +1,16 @@
 import * as React from "react";
 import { GET_PEOPLE } from "../api";
+
 import useApi from "../hooks/use-api";
-import HeartIcon from "../icons/Heart";
-import Error from "../components/Error";
-import Trackbar from "../components/Trackbar";
-import Loader from "../icons/Loader";
-import PlayIcon from "../icons/Play";
-import { usePlayer } from "../contexts/player";
+
+import Error      from "../components/Error";
+import Trackbar   from "../components/Trackbar";
 import TextRoller from "../components/TextRoller";
+
+import Loader   from "../icons/Loader";
+import PlayIcon from "../icons/Play";
+
+import { usePlayer } from "../contexts/player";
 
 const Person: React.FunctionComponent<PersonProps> = (props) => {
     const { _id, name, picture, nowPlaying, liveListeners } = props;
