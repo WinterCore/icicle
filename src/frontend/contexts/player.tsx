@@ -83,7 +83,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         leaveStream,
         roomData,
         skip,
-        nowPlaying : data,
+        nowPlaying : data
     };
 
     return <PlayerContext.Provider value={ context } { ...props } />;
