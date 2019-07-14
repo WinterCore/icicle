@@ -11,7 +11,8 @@
     "frontend:css:build": "stylus --mode production --config build/frontend/webpack.config.js",
     "server:dev": "cross-env NODE_ENV=development nodemon --ignore dist/frontend dist/server/index.min.js",
     "server:build:watch": "cross-env NODE_ENV=development webpack --watch --progress --config build/server/webpack.config.js",
-    "server:build": "cross-env NODE_ENV=production webpack --mode production --config build/server/webpack.config.js"
+    "server:build": "cross-env NODE_ENV=production webpack --mode production --config build/server/webpack.config.js",
+    "build": "npm run server:build & npm run frontend:build"
   },
   "repository": {
     "type": "git",
