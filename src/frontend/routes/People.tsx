@@ -48,7 +48,6 @@ const Person: React.FunctionComponent<PersonProps> = (props) => {
                     </div>
                 </div>
                 <div className="person-actions">
-                    <HeartIcon />
                     <PlayIcon onClick={ onPlay } />
                 </div>
             </div>
