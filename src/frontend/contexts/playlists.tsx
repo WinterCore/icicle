@@ -15,11 +15,12 @@ type Playlist = {
 };
 
 type PlaylistContext = {
-    playlists     : Playlist[];
-    isLoading     : boolean;
-    isModalOpen   : boolean;
-    songPlaylists : string[];
-    videoId       : string;
+    playlists              : Playlist[];
+    isLoading              : boolean;
+    isModalOpen            : boolean;
+    songPlaylists          : string[];
+    videoId                : string;
+    isLoadingSongPlaylists : boolean;
     
     closeModal       ()                : void;
     openModal        (videoId: string) : void;
@@ -77,7 +78,7 @@ const PlaylistsProvider: React.FunctionComponent = (props): React.ReactElement =
     }, [user]);
 
 
-    return <PlaylistContext.Provider value={{ playlists, setPlaylists, isLoading, isModalOpen, openModal, songPlaylists, closeModal, setSongPlaylists, videoId }} { ...props } />;
+    return <PlaylistContext.Provider value={{ playlists, isLoadingSongPlaylists, setPlaylists, isLoading, isModalOpen, openModal, songPlaylists, closeModal, setSongPlaylists, videoId }} { ...props } />;
 }
 
 function usePlaylists() {

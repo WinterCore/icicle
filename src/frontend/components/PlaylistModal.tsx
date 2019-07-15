@@ -3,15 +3,17 @@ import * as React from "react";
 import { usePlaylists }    from "../contexts/playlists";
 import { useNotification } from "../contexts/notification";
 
-import CrossIcon from "../icons/Cross";
-import PlusIcon from "../icons/Plus";
-import Input from "./Input";
+import CrossIcon  from "../icons/Cross";
+import PlusIcon   from "../icons/Plus";
+import LoaderIcon from "../icons/Loader";
+
+import Input  from "./Input";
 import Button from "./Button";
 
 import api, { ADD_SONG_TO_PLAYLIST, REMOVE_SONG_FROM_PLAYLIST, CREATE_PLAYLIST } from "../api";
 
 const PlaylistModal: React.FunctionComponent = () => {
-    const { playlists, songPlaylists, isModalOpen, closeModal, videoId, setSongPlaylists, setPlaylists } = usePlaylists();
+    const { playlists, songPlaylists, isModalOpen, closeModal, videoId, setSongPlaylists, setPlaylists, isLoadingSongPlaylists } = usePlaylists();
 
     const { addNotification }                   = useNotification();
     const [isCreating, setIsCreating]           = React.useState<boolean>(false);
@@ -124,21 +126,28 @@ const PlaylistModal: React.FunctionComponent = () => {
                 </div>
                 <div className="playlist-modal-playlists">
                     {
-                        playlists.map(({ _id, name }) => (
-                            <div key={ _id } className="playlist-modal-playlist">
-                                <input
-                                    id={ `playlist-${_id}` }
-                                    className="playlist-modal-playlist-checkbox"
-                                    type="checkbox"
-                                    checked={ songPlaylists.indexOf(_id) > -1 }
-                                    disabled={ isLoading }
-                                    onChange={ (e) => onCheckboxChange(e, _id) }
-                                />
-                                <label htmlFor={ `playlist-${_id}` } className="playlist-modal-playlist-name">
-                                    { name }
-                                </label>
-                            </div>
-                        ))
+                        isLoadingSongPlaylists
+                            ? (
+                                <div className="flex-middle">
+                                    <LoaderIcon />
+                                </div>
+                            ) : (
+                                playlists.map(({ _id, name }) => (
+                                    <div key={ _id } className="playlist-modal-playlist">
+                                        <input
+                                            id={ `playlist-${_id}` }
+                                            className="playlist-modal-playlist-checkbox"
+                                            type="checkbox"
+                                            checked={ songPlaylists.indexOf(_id) > -1 }
+                                            disabled={ isLoading }
+                                            onChange={ (e) => onCheckboxChange(e, _id) }
+                                        />
+                                        <label htmlFor={ `playlist-${_id}` } className="playlist-modal-playlist-name">
+                                            { name }
+                                        </label>
+                                    </div>
+                                ))
+                            )
                     }
                 </div>
                 <div className="playlist-modal-footer">
