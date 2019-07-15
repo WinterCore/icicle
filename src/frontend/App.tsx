@@ -20,13 +20,6 @@ import PlaylistModal from "./components/PlaylistModal";
 import "./styles/main.styl";
 
 function App() {
-
-    React.useEffect(() => {
-        window.addEventListener("load", () => {
-            document.querySelector("#root").classList.add("loaded")
-        });
-    }, []);
-
     return (
         <BrowserRouter>
             <AppProviders>
