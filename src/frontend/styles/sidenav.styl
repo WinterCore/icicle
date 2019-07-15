@@ -12,6 +12,17 @@ sidenav-padding = 30px
     @media (max-width mobile-breakpoint)
         display block
 
+.sidenav-backdrop
+    position fixed
+    top 0
+    left 0
+    background rgba(0, 0, 0, 0.3)
+    width 100vw
+    height 100vh
+    display none
+    @media (max-width mobile-breakpoint)
+        &.visible
+            display block
 #sidenav
     a
         text-decoration none

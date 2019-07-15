@@ -17,7 +17,7 @@ import UserLoginCard    from "../components/UserLoginCard";
 import { usePlaylists } from "../contexts/playlists";
 import { useUser }      from "../contexts/user";
 
-const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location : { search : query, pathname } }) => {
+const Sidenav: React.FunctionComponent<RouteChildrenProps> = ({ history, location : { search : query, pathname } }) => {
     const [search, setSearch]       = React.useState((parse(query).q || "") as string);
     const [isVisible, setIsVisible] = React.useState(false);
     const { playlists }             = usePlaylists();
@@ -26,6 +26,10 @@ const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location
     const setSearchInputValue  = ({ target }: React.ChangeEvent<HTMLInputElement>) => setSearch(target.value);
     const onSearch             = () => search && history.push(`/search?q=${search}`);
     const handleHamburgerClick = () => setIsVisible(!isVisible);
+
+    React.useEffect(() => {
+        return history.listen(() => setIsVisible(false));
+    }, []);
 
     return (
         <>
@@ -64,8 +68,9 @@ const Header: React.FunctionComponent<RouteChildrenProps> = ({ history, location
                 }
             </nav>
             <HamburgerIcon onClick={ handleHamburgerClick } />
+            <div onClick={ () => setIsVisible(false) } className={ `sidenav-backdrop${isVisible ? " visible" : ""}` } />
         </>
     );
 }
 
-export default withRouter(Header);
+export default withRouter(Sidenav);
