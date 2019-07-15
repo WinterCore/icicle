@@ -14,14 +14,7 @@ import { usePlayer } from "../contexts/player";
 
 const Person: React.FunctionComponent<PersonProps> = (props) => {
     const { _id, name, picture, nowPlaying, liveListeners } = props;
-    const { joinStream } = usePlayer();
-
-    const [secondsPlayed, setSecondsPlayed] = React.useState(nowPlaying.startAt);
-    
-    React.useEffect(() => {
-        let progressInterval: NodeJS.Timeout = setInterval(() => setSecondsPlayed(secondsPlayed => secondsPlayed + 1), 1000);
-        return () => clearInterval(progressInterval);
-    }, []);
+    const { joinStream, roomData } = usePlayer();
 
     const onPlay = () => joinStream(_id);
 
@@ -42,13 +35,9 @@ const Person: React.FunctionComponent<PersonProps> = (props) => {
                             ) }
                         </TextRoller>
                     </div>
-                    <Trackbar seekable={ false } percentage={ (secondsPlayed / nowPlaying.duration) * 100 }  />
-                    <div className="person-music-bar">
-                        <div />
-                    </div>
                 </div>
                 <div className="person-actions">
-                    <PlayIcon onClick={ onPlay } />
+                    { (!roomData || roomData._id !== _id) && <PlayIcon onClick={ onPlay } /> }
                 </div>
             </div>
         </div>
