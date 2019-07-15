@@ -69,11 +69,14 @@ const People: React.FunctionComponent = () => {
     const { data : responseData, isLoading, error } = useApi({ ...GET_PEOPLE() });
     if (isLoading) return <div className="flex-middle"><Loader /></div>;
     if (error) return <div className="flex-middle"><Error /></div>;
-    const { nextPageToken, data }: PeopleResponseData = responseData;
+    const { data }: PeopleResponseData = responseData;
 
     return (
         <div className="people-section">
-            { data.map((item) => <Person key={ item._id } { ...item } />) }
+            { data.length 
+                ? data.map((item) => <Person key={ item._id } { ...item } />)
+                : <h4 style={{ textAlign : "center" }}>We couldn't find any people atm, why don't you start your own stream.</h4>
+            }
         </div>
     );
 }
