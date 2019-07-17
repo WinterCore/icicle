@@ -7,6 +7,9 @@ import { download } from "../audio";
 
 import { SOCKET_ACTIONS } from "../../../constants";
 
+import Store from "./store";
+
+
 class Scheduler extends EventEmitter {
     // Using maps so I can run into memory leaks and learn how to deal with them
     jobs: any = {};
@@ -40,6 +43,9 @@ class Scheduler extends EventEmitter {
                         socket.emit(SOCKET_ACTIONS.PLAY_NOW, null); // Notify the owner
                         socket.in(user._id).emit(SOCKET_ACTIONS.PLAY_NOW, null); // Notify all the listeners
                     }
+                    
+                    const data = Store.getSocketData(socket);
+                    Store.setSocketData(socket, { ...data, isProcessing : false });
                 } catch (e) { logger.error(e); }
             }, duration * 1000));
         });
