@@ -4,6 +4,7 @@ import { info }     from "../../youtube";
 import { download } from "../../audio";
 
 import User  from "../../../database/models/user";
+import Song  from "../../../database/models/song";
 
 import Store     from "../store";
 import Scheduler from "../scheduler";
@@ -15,7 +16,9 @@ import logger from "../../../logger";
 
 export default async function playNow(socket: socketio.Socket, videoId: string) {
     try {
-        const { items : [data] } = await info([videoId]);
+        let data: any = await Song.findOne({ videoId });
+        if (!data)
+            data = (await info([videoId])).items[0];
         const url = await download(videoId);
         const { type, id, currentRoomId } = Store.getSocketData(socket);
         socket.leaveAll();
