@@ -13,7 +13,7 @@ import { usePlaylists }    from "../contexts/playlists";
 import api, { ADD_TO_QUEUE } from "../api";
 
 const Video: React.FunctionComponent<VideoProps> = (props) => {
-    const { id, title, thumbnail, duration }            = props;
+    const { id, title, thumbnail }                      = props;
     const [isAddToQueueLoading, setIsAddToQueueLoading] = React.useState(false);
     const [isAddToQueueDone, setIsAddToQueueDone]       = React.useState(false);
     const [isPlayNowLoading, setIsPlayNowLoading]       = React.useState(false);
@@ -91,7 +91,6 @@ interface VideoProps {
     id        : string;
     title     : string;
     thumbnail : string;
-    duration ?: number;
 }
 
 export default Video;
