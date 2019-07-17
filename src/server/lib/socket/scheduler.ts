@@ -17,7 +17,6 @@ class Scheduler extends EventEmitter {
         this.on("schedule-next", ({ user, socket, duration }) => {
             this.cancel(user._id);
             this.schedule(user._id, setTimeout(async () => {
-                console.log("executing duration ", duration);
                 try {
                     const queue: Database.Queue[] = await Queue.find({ by : user._id }).sort({ date : 1 }).limit(1);
                     const queueItem = queue[0];
