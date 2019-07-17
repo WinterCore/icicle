@@ -33,7 +33,7 @@ export default async function check(socket: socketio.Socket, roomId: string) {
             }
         }
     } catch(e) {
+        
         logger.error(e);
-
     }
 }

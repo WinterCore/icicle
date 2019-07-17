@@ -45,5 +45,8 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             socket.emit(SOCKET_ACTIONS.PLAY_NOW, { ...data, url, startAt : 0, by : { _id : null, name : "Unknown" } });
             Store.setSocketData(socket, { id, type, currentRoomId : null });
         }
-    } catch(e) { logger.error(e); }
+    } catch(e) {
+        socket.emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play your video");
+        logger.error(e);
+    }
 }

@@ -7,6 +7,8 @@ import Scheduler from "../scheduler";
 
 import logger from "../../../logger";
 
+import { SOCKET_ACTIONS } from "../../../../constants";
+
 
 export default async function skip(socket: socketio.Socket, videoId: string) {
     try {
@@ -17,5 +19,8 @@ export default async function skip(socket: socketio.Socket, videoId: string) {
                 Scheduler.emit("schedule-next", { user, socket, duration : 0 }); // Duration of 0 to make the schedular skip to the next song immediately
             }
         }
-    } catch(e) { logger.error(e); }
+    } catch(e) {
+        socket.emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play your video");
+        logger.error(e);
+    }
 }
