@@ -10,5 +10,6 @@ export const SOCKET_ACTIONS = {
     SKIP          : "SKIP",
     SOCKET_JOINED : "SOCKET_JOINED",
     SOCKET_LEFT   : "SOCKET_LEFT",
-    NEW_MESSAGE   : "NEW_MESSAGE"
+    NEW_MESSAGE   : "NEW_MESSAGE",
+    ERROR         : "ERROR"
 };
