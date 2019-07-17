@@ -4,8 +4,8 @@ import * as fs   from "fs";
 
 import { AUDIO_PATH } from "../../../../config/server";
 
-import { DOMAIN }         from "../../../../config/server";
-import logger from "../../logger";
+import { DOMAIN } from "../../../../config/server";
+import logger     from "../../logger";
 
 export const download = (id: string): Promise<string> => {
     return new Promise((resolve, reject) => {
