@@ -1,7 +1,8 @@
 import * as React    from "react";
 
-import { useSocket } from "./socket";
-import { useUser } from "./user";
+import { useSocket }       from "./socket";
+import { useUser }         from "./user";
+import { useNotification } from "./notification";
 
 import { SOCKET_ACTIONS } from "../../constants";
 
@@ -31,6 +32,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [roomData, setRoomData] = useState<RoomData | null>(() => JSON.parse(window.localStorage.getItem("last_stream")));
     const { socket }              = useSocket();
     const { user }                = useUser();
+    const { addNotification }     = useNotification();
 
     const onRoomJoin  = (data: PlayerData) => {
         setRoomData(roomData => data ? data.by : roomData);
@@ -48,6 +50,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const skip              = ()                 => socket.emit(SOCKET_ACTIONS.SKIP);
     const handleSocketJoin  = ()                 => setData(data => ({ ...data, liveListeners : data.liveListeners + 1 }));
     const handleSocketLeave = ()                 => setData(data => ({ ...data, liveListeners : data.liveListeners - 1 }));
+    const handleError       = (message: string)  => addNotification({ id :`${Date.now()}`, message, type : "error", time : 5000 });
 
     const startStream = (videoId: string) => {
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, videoId);
@@ -73,6 +76,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
         socket.on(SOCKET_ACTIONS.SOCKET_JOINED, () => console.log("Joined"));
         socket.on(SOCKET_ACTIONS.SOCKET_LEFT, handleSocketLeave);
+        socket.on(SOCKET_ACTIONS.ERROR, handleError);
         socket.emit(SOCKET_ACTIONS.CHECK, data._id);
         return () => socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
     }, [
