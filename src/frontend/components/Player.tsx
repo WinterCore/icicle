@@ -1,11 +1,9 @@
 import * as React from "react";
 
-import Previous from "../icons/Previous";
 import Play     from "../icons/Play";
 import Pause    from "../icons/Pause";
 import Next     from "../icons/Next";
 
-import Trackbar     from "./Trackbar";
 import VolumeRocker from "./VolumeRocker";
 import TextRoller   from "./TextRoller";
 
