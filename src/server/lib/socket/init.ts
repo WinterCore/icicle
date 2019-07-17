@@ -48,7 +48,7 @@ export default function init(server: Server) {
         socket.on(SOCKET_ACTIONS.SEEK, data => seek(socket, data));
         socket.on(SOCKET_ACTIONS.CHECK, data => check(socket, data));
         socket.on(SOCKET_ACTIONS.JOIN, data => join(socket, data));
-        socket.on(SOCKET_ACTIONS.SKIP, data => skip(socket, data));
+        socket.on(SOCKET_ACTIONS.SKIP, () => skip(socket));
         socket.on(SOCKET_ACTIONS.NEW_MESSAGE, (roomId, message) => sendMessage(socket, roomId, message));
 
 
