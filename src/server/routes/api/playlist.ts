@@ -20,19 +20,20 @@ import NotFound from "../../errors/notfound";
 const router = Router();
 
 router.get("/song/:videoId/playlists", authenticated, co(async (req: Request, res: Response) => {
-    const song = await Song.findOne({ videoId : req.params.videoId, by : req.userId }, { playlists : 1 });
-    return res.json({ data : song ? song.playlists : [] });
+    const playlists = await Playlist.find({ "user._id" : req.userId, songs : req.params.videoId }, { _id : 1 });
+    return res.json({ data : playlists.map(item => item._id) });
 }));
 
 router.post("/:playlistId/song", [authenticated, validatePlaylistSong], co(async (req: Request, res: Response) => {
     const { playlistId } = req.params;
     const { videoId }    = req.body;
 
-    const oldSong = await Song.findOne({ videoId, by : req.userId });
-    if (oldSong) {
-        if (oldSong.playlists.indexOf(playlistId) === -1) {
-            oldSong.playlists.push(playlistId);
-            await oldSong.save();
+    const playlist = await Playlist.findById(playlistId);
+    const song = await Song.findOne({ videoId });
+    if (song) {
+        if (playlist.songs.indexOf(videoId) === -1) {
+            playlist.songs.push(videoId);
+            await playlist.save();
         } else {
             res.status(403);
             return res.json({ errors : ["The song already exists in the specified playlist"] });
@@ -47,11 +48,11 @@ router.post("/:playlistId/song", [authenticated, validatePlaylistSong], co(async
             title     : data.title,
             videoId   : videoId,
             thumbnail : data.thumbnail,
-            duration  : data.duration,
-            by        : req.userId,
-            playlists : [playlistId]
+            duration  : data.duration
         });
         await song.save();
+        playlist.songs.push(videoId);
+        await playlist.save();
     }
 
     return res.json({ message : "Added successfully" });
@@ -60,7 +61,8 @@ router.post("/:playlistId/song", [authenticated, validatePlaylistSong], co(async
 router.post("/:playlistId/queue", authenticated, co(async (req: Request, res: Response) => {
     const { playlistId } = req.params;
     
-    const songs: Database.Song[] = await Song.find({ by : req.userId, playlists : playlistId });
+    const playlist: Database.Playlist = await Playlist.findOne({ _id : playlistId, "user._id" : req.userId });
+    const songs: Database.Song[] = await Song.find({ videoId : { $in : playlist.songs } }).sort({ title : 1 });
     const songsToBeAdded = songs.map(song => ({
         title     : song.title,
         videoId   : song.videoId,
@@ -77,18 +79,12 @@ router.post("/:playlistId/queue", authenticated, co(async (req: Request, res: Re
 
 router.delete("/:playlistId/song/:videoId", [authenticated], co(async (req: Request, res: Response) => {
     const { playlistId, videoId } = req.params;
-    
-    const song = await Song.findOne({ videoId, by : req.userId });
-    if (!song) throw new NotFound();
-    const i = song.playlists.indexOf(playlistId);
-    if (i > -1) {
-        song.playlists.splice(i, 1);
-        if (song.playlists.length === 0) {
-            await song.remove();
-        } else {
-            await song.save();
-        }
-    }
+
+    const playlist: Database.Playlist = await Playlist.findOne({ _id : playlistId, "user._id" : req.userId });
+    if (playlist.songs.indexOf(videoId) === -1) throw new NotFound();
+    const i = playlist.songs.indexOf(videoId);
+    playlist.songs.splice(playlist.songs.indexOf(videoId), 1);
+    playlist.save();
     return res.json({ message : "Deleted successfully" });
 }));
 
@@ -97,8 +93,11 @@ router.get("/", authenticated, co(async (req: Request, res: Response) => {
     return res.json({ data : playlists.map(playlistResource(req)) });
 }));
 
-router.get("/:id/songs", authenticated, co(async (req: Request, res: Response) => {
-    const songs: Database.Song[] = await Song.find({ by : req.userId, playlists : req.params.id }).sort({ title : 1 });
+router.get("/:playlistId/songs", authenticated, co(async (req: Request, res: Response) => {
+    const { playlistId } = req.params;
+    const playlist: Database.Playlist = await Playlist.findOne({ _id : playlistId, "user._id" : req.userId });
+    if (!playlist) throw new NotFound();
+    const songs: Database.Song[] = await Song.find({ videoId : { $in : playlist.songs } }).sort({ title : 1 });
     return res.json({ data : songs.map(playlistSongResource(req)) });
 }))
 
@@ -118,17 +117,6 @@ router.delete("/:playlistId", [authenticated], co(async (req: Request, res: Resp
 
     const playlist: Database.Playlist = await Playlist.findOne({ "user._id" : req.userId, _id : playlistId });
     playlist.remove();
-
-    const songs: Database.Song[] = await Song.find({ "by" : req.userId, playlists : playlist._id });
-    for (const song of songs) {
-        const i = song.playlists.indexOf(playlistId);
-        song.playlists.splice(i, 1);
-        if (song.playlists.length === 0) {
-            await song.remove();
-        } else {
-            await song.save();
-        }
-    }
     
     return res.json({ message : `${playlist.name} was deleted successfully` });
 }));
