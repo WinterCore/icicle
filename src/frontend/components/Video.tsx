@@ -10,8 +10,6 @@ import { useUser }         from "../contexts/user";
 import { useNotification } from "../contexts/notification";
 import { usePlaylists }    from "../contexts/playlists";
 
-import { secondsToTime } from "../helpers";
-
 import api, { ADD_TO_QUEUE } from "../api";
 
 const Video: React.FunctionComponent<VideoProps> = (props) => {
