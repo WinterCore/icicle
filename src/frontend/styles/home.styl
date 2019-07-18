@@ -2,6 +2,10 @@ person-row-padding = 20px
 person-row-height = 80px + (person-row-padding * 2)
 
 person-height = 92px
+.action-buttons
+    display flex
+    & > * + *
+        margin-left 20px
 
 .song-outer
     @media (max-width mobile-breakpoint)
