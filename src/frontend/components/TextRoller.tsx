@@ -5,16 +5,14 @@ import * as React from "react";
 const TextRoller: React.FunctionComponent<TextRollerProps> = ({ children, speed, uid }) => {
     const containerRef    = React.useRef<HTMLDivElement>(null);
     const itemRef         = React.useRef<HTMLDivElement>(null);
-    const [left, setLeft] = React.useState(0);
+    // const [left, setLeft] = React.useState(0);
 
     React.useLayoutEffect(() => {
-        let textWidth, containerWidth, tempLeft, tracker;
+        let textWidth, containerWidth, tempLeft = 0, tracker;
         const loop = () => {
-            if (textWidth + tempLeft < 0) setLeft(containerWidth);
-            setLeft((left) => {
-                tempLeft = left - speed;
-                return left - speed;
-            });
+            if (textWidth + tempLeft < 0) itemRef.current.style.transform = `translateX(${containerWidth}px)`;
+            tempLeft -= speed;
+            itemRef.current.style.transform = `translateX(${tempLeft - speed}px)`;
             tracker = window.requestAnimationFrame(loop);
         };
         
@@ -22,7 +20,8 @@ const TextRoller: React.FunctionComponent<TextRollerProps> = ({ children, speed,
             window.cancelAnimationFrame(tracker);
             containerWidth = containerRef.current.getBoundingClientRect().width;
             textWidth      = itemRef.current.getBoundingClientRect().width;
-            setLeft(0);
+            tempLeft = 0;
+            itemRef.current.style.transform = "translateX(0px)";
             if (textWidth > containerWidth) {
                 tracker = window.requestAnimationFrame(loop);
             }
@@ -39,7 +38,7 @@ const TextRoller: React.FunctionComponent<TextRollerProps> = ({ children, speed,
 
     return (
         <div className="textroller-outer" ref={ containerRef }>
-            <div style={{ transform : `translateX(${left}px)` }} className="textroller-item" ref={ itemRef }>
+            <div className="textroller-item" ref={ itemRef }>
                 { children }
             </div>
         </div>
