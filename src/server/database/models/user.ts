@@ -7,6 +7,12 @@ const UserSchema: Schema = new Schema({
     picture       : String,
     following     : [Schema.Types.ObjectId],
     liveListeners : { type : Number, default : 0 },
+    settings      : {
+        invisMode : {
+            type    : Boolean,
+            default : false
+        }
+    },
     nowPlaying    : {
         title     : String,
         url       : String,

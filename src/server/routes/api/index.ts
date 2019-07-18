@@ -7,6 +7,7 @@ import search   from "./search";
 import people   from "./people";
 import queue    from "./queue";
 import playlist from "./playlist";
+import settings from "./settings";
 
 const router: Router = Router();
 router.use(cors());
@@ -17,6 +18,7 @@ router.use("/search", search);
 router.use("/people", people);
 router.use("/queue", queue);
 router.use("/playlist", playlist);
+router.use("/settings", settings);
 
 router.use((req: Request, res: Response) => {
     res.status(404);

@@ -18,6 +18,7 @@ card-hover-background = rgba(14, 26, 65, 0.6)
 @import "changelog.styl"
 @import "people.styl"
 @import "playlist.styl"
+@import "settings.styl"
 @import "about.styl"
 @import "chat.styl"
 
@@ -115,6 +116,52 @@ a
             margin-right 8px
             width 16px
 
+
+switch-height = 24px
+
+.switch-container
+    display flex
+    align-items center
+.switch
+    margin-right 20px
+    input[type="checkbox"]
+        &:disabled
+            & + label
+                cursor not-allowed
+        display none
+        & + label
+            background #BBB
+            border-radius switch-height
+            padding 2px
+            transition all .4s ease
+            outline 0
+            display block
+            width (switch-height * 2)
+            height switch-height
+            position relative
+            cursor pointer
+            user-select none
+            &:after
+                border-radius 50%
+                background #fff
+                transition all .2s ease
+                position relative
+                display block
+                content ""
+                width 50%
+                height 100%
+                left 0
+            &:before
+                position relative
+                display block
+                content ""
+                width 50%
+                height 100%
+                display none
+        &:checked + label
+            background #9FD6AE
+        &:checked + label:after
+            left 50%
 
 *::-webkit-scrollbar
   width 4px

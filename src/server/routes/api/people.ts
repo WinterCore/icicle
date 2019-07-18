@@ -17,7 +17,11 @@ const projection = {
 router.get("/", co(async (req: Request, res: Response) => {
     const { page = 1, q } = req.body;
     
-    const streamers = await User.find({ nowPlaying : { $ne : null } }, projection).sort({ liveListeners : -1 }).skip((page - 1) * 12).limit(12);
+    const streamers = await User
+        .find({ nowPlaying : { $ne : null }, "settings.invisMode" : { $ne : true } }, projection)
+        .sort({ liveListeners : -1 })
+        .skip((page - 1) * 12)
+        .limit(12);
     return res.json({ data : streamers.map(streamerResource(req)) });
 }));
 

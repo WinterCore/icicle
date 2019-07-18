@@ -23,8 +23,7 @@ const userProperties = [
     "name",
     "email",
     "picture",
-    "limit",
-    "isMod"
+    "settings"
 ];
 
 function createConnection() {

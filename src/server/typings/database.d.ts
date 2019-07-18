@@ -8,10 +8,11 @@ interface User extends Document {
     following     : string[];
     liveListeners : number;
     nowPlaying    : NowPlaying;
+    settings      : { invisMode : boolean; };
 
-    getNowPlayingCurrentTime() : number;
-    getNowPlayingData       () : number;
-    isStreaming             () : boolean;
+    getNowPlayingCurrentTime () : number;
+    getNowPlayingData        () : number;
+    isStreaming              () : boolean;
 }
 
 interface Video {

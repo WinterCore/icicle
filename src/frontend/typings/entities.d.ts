@@ -7,6 +7,9 @@ declare namespace Entities {
         picture    : string;
         email      : string;
         token      : string;
+        settings   : {
+            invisMode : boolean;
+        };
     }
     export interface Song {
         _id       : string;
