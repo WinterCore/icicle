@@ -10,6 +10,8 @@ import { useUser }         from "../contexts/user";
 import { useNotification } from "../contexts/notification";
 import { usePlaylists }    from "../contexts/playlists";
 
+import TextRoller from "../components/TextRoller";
+
 import api, { ADD_TO_QUEUE } from "../api";
 
 const Video: React.FunctionComponent<VideoProps> = (props) => {
@@ -68,17 +70,26 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
     }, [nowPlaying && nowPlaying.title]);
 
     return (
-        <div className="video">
-            <div className="video-thumbnail-outer">
-                <img className="video-thumbnail" src={ thumbnail } />
-                {/* <span className="video-duration">{ secondsToTime(duration) }</span> */}
-                <div className="video-floating-actions">
-                    { user ? (isAddToQueueDone ? <div /> : (!isAddToQueueLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />)) : <div /> }
-                    { isPlayNowLoading ? <Loader /> : <PlayIcon onClick={ onPlayNow } /> }
-                    { user ? <AddToPlaylistIcon onClick={ () => openModal(id) } /> : <div /> }
+        <div className="song-outer">
+            <div className="song">
+                <div className="song-image" style={{ backgroundImage : `url(${thumbnail})` }}></div>
+                <div className="song-middle-outer">
+                    <div className="song-info">
+                        <div className="song-name">
+                            <TextRoller>
+                                { title }
+                            </TextRoller>
+                        </div>
+                    </div>
                 </div>
+                {
+                    <div className="song-actions">
+                        { user ? (isAddToQueueDone ? <div /> : (!isAddToQueueLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />)) : <div /> }
+                        { isPlayNowLoading ? <Loader /> : <PlayIcon onClick={ onPlayNow } /> }
+                        { user ? <AddToPlaylistIcon onClick={ () => openModal(id) } /> : <div /> }
+                    </div>
+                }
             </div>
-            <div className="video-title" dangerouslySetInnerHTML={{ __html : title }} />
         </div>
     );
 };

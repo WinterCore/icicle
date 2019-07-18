@@ -88,13 +88,9 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
     if (error) return <div className="flex-middle"><Error /></div>;
 
     return (
-        <div ref={ containerRef } className="search-grid row">
-            { data.map((item: Video) => (
-                <div key={ item.id } className="video-outer col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <Video { ...item } />
-                </div>
-            )) }
-            <div className="flex-middle col-xs-12" style={{ marginTop : 20 }}>
+        <div ref={ containerRef } className="search-grid">
+            { data.map((item: Video) => <Video key={ item.id } { ...item } />) }
+            <div className="flex-middle" style={{ marginTop : 20 }}>
                 { isLoadingMore && <Loader /> }
             </div>
         </div>
