@@ -3,7 +3,8 @@ import { RouteChildrenProps } from "react-router";
 import Axios                  from "axios";
 
 
-import Loader from "../icons/Loader";
+import Loader     from "../icons/Loader";
+import SearchIcon from "../icons/Search";
 
 import Error        from "../components/Error";
 import PlaylistItem from "../components/PlaylistItem";
@@ -14,6 +15,8 @@ import { usePlaylists }    from "../contexts/playlists";
 import { usePlayer }       from "../contexts/player";
 import { useUser }         from "../contexts/user";
 
+import Input from "../components/Input";
+
 import api, { GET_PLAYLISTS_ITEMS, DELETE_PLAYLIST, QUEUE_PLAYLIST } from "../api";
 
 type Params = {
@@ -22,11 +25,14 @@ type Params = {
 
 const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : { params : { id } }, history }) => {
     const [data, setData]                                     = React.useState<Entities.Song[]>([]);
+    const [filteredData, setFilteredData]                     = React.useState<Entities.Song[]>([]);
     const [isLoading, setIsLoading]                           = React.useState<boolean>(true);
     const [isDeleteLoading, setIsDeleteLoading]               = React.useState<boolean>(false);
     const [isAddingToQueueLoading, setIsAddingToQueueLoading] = React.useState<boolean>(false);
     const [error, setError]                                   = React.useState<boolean>(false);
     const [confirmDelete, setConfirmDelete]                   = React.useState<boolean>(null);
+    const [search, setSearch]                                 = React.useState<string>("");
+
     const { addNotification }                                 = useNotification();
     const { setPlaylists }                                    = usePlaylists();
     const { nowPlaying, startStream }                         = usePlayer();
@@ -41,6 +47,7 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
             cancelToken : cancelTokenSource.token
         }).then((response) => {
             setData(response.data.data);
+            setFilteredData(response.data.data);
             setIsLoading(false);
         }).catch((err) => {
             console.log(err);
@@ -50,7 +57,20 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
         return () => cancelTokenSource.cancel("CANCELED");
     }, [id]);
 
-    const handleItemDelete = (videoId: string) => setData(data => data.filter(item => item.videoId !== videoId));
+    
+    const onSearchChange  = ({ target }: React.ChangeEvent<HTMLInputElement>) => setSearch(target.value);
+    const onSearch = () => {
+        if (search) {
+            setFilteredData(data.filter(item => item.title.toLowerCase().indexOf(search.trim().toLowerCase()) > -1));
+        } else {
+            setFilteredData(data);
+        }
+    };
+
+    const handleItemDelete = (videoId: string) => {
+        setData(data => data.filter(item => item.videoId !== videoId));
+        setFilteredData(data.filter(item => item.videoId !== videoId));
+    };
 
     const onPlaylistDelete = () => {
         if (!confirmDelete) return setConfirmDelete(true);
@@ -104,14 +124,19 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
     if (error) return <div className="flex-middle"><Error /></div>;
     return (
         <div className="playlist-outer">
-            <div className="playlist-actions">
-                <Button disabled={ isAddingToQueueLoading } onClick={ addToQueue }>{ isAddingToQueueLoading ? "Adding..." : "Add to the queue" }</Button>
-                <Button disabled={ isDeleteLoading } onClick={ onPlaylistDelete }>{ confirmDelete ? (isDeleteLoading ? "Deleting..." : "Are you sure ?") : "Delete playlist" }</Button>
+            <div className="playlist-header">
+                <div className="playlist-search-box">
+                    <Input onChange={ onSearchChange } value={ search } onEnter={ onSearch } icon={ <SearchIcon onClick={ onSearch } /> } />
+                </div>
+                <div className="playlist-actions">
+                    <Button disabled={ isAddingToQueueLoading } onClick={ addToQueue }>{ isAddingToQueueLoading ? "Adding..." : "Add to the queue" }</Button>
+                    <Button disabled={ isDeleteLoading } onClick={ onPlaylistDelete }>{ confirmDelete ? (isDeleteLoading ? "Deleting..." : "Are you sure ?") : "Delete playlist" }</Button>
+                </div>
             </div>
             <div className="playlist-items">
                 {
-                    data.length
-                        ? data.map(item => <PlaylistItem key={ item._id } playlistId={ id }  { ...item } onDelete={ handleItemDelete } />)
+                    filteredData.length
+                        ? filteredData.map(item => <PlaylistItem key={ item._id } playlistId={ id }  { ...item } onDelete={ handleItemDelete } />)
                         : <h4 style={{ textAlign : "center" }}>There are no items in this playlist</h4>
                 }
             </div>

@@ -1,8 +1,22 @@
 .playlist-outer
+    .playlist-header
+        padding 0 20px
+        display flex
+        align-items center
+        .playlist-search-box
+            flex 1
+            margin-right 20px
+            .input-outer
+                height 36px
+        @media (max-width mobile-breakpoint)
+            flex-direction column
+            .playlist-search-box
+                width 100%
+                padding 0 20px 20px 40px
+                margin-right 0
     .playlist-actions
         display flex
         justify-content flex-end
-        padding 10px 20px
         & > * + *
             margin-left 10px
         @media (max-width mobile-breakpoint)
