@@ -31,9 +31,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [data, setData]         = useState<PlayerData | null>(null);
     const [roomData, setRoomData] = useState<RoomData | null>(() => JSON.parse(window.localStorage.getItem("last_stream")));
     const { socket }              = useSocket();
-    const { user }                = useUser();
     const { addNotification }     = useNotification();
-
     const onRoomJoin  = (data: PlayerData) => {
         setRoomData(roomData => data ? data.by : roomData);
         if (data) window.localStorage.setItem("last_stream", JSON.stringify(data.by));
@@ -79,7 +77,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         socket.emit(SOCKET_ACTIONS.CHECK, data._id);
         return () => socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
     }, [
-        user // Request nowplaying data after user login/logout
+        socket
     ]);
 
     const onReconnect = () => {

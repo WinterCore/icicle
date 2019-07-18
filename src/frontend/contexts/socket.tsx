@@ -12,29 +12,29 @@ const SocketContext = createContext(null);
 const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
     const { user }                  = useUser();
     const [isLoading, setIsLoading] = useState(true);
-    if (window.socket) {
-        window.socket.disconnect();
-    } else {
-        window.socket = SocketIo(DOMAIN, {
+    const [socket, setSocket]       = useState(() => (
+        SocketIo(DOMAIN, {
             transportOptions : {
                 polling : {
                     extraHeaders : { Authorization : `Bearer ${user && user.token}` }
                 }
             }
-        });
-    }
-
+        })
+    ));
     React.useLayoutEffect(() => {
-        window.socket = SocketIo(DOMAIN, {
-            transportOptions : {
-                polling : {
-                    extraHeaders : { Authorization : `Bearer ${user && user.token}` }
+        setSocket(socket => {
+            return SocketIo(DOMAIN, {
+                transportOptions : {
+                    polling : {
+                        extraHeaders : { Authorization : `Bearer ${user && user.token}` }
+                    }
                 }
-            }
+            });
         });
+        return () => socket.disconnect();
     }, [!!user]);
 
-    return <SocketContext.Provider value={{ socket : window.socket, isLoading }} { ...props } />;
+    return <SocketContext.Provider value={{ socket, isLoading }} { ...props } />;
 }
 
 function useSocket() {
