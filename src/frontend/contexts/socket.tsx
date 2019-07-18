@@ -14,14 +14,25 @@ const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [isLoading, setIsLoading] = useState(true);
     if (window.socket) {
         window.socket.disconnect();
-    }
-    window.socket = SocketIo(DOMAIN, {
-        transportOptions : {
-            polling : {
-                extraHeaders : { Authorization : `Bearer ${user && user.token}` }
+    } else {
+        window.socket = SocketIo(DOMAIN, {
+            transportOptions : {
+                polling : {
+                    extraHeaders : { Authorization : `Bearer ${user && user.token}` }
+                }
             }
-        }
-    });
+        });
+    }
+
+    React.useLayoutEffect(() => {
+        window.socket = SocketIo(DOMAIN, {
+            transportOptions : {
+                polling : {
+                    extraHeaders : { Authorization : `Bearer ${user && user.token}` }
+                }
+            }
+        });
+    }, [!!user]);
 
     return <SocketContext.Provider value={{ socket : window.socket, isLoading }} { ...props } />;
 }
