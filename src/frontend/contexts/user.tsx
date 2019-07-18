@@ -7,8 +7,9 @@ const { useState, useContext, createContext, useMemo } = React;
 const UserContext = createContext(null);
 
 interface UserProvider {
-    login (user: Entities.User) : void;
-    logout()                    : void;
+    login  (user: Entities.User) : void;
+    logout ()                    : void;
+    update (data: any)           : void;
 
     user : Entities.User;
 }
@@ -31,9 +32,16 @@ const UserProvider: React.FunctionComponent = (props): React.ReactElement => {
             delete api.defaults.headers.common["Authorization"];
         };
 
+        const update = (data: any) => {
+            const newUser = { ...user, ...data };
+            setUser(newUser);
+            window.localStorage.setItem("user", JSON.stringify(newUser));
+        };
+
         return  {
-            login  : login,
-            logout : logout,
+            login,
+            logout,
+            update,
             user
         };
     }, [user]);
