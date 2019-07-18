@@ -1,4 +1,5 @@
-import * as React from "react";
+import * as React     from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import { usePlaylists }    from "../contexts/playlists";
 import { useNotification } from "../contexts/notification";
@@ -20,6 +21,8 @@ const PlaylistModal: React.FunctionComponent = () => {
     const [name, setName]                       = React.useState<string>("");
     const [isLoading, setIsLoading]             = React.useState<boolean>(false);
     const [isCreateLoading, setIsCreateLoading] = React.useState<boolean>(false);
+
+    useHotkeys("esc", closeModal);
 
     const onNameChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => { setName(target.value) };
 
@@ -118,8 +121,8 @@ const PlaylistModal: React.FunctionComponent = () => {
     if (!isModalOpen) return null;
 
     return (
-        <div className="playlist-modal-backdrop">
-            <div className={ `playlist-modal-outer${isModalOpen ? " active" : ""}` }>
+        <div onClick={ closeModal } className="playlist-modal-backdrop">
+            <div onClick={ (e) => e.stopPropagation() } className={ `playlist-modal-outer${isModalOpen ? " active" : ""}` }>
                 <div className="playlist-modal-header">
                     <h4>Save to...</h4>
                     <CrossIcon onClick={ onModalClose } />
