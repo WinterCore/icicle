@@ -10,7 +10,7 @@ const TextRoller: React.FunctionComponent<TextRollerProps> = ({ children, speed,
     React.useLayoutEffect(() => {
         let textWidth, containerWidth, tempLeft = 0, tracker;
         const loop = () => {
-            if (textWidth + tempLeft < 0) itemRef.current.style.transform = `translateX(${containerWidth}px)`;
+            if (textWidth + tempLeft < 0) tempLeft = containerWidth
             tempLeft -= speed;
             itemRef.current.style.transform = `translateX(${tempLeft - speed}px)`;
             tracker = window.requestAnimationFrame(loop);
