@@ -12,9 +12,9 @@ import { usePlaylists } from "../contexts/playlists";
 import Chat from "../components/Chat/Index";
 
 const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
-    const { roomData, nowPlaying } = usePlayer();
-    const { user }                 = useUser();
-    const { openModal }            = usePlaylists();
+    const { roomData, nowPlaying, leaveStream } = usePlayer();
+    const { user }                              = useUser();
+    const { openModal }                         = usePlaylists();
 
     return (
         <div className="row" style={{ margin : "10px 20px" }}>
@@ -44,12 +44,20 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
                                         ) : "Nothing is currently playing"
                                 }
                             </h4>
-                            {
-                                nowPlaying && user &&
-                                    <div>
-                                        <Button onClick={ () => openModal(nowPlaying.videoId) }>Add to playlist</Button>
-                                    </div>
-                            }
+                            <div className="action-buttons">
+                                {
+                                    nowPlaying && user &&
+                                        <div>
+                                            <Button onClick={ () => openModal(nowPlaying.videoId) }>Add to playlist</Button>
+                                        </div>
+                                }
+                                {
+                                    roomData && (!user || user._id !== roomData._id) && // only if the user is not the owner of the stream
+                                        <div>
+                                            <Button onClick={ () => leaveStream() }>Leave</Button>
+                                        </div>
+                                }
+                            </div>
                         </div>
                     ) : <h2 className="col-xs-12">Please join a room to start listening to music</h2>
             }

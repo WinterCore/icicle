@@ -15,6 +15,7 @@ import seek        from "./actions/seek";
 import check       from "./actions/check";
 import join        from "./actions/join";
 import skip        from "./actions/skip";
+import leave       from "./actions/leave";
 import sendMessage from "./actions/send-message";
 
 import logger from "../../logger";
@@ -49,6 +50,7 @@ export default function init(server: Server) {
         socket.on(SOCKET_ACTIONS.CHECK, data => check(socket, data));
         socket.on(SOCKET_ACTIONS.JOIN, data => join(socket, data));
         socket.on(SOCKET_ACTIONS.SKIP, () => skip(socket));
+        socket.on(SOCKET_ACTIONS.LEAVE, () => leave(socket));
         socket.on(SOCKET_ACTIONS.NEW_MESSAGE, (roomId, message) => sendMessage(socket, roomId, message));
 
 

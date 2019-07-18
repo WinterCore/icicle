@@ -17,12 +17,12 @@ type RoomData = {
 
 interface PlayerProvider {
     onRoomJoin  (data: PlayerData) : void;
-    leaveRoom()                    : void;
     seek        (seconds: number)  : void;
     startStream (id: string)       : void;
-    leaveStream (id: string)       : void;
+    leaveStream ()                 : void;
     joinStream  (id: string)       : void;
     skip        ()                 : void;
+    
     roomData   : RoomData;
     nowPlaying : PlayerData;
 }
@@ -39,13 +39,13 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         if (data) window.localStorage.setItem("last_stream", JSON.stringify(data.by));
         setData(data ? { ...data } : null);
     };
-    const leaveRoom = () => {
+    const leaveStream = () => {
+        socket.emit(SOCKET_ACTIONS.LEAVE);
         setData(null);
         setRoomData(null);
         window.localStorage.removeItem("last_stream");
     };
     const seek              = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
-    const leaveStream       = (id: string)       => socket.emit(SOCKET_ACTIONS.LEAVE, id);
     const joinStream        = (id: string)       => socket.emit(SOCKET_ACTIONS.JOIN, id);
     const skip              = ()                 => socket.emit(SOCKET_ACTIONS.SKIP);
     const handleSocketJoin  = ()                 => setData(data => ({ ...data, liveListeners : data.liveListeners + 1 }));
@@ -59,11 +59,10 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
 
     const context = {
         onRoomJoin,
-        leaveRoom,
+        leaveStream,
         seek,
         joinStream,
         startStream,
-        leaveStream,
         roomData,
         skip,
         nowPlaying : data
