@@ -89,7 +89,7 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
 
     return (
         <div ref={ containerRef } className="search-grid">
-            { data.map((item: Video) => <Video key={ item.id } { ...item } />) }
+            { data.length ? data.map((item: Video) => <Video key={ item.id } { ...item } />) : <h4 className="flex-middle">No videos were found!</h4> }
             <div className="flex-middle" style={{ marginTop : 20 }}>
                 { isLoadingMore && <Loader /> }
             </div>
