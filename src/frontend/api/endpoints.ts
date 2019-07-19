@@ -6,6 +6,7 @@ export const CONFIRM_GOOGLE_LOGIN      = (): AxiosRequestConfig => ({ method : "
 export const SEARCH                    = (): AxiosRequestConfig => ({ method : "GET", url : "/search" });
 export const GET_PEOPLE                = (): AxiosRequestConfig => ({ method : "GET", url : "/people" });
 export const ADD_TO_QUEUE              = (): AxiosRequestConfig => ({ method : "POST", url : "/queue" });
+export const CLEAR_QUEUE               = (): AxiosRequestConfig => ({ method : "POST", url : "/queue/clear" });
 export const GET_QUEUE_ITEMS           = (id: string): AxiosRequestConfig => ({ method : "GET", url : `/queue/${id}` });
 export const DELETE_QUEUE_ITEM         = (id: string): AxiosRequestConfig => ({ method : "DELETE", url : `/queue/${id}` });
 export const GET_PLAYLISTS             = (): AxiosRequestConfig => ({ method : "GET", url : "/playlist" });

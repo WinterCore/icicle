@@ -38,6 +38,7 @@ router.post("/", [authenticated, validateQueue], co(async (req: Request, res: Re
     return res.json({ message : "Added successfully" });
 }));
 
+
 router.delete("/:id", [authenticated], co(async (req: Request, res: Response) => {
     const { id } = req.params;
 
@@ -47,4 +48,10 @@ router.delete("/:id", [authenticated], co(async (req: Request, res: Response) =>
     return res.json({ data : queueItems.map(queueResource(req)) });
 }));
 
+router.post("/clear", [authenticated], co(async (req: Request, res: Response) => {
+
+    await Queue.deleteMany({ by : req.userId });
+
+    return res.json({ message : "Your queue has been cleared successfully" });
+}));
 export default router;
