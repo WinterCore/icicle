@@ -9,11 +9,13 @@ import { secondsToTime } from "../helpers";
 
 import { usePlayer }       from "../contexts/player";
 import { useNotification } from "../contexts/notification";
-import { useUser } from "../contexts/user";
+import { useUser }         from "../contexts/user";
+import { usePlaylists }    from "../contexts/playlists";
 
 import TextRoller from "./TextRoller";
 
 import api, { DELETE_PLAYLIST_ITEM, ADD_TO_QUEUE } from "../api";
+import AddToPlaylistIcon from "../icons/AddToPlaylist";
 
 
 const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
@@ -25,6 +27,7 @@ const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
     const { startStream, nowPlaying } = usePlayer();
     const { user }                    = useUser();
     const { addNotification }         = useNotification();
+    const { openModal }               = usePlaylists();
 
     const deletePlaylistItem = () => {
         setIsLoading(true);
@@ -105,6 +108,7 @@ const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
                     <div className="song-actions">
                         { isAddToQueueLoading ? <LoaderIcon /> : <WatchIcon onClick={ addToQueue } /> }
                         <PlayIcon onClick={ playPlaylistItem } />
+                        <AddToPlaylistIcon onClick={ () => openModal(videoId) } />
                         { isLoading ? <LoaderIcon /> : <CrossIcon onClick={ deletePlaylistItem } /> }
                     </div>
                 }
