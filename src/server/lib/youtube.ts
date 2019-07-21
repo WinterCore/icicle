@@ -33,11 +33,10 @@ async function search(params) {
 	// const videosDetails = await contentDetails(ids);
 
 	// const videos = mergeVideosInfo(videosSnippet, videosDetails);
-
 	return {
 		data : videosSnippet.map(snippetItem => ({
 			id        : snippetItem.id.videoId || snippetItem.id,
-			thumbnail : snippetItem.snippet.thumbnails.medium.url,
+			thumbnail : snippetItem.snippet.thumbnails.default.url,
 			title     : snippetItem.snippet.title
 		})),
 		nextPageToken
