@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import Play     from "../icons/Play";
 import Pause    from "../icons/Pause";
@@ -6,12 +7,13 @@ import Next     from "../icons/Next";
 
 import VolumeRocker from "./VolumeRocker";
 import TextRoller   from "./TextRoller";
+import TrackbarV2   from "./TrackbarV2";
 
-import { usePlayer } from "../contexts/player";
-import { useUser }   from "../contexts/user";
+import { usePlayer }    from "../contexts/player";
+import { useUser }      from "../contexts/user";
+import { usePlaylists } from "../contexts/playlists";
 
-import { secondsToTime } from "../helpers";
-import TrackbarV2 from "./TrackbarV2";
+import { secondsToTime, SHORTCUTS } from "../helpers";
 
 const Placeholder: React.FunctionComponent = () => {
     return (
@@ -46,6 +48,7 @@ const Placeholder: React.FunctionComponent = () => {
 const ActualPlayer: React.FunctionComponent = () => {
     const { nowPlaying, seek, skip }                = usePlayer();
     const { user }                                  = useUser();
+    const { openModal }                             = usePlaylists();
     const playerRef                                 = React.useRef<HTMLAudioElement>(null);
     const [secondsPlayed, setSecondsPlayed]         = React.useState(nowPlaying.startAt);
     const [isPaused, setIsPaused]                   = React.useState<boolean>(true);
@@ -103,6 +106,24 @@ const ActualPlayer: React.FunctionComponent = () => {
         playerRef.current.volume = 0.3;
         setVolume(0.3); 
     }, []);
+
+    useHotkeys(SHORTCUTS.PLAY_PAUSE, React.useCallback(() => {
+        setIsPausedOnPurpose((isPausedOnPurpose) => {
+            if (isPausedOnPurpose) {
+                playerRef.current.play();
+                playerRef.current.currentTime = secondsPlayed;
+                setIsPaused(false);
+                return false;
+            } else {
+                playerRef.current.pause();
+                setIsPaused(true);
+                return true;
+            }
+        });
+    }, [secondsPlayed]));
+
+    useHotkeys(SHORTCUTS.SKIP, skip);
+    useHotkeys(SHORTCUTS.ADD_CURRENT_SONG_TO_PLAYLIST, () => openModal(nowPlaying.videoId));
 
     return (
         <div className="player-outer">

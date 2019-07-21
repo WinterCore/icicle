@@ -9,3 +9,9 @@ export const secondsToTime = (s: number) => {
 export const randomRange = (min: number, max: number): number => {
     return Math.random() * (max - min) + min;
 };
+
+export const SHORTCUTS = {
+    PLAY_PAUSE                   : "k,space",
+    SKIP                         : "l",
+    ADD_CURRENT_SONG_TO_PLAYLIST : "p"
+};

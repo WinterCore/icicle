@@ -13,6 +13,8 @@ import Button from "./Button";
 
 import api, { ADD_SONG_TO_PLAYLIST, REMOVE_SONG_FROM_PLAYLIST, CREATE_PLAYLIST } from "../api";
 
+import { SHORTCUTS } from "../helpers";
+
 const PlaylistModal: React.FunctionComponent = () => {
     const { playlists, songPlaylists, isModalOpen, closeModal, videoId, setSongPlaylists, setPlaylists, isLoadingSongPlaylists } = usePlaylists();
 
@@ -22,7 +24,7 @@ const PlaylistModal: React.FunctionComponent = () => {
     const [isLoading, setIsLoading]             = React.useState<boolean>(false);
     const [isCreateLoading, setIsCreateLoading] = React.useState<boolean>(false);
 
-    useHotkeys("esc", closeModal);
+    useHotkeys(SHORTCUTS.ADD_CURRENT_SONG_TO_PLAYLIST, closeModal);
 
     const onNameChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => { setName(target.value) };
 

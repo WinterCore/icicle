@@ -53,7 +53,6 @@ export default function init(server: Server) {
         socket.on(SOCKET_ACTIONS.LEAVE, () => leave(socket));
         socket.on(SOCKET_ACTIONS.NEW_MESSAGE, (roomId, message) => sendMessage(socket, roomId, message));
 
-
         socket.on("disconnect", () => {
             const { id, currentRoomId } = Store.getSocketData(socket);
             if (id) {
