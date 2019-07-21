@@ -44,7 +44,7 @@ interface Setting extends Document {
     changelog : {
         version : string;
         changes : string[];
-    }
+    }[]
 }
 
 interface Song extends Queue {}
