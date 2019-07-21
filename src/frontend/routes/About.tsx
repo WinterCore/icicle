@@ -1,10 +1,19 @@
 import * as React             from "react";
 import { RouteChildrenProps } from "react-router";
 
+import useApi from "../hooks/use-api";
+
 import IcicleIcon from "../icons/Icicle";
-import TextRoller from "../components/TextRoller";
+import LoaderIcon from "../icons/Loader";
+
+import Error      from "../components/Error";
+
+import { GET_CHANGELOG } from "../api";
+
 
 const About: React.FunctionComponent<RouteChildrenProps> = ({ location }) => {
+    const { data, isLoading, error } = useApi({ ...GET_CHANGELOG() });
+
     return (
         <div className="about-section">
             <div className="flex-middle">
@@ -29,18 +38,20 @@ const About: React.FunctionComponent<RouteChildrenProps> = ({ location }) => {
                 </div>
                 <br /><br />
                 <h2>Change log</h2>
-                <h4>Version 0.2</h4>
-                <ul className="change-log-version washed-out">
-                    <li>The player's trackbar is now rainbow colored</li>
-                    {/* <li>Added chat section for the current room : Enjoy talking to other people that are listening with you, and trash talk all you want</li> */}
-                    <li>Added playlists support : Now you can create/delete playlists, add/delete vidoes from playlists, add entire playlists to the queue</li>
-                    <li>Added text roller : Overflowing text will now scroll in a nice elegant way <div style={{ width : 100 }}><TextRoller>Wooooo this is very cool</TextRoller></div></li>
-                    <li>Search section : Make 4 videos appear per row instead of 3 on larger screens</li>
-                    <li>Adding a video to the queue will start playing it immediately if you have nothing playing.</li>
-                    <li>Added a nice pink background gradient for sidenav links which appears when they're active.</li>
-                    <li>Styling improvements</li>
-                    <li>Major bug fixes</li>
-                </ul>
+                {
+                    error
+                        ? <div className="flex-middle"><Error /></div>
+                        : isLoading
+                            ? <div className="flex-middle"><LoaderIcon /></div>
+                            : data.data.map(({ version, changes }, i) => (
+                                <div key={ version }>
+                                    <h4>{ version }</h4>
+                                    <ul className="change-log-version washed-out">
+                                        { changes.map((change: string, i) => <li key={ i }>{ change }</li>) }
+                                    </ul>
+                                </div>
+                            ))
+                }
             </div>
         </div>
     );
