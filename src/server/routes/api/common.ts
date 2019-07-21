@@ -9,7 +9,7 @@ const router = Router();
 router.get("/changelog", co(async (req: Request, res: Response) => {
     const { changelog } = await Setting.findOne();
 
-    res.json({ data : changelog });
+    res.json({ data : changelog.reverse() });
 }));
 
 export default router;
