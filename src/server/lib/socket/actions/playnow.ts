@@ -18,7 +18,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
     try {
         const { type, id, currentRoomId, isProcessing } = Store.getSocketData(socket);
         if (isProcessing) {
-            socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
+            return socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
         }
         Store.setSocketData(socket, { id, type, currentRoomId, isProcessing : true });
         let data: any = await Song.findOne({ videoId });
