@@ -76,10 +76,11 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
         socket.on(SOCKET_ACTIONS.SOCKET_LEFT, handleSocketLeave);
         socket.on(SOCKET_ACTIONS.ERROR, handleError);
-        socket.on(SOCKET_ACTIONS.END_STREAM, () => {
+        socket.on(SOCKET_ACTIONS.END_STREAM, (notify: boolean) => {
             setData(null);
             setRoomData(null);
-            addNotification({ message : "The stream has been terminated by the streamer." });
+            if (notify)
+                addNotification({ message : "The stream has been terminated by the streamer." });
             window.localStorage.removeItem("last_stream");
         });
         socket.emit(SOCKET_ACTIONS.CHECK, data._id);
