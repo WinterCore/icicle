@@ -11,6 +11,7 @@ import Home         from "./routes/Home";
 import ConfirmLogin from "./routes/ConfirmLogin";
 import Playlist     from "./routes/Playlist";
 import About        from "./routes/About";
+import Invite       from "./routes/Invite";
 import Settings     from "./routes/Settings";
 
 import Player        from "./components/Player";
@@ -42,6 +43,7 @@ function App() {
                         <Route path="/people" component={ People } />
                         <Route path="/about" component={ About } />
                         <Route path="/settings" component={ Settings } />
+                        <Route path="/invite/:token" component={ Invite } />
                         <Route path="/auth/google/callback" component={ ConfirmLogin } />
                         <Route path="/playlist/:id" component={ Playlist } />
                     </section>

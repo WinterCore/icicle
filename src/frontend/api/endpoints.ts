@@ -4,6 +4,7 @@ export const UPDATE_SETTINGS           = () => ({ method : "POST", url : "/setti
 export const GET_GOOGLE_AUTH_URL       = (): AxiosRequestConfig => ({ method : "POST", url : "/auth/google" });
 export const CONFIRM_GOOGLE_LOGIN      = (): AxiosRequestConfig => ({ method : "GET", url : "/auth/google/callback" });
 export const SEARCH                    = (): AxiosRequestConfig => ({ method : "GET", url : "/search" });
+export const CREATE_INVITE_LINK        = (): AxiosRequestConfig => ({ method : "POST", url : "/invite" });
 export const GET_PEOPLE                = (): AxiosRequestConfig => ({ method : "GET", url : "/people" });
 export const ADD_TO_QUEUE              = (): AxiosRequestConfig => ({ method : "POST", url : "/queue" });
 export const GET_CHANGELOG             = (): AxiosRequestConfig => ({ method : "GET", url : "/changelog" });

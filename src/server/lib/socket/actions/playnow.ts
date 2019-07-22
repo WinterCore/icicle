@@ -7,6 +7,7 @@ import User  from "../../../database/models/user";
 import Song  from "../../../database/models/song";
 
 import Store     from "../store";
+import RoomStore from "../room-store";
 import Scheduler from "../scheduler";
 
 import { SOCKET_ACTIONS } from "../../../../constants";
@@ -26,9 +27,11 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             data = (await info([videoId])).items[0];
         const url = await download(videoId);
         socket.leaveAll();
-        if (currentRoomId) // leave the old stream if found
-            await User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } });
         if (type === "USER") {
+            if (currentRoomId) { // if the user is another room (remove him from the listeners list)
+                await User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } });
+                RoomStore.removeListener(currentRoomId, id);
+            }
             const user = await User.findOne({ _id : id });
             if (!user.nowPlaying) { // if the user is creating a room make him join it
                 socket.join(user._id);

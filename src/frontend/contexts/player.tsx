@@ -16,12 +16,13 @@ type RoomData = {
 }
 
 interface PlayerProvider {
-    onRoomJoin  (data: PlayerData) : void;
-    seek        (seconds: number)  : void;
-    startStream (id: string)       : void;
-    leaveStream ()                 : void;
-    joinStream  (id: string)       : void;
-    skip        ()                 : void;
+    onRoomJoin      (data: PlayerData) : void;
+    seek            (seconds: number)  : void;
+    startStream     (id: string)       : void;
+    leaveStream     ()                 : void;
+    joinStream      (id: string)       : void;
+    terminateStream ()                 : void;
+    skip            ()                 : void;
     
     roomData   : RoomData;
     nowPlaying : PlayerData;
@@ -46,7 +47,10 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const seek              = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
     const joinStream        = (id: string)       => socket.emit(SOCKET_ACTIONS.JOIN, id);
     const skip              = ()                 => socket.emit(SOCKET_ACTIONS.SKIP);
+    const handleSocketJoin  = ()                 => setData(data => data && ({ ...data, liveListeners : data.liveListeners + 1 }));
+    const handleSocketLeave = ()                 => setData(data => data && ({ ...data, liveListeners : data.liveListeners - 1 }));
     const handleError       = (message: string)  => addNotification({ message, type : "error" });
+    const terminateStream   = ()                 => socket.emit(SOCKET_ACTIONS.END_STREAM);
 
     const startStream = (videoId: string) => {
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, videoId);
@@ -61,6 +65,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         startStream,
         roomData,
         skip,
+        terminateStream,
         nowPlaying : data
     };
 
@@ -69,9 +74,14 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         const data = JSON.parse(window.localStorage.getItem("last_stream")) || {};
         socket.on(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
         socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
-        socket.on(SOCKET_ACTIONS.SOCKET_JOINED, () => console.log("Joined"));
         socket.on(SOCKET_ACTIONS.SOCKET_LEFT, handleSocketLeave);
         socket.on(SOCKET_ACTIONS.ERROR, handleError);
+        socket.on(SOCKET_ACTIONS.END_STREAM, () => {
+            setData(null);
+            setRoomData(null);
+            addNotification({ message : "The stream has been terminated by the streamer." });
+            window.localStorage.removeItem("last_stream");
+        });
         socket.emit(SOCKET_ACTIONS.CHECK, data._id);
         return () => socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
     }, [

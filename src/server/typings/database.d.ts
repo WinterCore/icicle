@@ -66,4 +66,10 @@ interface Playlist extends Document {
     songs : string[]
 }
 
+interface Invite extends Document {
+    token  : string;
+    endsAt : Date;
+    user   : string;
+}
+
 export as namespace Database;
