@@ -3,6 +3,8 @@ import * as SocketIo from "socket.io-client";
 
 import { DOMAIN } from "../../../config/frontend";
 
+import usePrevious from "../hooks/use-previous";
+
 import { useUser } from "./user";
 
 const { useContext, createContext, useState } = React;
@@ -12,6 +14,7 @@ const SocketContext = createContext(null);
 const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
     const { user }                  = useUser();
     const [isLoading, setIsLoading] = useState(true);
+    const prevUser                  = usePrevious(user);
     const [socket, setSocket]       = useState(() => (
         SocketIo(DOMAIN, {
             transportOptions : {
@@ -22,16 +25,18 @@ const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
         })
     ));
     React.useLayoutEffect(() => {
-        setSocket(socket => {
-            return SocketIo(DOMAIN, {
-                transportOptions : {
-                    polling : {
-                        extraHeaders : { Authorization : `Bearer ${user && user.token}` }
+        if (!!prevUser !== !!user) {
+            setSocket(socket => {
+                return SocketIo(DOMAIN, {
+                    transportOptions : {
+                        polling : {
+                            extraHeaders : { Authorization : `Bearer ${user && user.token}` }
+                        }
                     }
-                }
+                });
             });
-        });
-        return () => socket.disconnect();
+            return () => socket.disconnect();
+        }
     }, [!!user]);
 
     return <SocketContext.Provider value={{ socket, isLoading }} { ...props } />;
