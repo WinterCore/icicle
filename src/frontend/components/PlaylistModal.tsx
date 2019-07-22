@@ -24,7 +24,7 @@ const PlaylistModal: React.FunctionComponent = () => {
     const [isLoading, setIsLoading]             = React.useState<boolean>(false);
     const [isCreateLoading, setIsCreateLoading] = React.useState<boolean>(false);
 
-    useHotkeys(SHORTCUTS.ADD_CURRENT_SONG_TO_PLAYLIST, closeModal);
+    useHotkeys(SHORTCUTS.CLOSE, closeModal);
 
     const onNameChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => { setName(target.value) };
 

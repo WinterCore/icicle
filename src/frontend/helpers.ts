@@ -13,5 +13,6 @@ export const randomRange = (min: number, max: number): number => {
 export const SHORTCUTS = {
     PLAY_PAUSE                   : "k,space",
     SKIP                         : "l",
-    ADD_CURRENT_SONG_TO_PLAYLIST : "p"
+    ADD_CURRENT_SONG_TO_PLAYLIST : "p",
+    CLOSE                        : "esc"
 };
