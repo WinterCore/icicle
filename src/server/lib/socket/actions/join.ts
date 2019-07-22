@@ -43,7 +43,6 @@ export default async function join(socket: socketio.Socket, streamerId: string, 
 
         // Notify the socket
         socket.in(streamerId).emit(SOCKET_ACTIONS.SOCKET_JOINED);
-        console.log(socket);
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, streamer.getNowPlayingData());
     } catch(e) {
         socket.emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to join the specified room");
