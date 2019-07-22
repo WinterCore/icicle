@@ -15,7 +15,7 @@ export default async function skip(socket: socketio.Socket) {
         const { type, id, isProcessing, currentRoomId } = Store.getSocketData(socket);
         if (type === "USER") {
             if (isProcessing) {
-                socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
+                return socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
             }
             Store.setSocketData(socket, { id, type, isProcessing : true, currentRoomId });
             const user = await User.findOne({ _id : id });
