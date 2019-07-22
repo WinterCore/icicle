@@ -43,21 +43,13 @@ const PlaylistModal: React.FunctionComponent = () => {
                 data : { videoId }
             }).then(() => {
                 setIsLoading(false)
-                addNotification({
-                    id      : `${Date.now()}`,
-                    message : "Added to the playlist successfully",
-                    type    : "success"     
-                });
+                addNotification({ message : "Added to the playlist successfully" });
                 setSongPlaylists((oldSongPlaylists: string[]) => [...oldSongPlaylists, _id]);
             }).catch((err) => {
                 setIsLoading(false);
                 console.log(err);
                 if (err.response) {
-                    addNotification({
-                        id      : `${Date.now()}`,
-                        message : err.response.data.errors.join("<br />"),
-                        type    : "error"
-                    });
+                    addNotification({ message : err.response.data.errors.join("<br />"), type : "error" });
                 }
             });
         } else {
@@ -66,21 +58,13 @@ const PlaylistModal: React.FunctionComponent = () => {
                 data : { videoId }
             }).then(() => {
                 setIsLoading(false)
-                addNotification({
-                    id      : `${Date.now()}`,
-                    message : "Removed successfully",
-                    type    : "success"     
-                });
+                addNotification({ message : "Removed successfully" });
                 setSongPlaylists((oldSongPlaylists: string[]) => oldSongPlaylists.filter(id => id !== _id));
             }).catch((err) => {
                 setIsLoading(false);
                 console.log(err);
                 if (err.response) {
-                    addNotification({
-                        id      : `${Date.now()}`,
-                        message : err.response.data.errors.join("<br />"),
-                        type    : "error"
-                    });
+                    addNotification({ message : err.response.data.errors.join("<br />"), type : "error" });
                 }
             });
             
@@ -97,17 +81,12 @@ const PlaylistModal: React.FunctionComponent = () => {
             setIsCreateLoading(false);
             setName("");
             setPlaylists(oldPlaylists => [...oldPlaylists, data].sort((a, b) => a.name.localeCompare(b.name)));
-            addNotification({
-                id      : `${Date.now()}`,
-                message : `${name} was created successfully`,
-                type    : "success"     
-            });
+            addNotification({ message : `${name} was created successfully` });
         }).catch((err) => {
             setIsCreateLoading(false);
             console.log(err);
             if (err.response) {
                 addNotification({
-                    id      : `${Date.now()}`,
                     message : err.response.data.errors.join("<br />"),
                     type    : "error"
                 });

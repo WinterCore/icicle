@@ -36,29 +36,17 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
         try {
             if (!nowPlaying || nowPlaying.by._id !== user._id) { // Start a stream if the user is not already in one or if the current stream is not the user's
                 startStream(id);
-                addNotification({
-                    id :`${Date.now()}`,
-                    message : "Your queue is empty, the video will be played immediately.",
-                    type : "success",
-                    time : 5000
-                });
+                addNotification({ message : "Your queue is empty, the video will be played immediately." });
             } else {
                 await api({ ...ADD_TO_QUEUE(), data : { id } });
-                addNotification({
-                    id :`${Date.now()}`,
-                    message : `${title} has been added to the queue.`,
-                    type : "success",
-                    time : 5000
-                });
+                addNotification({ message : `${title} has been added to the queue.` });
             }
             setIsAddToQueueDone(true);
         } catch(e) {
             if (e.response && e.response.status === 422) {
                 addNotification({
-                    id :`${Date.now()}`,
                     message : e.response.data.errors,
-                    type : "error",
-                    time : 5000
+                    type : "error"
                 });
             }
             setIsAddToQueueDone(true);

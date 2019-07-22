@@ -79,11 +79,7 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
             ...DELETE_PLAYLIST(id)
         }).then(({ data : { message } }) => {
             setIsDeleteLoading(false);
-            addNotification({
-                id      : `${Date.now()}`,
-                message : message,
-                type    : "success"     
-            });
+            addNotification({ message });
             setPlaylists(playlists => playlists.filter(playlist => playlist._id !== id));
             history.push("/");
         }).catch((err) => {
@@ -94,22 +90,14 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
 
     const addToQueue = () => {
         if (!data.length) {
-            return addNotification({
-                id      : `${Date.now()}`,
-                message : "There are no songs in this playlist to be added",
-                type    : "error"     
-            });
+            return addNotification({ message : "There are no songs in this playlist to be added", type : "error" });
         }
         setIsAddingToQueueLoading(true);
         api({
             ...QUEUE_PLAYLIST(id)
         }).then(({ data : { message } }) => {
             setIsAddingToQueueLoading(false);
-            addNotification({
-                id      : `${Date.now()}`,
-                message : message,
-                type    : "success"     
-            });
+            addNotification({ message });
             if (!nowPlaying || nowPlaying.by._id !== user._id) { // Start a stream if the user is not already in one or if the current stream is not the user's
                 startStream(data[0].videoId);
             }

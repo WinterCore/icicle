@@ -7,8 +7,8 @@ const NotificationContext = createContext(null);
 type NotificationType = "error" | "success";
 
 type Notification = {
-    id      : string;
-    type    : NotificationType;
+    id     ?: string;
+    type   ?: NotificationType;
     message : string;
     time   ?: number;
     done   ?: boolean;
@@ -23,7 +23,7 @@ type NotificationContext = {
 
 const NotificationProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [notifications, setNotifications] = useState([]);
-    const addNotification = (data: Notification) => setNotifications(notifications => [...notifications, data]);
+    const addNotification = (data: Notification) => setNotifications(notifications => [...notifications, { id : `${Date.now()}`, type : "success", ...data }]);
 
     const removeNotification = (id: string) => setNotifications(notifications => notifications.filter(item => item.id !== id));
 

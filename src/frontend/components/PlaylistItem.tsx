@@ -36,11 +36,7 @@ const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
         }).then(() => {
             setIsLoading(false);
             onDelete(videoId);
-            addNotification({
-                id      : `${Date.now()}`,
-                message : `${title} was removed successfully`,
-                type    : "success"     
-            });
+            addNotification({ message : `${title} was removed successfully` });
         }).catch((err) => {
             console.log(err);
             setIsLoading(false);
@@ -53,20 +49,10 @@ const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
         try {
             if (!nowPlaying || nowPlaying.by._id !== user._id) { // Start a stream if the user is not already in one or if the current stream is not the user's
                 startStream(videoId);
-                addNotification({
-                    id :`${Date.now()}`,
-                    message : "Your queue is empty, the video will be played immediately.",
-                    type : "success",
-                    time : 5000
-                });
+                addNotification({ message : "Your queue is empty, the video will be played immediately." });
             } else {
                 await api({ ...ADD_TO_QUEUE(), data : { id : videoId } });
-                addNotification({
-                    id :`${Date.now()}`,
-                    message : `${title} has been added to the queue.`,
-                    type : "success",
-                    time : 5000
-                });
+                addNotification({ message : `${title} has been added to the queue.` });
             }
             setIsAddToQueueLoading(false);
         } catch(e) {
@@ -74,12 +60,7 @@ const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
             
             setIsAddToQueueLoading(false);
             if (e.response && e.response.status === 422) {
-                addNotification({
-                    id :`${Date.now()}`,
-                    message : e.response.data.errors,
-                    type : "error",
-                    time : 5000
-                });
+                addNotification({ message : e.response.data.errors, type : "error" });
             }
         }
     };

@@ -67,12 +67,7 @@ const PlaylistsProvider: React.FunctionComponent = (props): React.ReactElement =
                 }).catch((err) => {
                     console.log(err);
                     setIsLoading(false);
-                    addNotification({
-                        id :`${Date.now()}`,
-                        message : "Something happened while trying to fetch your playlists",
-                        type : "error",
-                        time : 5000
-                    });
+                    addNotification({ message : "Something happened while trying to fetch your playlists", type : "error" });
                 });
         }
     }, [user]);

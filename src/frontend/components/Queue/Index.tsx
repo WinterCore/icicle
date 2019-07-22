@@ -31,17 +31,9 @@ const Queue: React.FunctionComponent = () => {
         }).then(({ data : { message } }) => {
             setIsClearingQueue(false);
             setData([]);
-            addNotification({
-                id   : `${Date.now()}`,
-                type : "success",
-                message
-            });
+            addNotification({ message });
         }).catch((err) => {
-            addNotification({
-                id      : `${Date.now()}`,
-                type    : "success",
-                message : "Something happened while trying to clear your queue"
-            });
+            addNotification({ message : "Something happened while trying to clear your queue" });
             setIsClearingQueue(false);
         });
     };

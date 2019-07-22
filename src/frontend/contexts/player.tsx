@@ -46,9 +46,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const seek              = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
     const joinStream        = (id: string)       => socket.emit(SOCKET_ACTIONS.JOIN, id);
     const skip              = ()                 => socket.emit(SOCKET_ACTIONS.SKIP);
-    const handleSocketJoin  = ()                 => setData(data => ({ ...data, liveListeners : data.liveListeners + 1 }));
-    const handleSocketLeave = ()                 => setData(data => ({ ...data, liveListeners : data.liveListeners - 1 }));
-    const handleError       = (message: string)  => addNotification({ id :`${Date.now()}`, message, type : "error", time : 5000 });
+    const handleError       = (message: string)  => addNotification({ message, type : "error" });
 
     const startStream = (videoId: string) => {
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, videoId);
