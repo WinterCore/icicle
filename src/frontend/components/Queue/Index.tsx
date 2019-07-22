@@ -73,7 +73,7 @@ const Queue: React.FunctionComponent = () => {
                         isLoading
                         ? <div className="flex-middle"><Loader /></div>
                         : ( 
-                            data.length
+                            data.length && roomData && nowPlaying
                                 ? (
                                     <>
                                         {
