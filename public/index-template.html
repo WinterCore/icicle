@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="theme-color" content="#14172b" />
+  <meta property="og:site_name" content="Icicle">
+  <meta property="og:url" content="https://icicle.wintercore.dev/">
+  <meta property="og:image" content="https://icicle.wintercore.dev/assets/icicle.png">
+  <meta property="og:locale" content="en_GB">
+  <meta name="description" content="Enjoy listening to music (through youtube) with your friends in realtime, playlists, queue and private streams support.">
   <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
   <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
@@ -42,6 +47,7 @@
       width           : 100vw;
       height          : 100vh;
       display         : flex;
+      flex-direction  : column;
       align-items     : center;
       position        : fixed;
       background      : #111E68;
@@ -51,6 +57,8 @@
       opacity         : 1;
       transform       : scale(1);
       pointer-events  : none;
+      font-family     : "Saira Semi Condensed", sans-serif;
+      color           : #FFF;
     }
     #loader.loaded {
       opacity   : 0;
@@ -63,6 +71,7 @@
 <body>
   <div id="loader">
     <img src="/assets/icicle.svg" alt="icicle logo" />
+    <h3>Initializing...</h3>
   </div>
   <div id="root"></div>
 </body>
