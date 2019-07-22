@@ -28,7 +28,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
         const url = await download(videoId);
         socket.leaveAll();
         if (type === "USER") {
-            if (currentRoomId) { // if the user is another room (remove him from the listeners list)
+            if (currentRoomId && currentRoomId !== id) { // if the user is another room (remove him from the listeners list)
                 await User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } });
                 RoomStore.removeListener(currentRoomId, id);
             }
