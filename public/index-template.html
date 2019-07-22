@@ -22,10 +22,48 @@
   <meta name="msapplication-TileColor" content="#14172b">
   <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
   <title>Icicle</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    #root {
+      display    : flex;
+      width      : 100%;
+      transform  : scale(0.9);
+      opacity    : 0;
+      transition : transform 300ms cubic-bezier(0.04, 0.68, 0.46, 1), opacity 300ms cubic-bezier(0.04, 0.68, 0.46, 1);
+    }
+    #root.loaded {
+      opacity   : 1;
+      transform : scale(1);
+    }
+
+    #loader {
+      width           : 100vw;
+      height          : 100vh;
+      display         : flex;
+      align-items     : center;
+      position        : fixed;
+      background      : #111E68;
+      justify-content : center;
+      z-index         : 1000;
+      transition      : transform 300ms cubic-bezier(0.04, 0.68, 0.46, 1), opacity 300ms cubic-bezier(0.04, 0.68, 0.46, 1);
+      opacity         : 1;
+      transform       : scale(1);
+      pointer-events  : none;
+    }
+    #loader.loaded {
+      opacity   : 0;
+      transform : scale(1.1);
+    }
+  </style>
   <link href="https://fonts.googleapis.com/css?family=Saira+Semi+Condensed&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/flexboxgrid.min.css" />
 </head>
 <body>
+  <div id="loader">
+    <img src="/assets/icicle.svg" alt="icicle logo" />
+  </div>
   <div id="root"></div>
 </body>
 </html>
