@@ -37,7 +37,9 @@ export default async function join(socket: socketio.Socket, streamerId: string, 
         await streamer.save();
         socket.join(streamerId);
         Store.setSocketData(socket, { id, type, currentRoomId : streamerId });
-        RoomStore.addListener(streamerId, id);
+        if (type === "USER") {
+            RoomStore.addListener(streamerId, id);
+        }
 
         // Notify the socket
         socket.in(streamerId).emit(SOCKET_ACTIONS.SOCKET_JOINED);
