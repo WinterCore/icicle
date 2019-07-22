@@ -93,7 +93,7 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
                                         </div>
                                 }
                                 {
-                                    (!roomData || roomData._id === user._id) &&
+                                    (user && roomData && roomData._id === user._id) &&
                                         <div>
                                             <Button disabled={ isCreatingInviteLink } onClick={ createInviteLink }>{ isCreatingInviteLink ? "Creating..." : "Create invite link" }</Button>
                                         </div>
