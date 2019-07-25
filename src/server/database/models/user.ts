@@ -31,6 +31,7 @@ UserSchema.methods.isStreaming = function isStreaming(this: Database.User): bool
 };
 
 UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.User) {
+    if (!this.isStreaming()) return null;
     return {
         title         : this.nowPlaying.title,
         duration      : this.nowPlaying.duration,
