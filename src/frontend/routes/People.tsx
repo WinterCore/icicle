@@ -4,7 +4,6 @@ import { GET_PEOPLE } from "../api";
 import useApi from "../hooks/use-api";
 
 import Error      from "../components/Error";
-import Trackbar   from "../components/Trackbar";
 import TextRoller from "../components/TextRoller";
 
 import Loader   from "../icons/Loader";
