@@ -2,21 +2,39 @@ import * as React             from "react";
 import { RouteChildrenProps } from "react-router";
 
 import useBooleanSwitch    from "../hooks/use-boolean-switch";
+
 import { useUser }         from "../contexts/user";
-import { UPDATE_SETTINGS } from "../api";
-import LoaderIcon from "../icons/Loader";
+
+import LoaderIcon          from "../icons/Loader";
+
+import api from "../api";
+
+import { UPDATE_SETTINGS, GET_SETTINGS } from "../api";
 
 const Settings: React.FunctionComponent<RouteChildrenProps> = () => {
-    const { user, update } = useUser();
-    const { error, isLoading, state, success, updateState } = useBooleanSwitch(user.settings.invisMode, UPDATE_SETTINGS, "invisMode");
+    const { user, update }                           = useUser();
+    const [isLoadingSettings, setIsLoadingSettings]  = React.useState(true);
+    const { isLoading, state, success, updateState } = useBooleanSwitch(user.settings.invisMode, UPDATE_SETTINGS, "invisMode");
     
     React.useEffect(() => {
         if (success) update({ settings : { invisMode : state } });
     }, [success]);
 
+    React.useEffect(() => {
+        api({ ...GET_SETTINGS() }).then((response) => {
+            setIsLoadingSettings(false);
+            update({ settings : response.data.data })
+        }).catch((err) => {
+            console.log(err);
+        });
+    }, []);
+
     return (
         <div className="settings-section">
-            <h2 className="heading">General</h2>
+            <div className="heading">
+                <h2 className="">General</h2>
+                { isLoadingSettings && <LoaderIcon /> }
+            </div>
             <div className="setting-item">
                 <div className="switch-container">
                     { isLoading && <LoaderIcon /> }

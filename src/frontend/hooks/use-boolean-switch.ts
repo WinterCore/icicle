@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { AxiosRequestConfig }           from "axios";
 
 import api from "../api";
 
@@ -17,7 +18,7 @@ const useBooleanSwitch = (defaultValue: boolean, endpoint, name: string): UseBoo
     const [error, setError]         = useState<boolean>(false);
     const [success, setSuccess]     = useState<boolean>(false);
 
-    const updateState = (val: boolean) => {
+    const updateState = useMemo(() => (val: boolean) => {
         setIsLoading(true);
         setError(false);
         setState(val);
@@ -35,7 +36,11 @@ const useBooleanSwitch = (defaultValue: boolean, endpoint, name: string): UseBoo
                     setState(!val);
                 }
             });
-    };
+    }, []);
+
+    useEffect(() => {
+        if (defaultValue !== state) setState(defaultValue);
+    }, [defaultValue]);
 
     return { updateState, state, isLoading, error, success };
 };
