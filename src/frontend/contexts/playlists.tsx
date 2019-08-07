@@ -70,7 +70,7 @@ const PlaylistsProvider: React.FunctionComponent = (props): React.ReactElement =
                     addNotification({ message : "Something happened while trying to fetch your playlists", type : "error" });
                 });
         }
-    }, [user]);
+    }, [!!user]);
 
 
     return <PlaylistContext.Provider value={{ playlists, isLoadingSongPlaylists, setPlaylists, isLoading, isModalOpen, openModal, songPlaylists, closeModal, setSongPlaylists, videoId }} { ...props } />;
