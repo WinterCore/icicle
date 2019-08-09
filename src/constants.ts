@@ -7,6 +7,7 @@ export const SOCKET_ACTIONS = {
     CHECK         : "CHECK",
     JOIN          : "JOIN",
     INVITE_JOIN   : "INVITE_JOIN",
+    DEAD_JOIN     : "DEAD_JOIN", // Joining a stream with nothing playing (I couldn't find a better name for this 😁)
     LEAVE         : "LEAVE",
     SKIP          : "SKIP",
     SOCKET_JOINED : "SOCKET_JOINED",

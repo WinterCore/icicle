@@ -1,3 +1,8 @@
+type PlayerDataUser = {
+    name : string;
+    _id  : string;
+};
+
 type PlayerData = {
     title         : string;
     url           : string;
@@ -5,10 +10,7 @@ type PlayerData = {
     startAt       : number;
     videoId       : string;
     liveListeners : number;
-    by            : {
-        name : string;
-        _id  : string;
-    }
+    by            : PlayerDataUser
 };
 
 interface Window {

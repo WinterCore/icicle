@@ -13,6 +13,8 @@ interface User extends Document {
     getNowPlayingCurrentTime () : number;
     getNowPlayingData        () : number;
     isStreaming              () : boolean;
+    getRoomData              () : PlayerDataUser;
+    getNowPlayingData        () : PlayerData;
 }
 
 interface Video {

@@ -30,6 +30,10 @@ UserSchema.methods.isStreaming = function isStreaming(this: Database.User): bool
     return this.nowPlaying && !!this.nowPlaying.url;
 };
 
+UserSchema.methods.getRoomData = function getRoomData(this: Database.User) {
+    return { _id : this._id, name : this.name };
+};
+
 UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.User) {
     if (!this.isStreaming()) return null;
     return {
@@ -38,7 +42,7 @@ UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.Use
         startAt       : this.getNowPlayingCurrentTime(),
         url           : this.nowPlaying.url,
         videoId       : this.nowPlaying.videoId,
-        by            : { _id : this._id, name : this.name },
+        by            : this.getRoomData(),
         liveListeners : this.liveListeners
     };
 };

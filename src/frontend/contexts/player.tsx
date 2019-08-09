@@ -33,7 +33,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [roomData, setRoomData] = useState<RoomData | null>(() => JSON.parse(window.localStorage.getItem("last_stream")));
     const { socket }              = useSocket();
     const { addNotification }     = useNotification();
-    const onRoomJoin  = (data: PlayerData) => {
+    const onRoomJoin  = (data: PlayerData) => {  
         setRoomData(roomData => data ? data.by : roomData);
         if (data) window.localStorage.setItem("last_stream", JSON.stringify(data.by));
         setData(data ? { ...data } : null);
@@ -44,6 +44,12 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         setRoomData(null);
         window.localStorage.removeItem("last_stream");
     };
+
+    const handleDeadRoomJoin = (data: PlayerDataUser) => {
+        setRoomData(data);
+        window.localStorage.setItem("last_stream", JSON.stringify(data));
+    };
+
     const seek              = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
     const joinStream        = (id: string)       => socket.emit(SOCKET_ACTIONS.JOIN, id);
     const skip              = ()                 => socket.emit(SOCKET_ACTIONS.SKIP);
@@ -74,7 +80,9 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         const data = JSON.parse(window.localStorage.getItem("last_stream")) || {};
         socket.on(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
         socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
+        socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
         socket.on(SOCKET_ACTIONS.SOCKET_LEFT, handleSocketLeave);
+        socket.on(SOCKET_ACTIONS.DEAD_JOIN, handleDeadRoomJoin);
         socket.on(SOCKET_ACTIONS.ERROR, handleError);
         socket.on(SOCKET_ACTIONS.END_STREAM, (notify: boolean) => {
             setData(null);
