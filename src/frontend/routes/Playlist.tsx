@@ -41,6 +41,7 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
     React.useEffect(() => {
         setIsLoading(true);
         setError(false);
+        setSearch("");
         const cancelTokenSource = Axios.CancelToken.source();
         api({
             ...GET_PLAYLISTS_ITEMS(id),
