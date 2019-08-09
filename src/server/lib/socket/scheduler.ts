@@ -52,7 +52,7 @@ class Scheduler extends EventEmitter {
     }
 
     private schedule(id: string, timeoutId: NodeJS.Timeout) { this.jobs[id] = timeoutId; }
-    private cancel(id: string) {
+    public cancel(id: string) {
         const timeoutId = this.jobs[id];
         clearTimeout(timeoutId);
         delete this.jobs[id];
