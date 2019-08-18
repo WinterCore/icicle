@@ -9,7 +9,7 @@ export default function validatePlaylist(req: Request, res: Response, next) {
     if (!name) return next(new ValidationError(["The name parameter is required"]));
     Playlist.countDocuments({ "user._id" : req.userId, name })
         .then((count) => {
-            if (count > 0) return next(new ValidationError("Another playlist with the same name already exists."));
+            if (count > 0) return next(new ValidationError(["Another playlist with the same name already exists."]));
             else next();
         }).catch(next);
 }
