@@ -15,7 +15,6 @@ const router = Router();
 
 router.get("/:room", co(async (req: Request, res: Response) => {
     const { room } = req.params;
-    // TODO: Prevent adding the same song twice
     const queueItems: Database.Queue[] = await Queue.find({ by : room }).sort({ date : 1 }).limit(8);
     return res.json({ data : queueItems.map(queueResource(req)) });
 }));
