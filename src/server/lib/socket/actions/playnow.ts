@@ -37,6 +37,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
                 socket.join(user._id);
             }
             user.nowPlaying = {
+                id        : `${Date.now()}`,
                 title     : data.title,
                 duration  : data.duration,
                 startedAt : new Date(),

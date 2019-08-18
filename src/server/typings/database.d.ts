@@ -26,6 +26,7 @@ interface Video {
 
 
 interface NowPlaying {
+    id        : string;
     title     : string;
     url       : string;
     duration  : number;

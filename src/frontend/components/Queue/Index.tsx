@@ -60,7 +60,7 @@ const Queue: React.FunctionComponent = () => {
     React.useEffect(() => {
         const cancelTokenSource = fetchQueue();
         return () => cancelTokenSource.cancel("CANCELED");
-    }, [nowPlaying ? nowPlaying.title : null]);
+    }, [nowPlaying ? nowPlaying.id : null]);
 
     return (
         <>
