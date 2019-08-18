@@ -1,5 +1,11 @@
 {
- "name": "App",
+ "name": "Icicle",
+ "short_name" : "Icicle",
+ "start_url": "/",
+ "background_color": "#1A2B7F",
+ "display": "fullscreen",
+ "scope": "/",
+ "theme_color": "#14172b",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",

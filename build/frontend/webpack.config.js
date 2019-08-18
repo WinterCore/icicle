@@ -1,5 +1,6 @@
-const path = require("path");
+const path              = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WorkboxPlugin     = require('workbox-webpack-plugin');
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
@@ -53,6 +54,10 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename : "index.html",
             template : path.resolve("./public/index-template.html")
+        }),
+        new WorkboxPlugin.GenerateSW({
+            clientsClaim : true,
+            skipWaiting  : true
         })
     ]
     // externals: {
