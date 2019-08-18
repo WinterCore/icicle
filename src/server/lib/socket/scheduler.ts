@@ -26,6 +26,7 @@ class Scheduler extends EventEmitter {
                     if (queueItem) {
                         const url = await download(queueItem.videoId);
                         user.nowPlaying = {
+                            id        : `${Date.now()}`,
                             title     : queueItem.title,
                             duration  : queueItem.duration,
                             startedAt : new Date(),
