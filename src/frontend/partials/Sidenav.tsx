@@ -29,7 +29,10 @@ const Sidenav: React.FunctionComponent<RouteChildrenProps> = ({ history, locatio
     const handleHamburgerClick = () => setIsVisible(!isVisible);
 
     React.useEffect(() => {
-        return history.listen(() => setIsVisible(false));
+        return history.listen(() => {
+            setIsVisible(false);
+            setSearch("");
+        });
     }, []);
 
     return (
