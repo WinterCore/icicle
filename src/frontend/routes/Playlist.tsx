@@ -30,7 +30,7 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
     const [isDeleteLoading, setIsDeleteLoading]               = React.useState<boolean>(false);
     const [isAddingToQueueLoading, setIsAddingToQueueLoading] = React.useState<boolean>(false);
     const [error, setError]                                   = React.useState<boolean>(false);
-    const [confirmDelete, setConfirmDelete]                   = React.useState<boolean>(null);
+    const [confirmDelete, setConfirmDelete]                   = React.useState<boolean>(false);
     const [search, setSearch]                                 = React.useState<string>("");
 
     const { addNotification }                                 = useNotification();
@@ -41,7 +41,9 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
     React.useEffect(() => {
         setIsLoading(true);
         setError(false);
+        setConfirmDelete(false);
         setSearch("");
+        setIsAddingToQueueLoading(false);
         const cancelTokenSource = Axios.CancelToken.source();
         api({
             ...GET_PLAYLISTS_ITEMS(id),
