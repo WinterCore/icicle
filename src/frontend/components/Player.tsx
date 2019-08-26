@@ -100,7 +100,7 @@ const ActualPlayer: React.FunctionComponent = () => {
                     });
             }
         }
-    }, [nowPlaying.id]);
+    }, [nowPlaying.id, nowPlaying.startAt]);
 
     React.useEffect(() => {
         playerRef.current.volume = 0.3;
