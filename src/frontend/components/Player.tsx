@@ -104,7 +104,7 @@ const ActualPlayer: React.FunctionComponent = () => {
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: nowPlaying.title,
                     artist: nowPlaying.by.name,
-                    artwork: [{ src: nowPlaying.thumbnail }]
+                    artwork: [{ src: nowPlaying.thumbnail, sizes: "320x180", type: "image/jpeg" }]
                 });
             }
             playerRef.current.src = nowPlaying.url;
