@@ -23,8 +23,15 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
         }
         Store.setSocketData(socket, { id, type, currentRoomId, isProcessing : true });
         let data: any = await Song.findOne({ videoId });
-        if (!data)
+        if (!data) {
             data = (await info([videoId])).items[0];
+                await Song.create([{
+                title     : data.title,
+                videoId   : videoId,
+                thumbnail : data.thumbnail,
+                duration  : data.duration
+            }]);
+        }
         const url = await download(videoId);
         socket.leaveAll();
         if (type === "USER") {
