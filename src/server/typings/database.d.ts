@@ -31,6 +31,7 @@ interface NowPlaying {
     url       : string;
     duration  : number;
     startedAt : Date;
+    thumbnail : string;
     videoId   : string;
 }
 

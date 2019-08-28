@@ -10,6 +10,7 @@ type PlayerData = {
     duration      : number;
     startAt       : number;
     videoId       : string;
+    thumbnail     : string;
     liveListeners : number;
     by            : PlayerDataUser
 };
@@ -25,3 +26,4 @@ type QueueItem = {
     duration  : number;
     thumbnail : string;
 }
+

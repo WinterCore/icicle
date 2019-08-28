@@ -76,6 +76,17 @@ const ActualPlayer: React.FunctionComponent = () => {
         }
     };
 
+    React.useEffect(() => {
+        
+        // @ts-ignore
+        if (navigator.mediaSession) {
+            // @ts-ignore
+            navigator.mediaSession.setActionHandler("play", handlePlayPause);
+            // @ts-ignore
+            navigator.mediaSession.setActionHandler("pause", handlePlayPause);
+        }
+    });
+
     const onVolumeChange = (percentage: number) => {
         setVolume(percentage);
         playerRef.current.volume = percentage;
@@ -87,6 +98,15 @@ const ActualPlayer: React.FunctionComponent = () => {
     }, []);
     React.useEffect(() => {
         if (playerRef.current) {
+            // @ts-ignore
+            if (navigator.mediaSession) {
+                // @ts-ignore
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: nowPlaying.title,
+                    artist: nowPlaying.by.name,
+                    artwork: [{ src: nowPlaying.thumbnail }]
+                });
+            }
             playerRef.current.src = nowPlaying.url;
             playerRef.current.currentTime = nowPlaying.startAt;
             setSecondsPlayed(nowPlaying.startAt);

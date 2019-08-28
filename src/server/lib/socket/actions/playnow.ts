@@ -47,6 +47,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
                 id        : `${Date.now()}`,
                 title     : data.title,
                 duration  : data.duration,
+                thumbnail : data.thumbnail,
                 startedAt : new Date(),
                 videoId,
                 url

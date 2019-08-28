@@ -29,6 +29,7 @@ class Scheduler extends EventEmitter {
                             id        : `${Date.now()}`,
                             title     : queueItem.title,
                             duration  : queueItem.duration,
+                            thumbnail : queueItem.thumbnail,
                             startedAt : new Date(),
                             videoId   : queueItem.videoId,
                             url
