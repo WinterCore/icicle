@@ -53,7 +53,6 @@ const ActualPlayer: React.FunctionComponent = () => {
     const [secondsPlayed, setSecondsPlayed]         = React.useState(nowPlaying.startAt);
     const [isPaused, setIsPaused]                   = React.useState<boolean>(true);
     const [isPausedOnPurpose, setIsPausedOnPurpose] = React.useState<boolean>(false);
-    const [volume, setVolume]                       = React.useState<number>(playerRef.current ? playerRef.current.volume : 0);
     const isOwner                                   = user ? nowPlaying.by._id === user._id : null;
     const handleSeek                                = (percentage: number) => {
         const currentTime = nowPlaying.duration * percentage;
@@ -66,7 +65,6 @@ const ActualPlayer: React.FunctionComponent = () => {
         if (isPaused) {
             playerRef.current.play();
             playerRef.current.currentTime = secondsPlayed;
-            setVolume(playerRef.current.volume);
             setIsPaused(false);
             setIsPausedOnPurpose(false);
         } else {
@@ -77,7 +75,6 @@ const ActualPlayer: React.FunctionComponent = () => {
     };
 
     React.useEffect(() => {
-        
         // @ts-ignore
         if (navigator.mediaSession) {
             // @ts-ignore
@@ -88,8 +85,8 @@ const ActualPlayer: React.FunctionComponent = () => {
     });
 
     const onVolumeChange = (percentage: number) => {
-        setVolume(percentage);
         playerRef.current.volume = percentage;
+        window.localStorage.setItem("volume", `${percentage}`);
     };
 
     React.useEffect(() => {
@@ -114,7 +111,6 @@ const ActualPlayer: React.FunctionComponent = () => {
                 playerRef.current.play()
                     .then(() => {
                         setIsPaused(false);
-                        setVolume(playerRef.current.volume);
                     }).catch(() => {
                         setIsPaused(true);
                     });
@@ -122,10 +118,7 @@ const ActualPlayer: React.FunctionComponent = () => {
         }
     }, [nowPlaying.id, nowPlaying.startAt]);
 
-    React.useEffect(() => {
-        playerRef.current.volume = 0.3;
-        setVolume(0.3); 
-    }, []);
+    React.useEffect(() => { playerRef.current.volume = +window.localStorage.getItem("volume") || 0.3; }, []);
 
     useHotkeys(SHORTCUTS.PLAY_PAUSE, React.useCallback(() => {
         setIsPausedOnPurpose((isPausedOnPurpose) => {
@@ -177,7 +170,7 @@ const ActualPlayer: React.FunctionComponent = () => {
                     { secondsToTime(nowPlaying.duration) }
                 </div>
                 <div className="player-volume">
-                    <VolumeRocker volume={ volume } onVolumeChange={ onVolumeChange } />
+                    <VolumeRocker onVolumeChange={ onVolumeChange } />
                 </div>
             </div>
             { <audio ref={ playerRef } /> }

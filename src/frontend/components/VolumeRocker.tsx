@@ -3,8 +3,9 @@ import * as React from "react";
 
 import Volume   from "../icons/Volume";
 
-const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChange, volume }) => {
-    const [isVisible, setIsVisible] = React.useState(false);
+const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChange }) => {
+    const [isVisible, setIsVisible] = React.useState<boolean>(false);
+    const [volume, setVolume]       = React.useState<number>(() => +window.localStorage.getItem("volume") || 0.3);
     const volumeRockerRef = React.useRef<HTMLDivElement>(null);
 
     const {
@@ -17,6 +18,12 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
     } = React.useMemo(() => {
 
         let hideTimeout: NodeJS.Timeout;
+
+        const handleVolumeChange = (vol: number) => {
+            setVolume(vol);
+            onVolumeChange(vol);
+        };
+
         const handleMouseEnter = () => {
             setIsVisible(true)
             clearTimeout(hideTimeout);
@@ -42,20 +49,20 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
             const { top, height } = volumeRockerRef.current.getBoundingClientRect();
             // TODO: calculate the exact position of the mouse on the knob
             const volume = Math.min(1, 1 - ((clientY - top) / height));
-            onVolumeChange(volume < 0.01 ? 0 : volume);
+            handleVolumeChange(volume < 0.01 ? 0 : volume);
         };
 
         const handleMouseDownMovement = (evt: MouseEvent) => {
             evt.preventDefault();
             const { top, height } = volumeRockerRef.current.getBoundingClientRect();
             const volume = Math.min(1, 1 - ((evt.clientY - top) / height));
-            onVolumeChange(volume < 0.01 ? 0 : volume);
+            handleVolumeChange(volume < 0.01 ? 0 : volume);
         };
         const handleTouchStartMovement = (evt: TouchEvent) => {
             evt.preventDefault();
             const { top, height } = volumeRockerRef.current.getBoundingClientRect();
             const volume = Math.min(1, 1 - ((evt.touches[0].clientY - top) / height));
-            onVolumeChange(volume < 0.01 ? 0 : volume);
+            handleVolumeChange(volume < 0.01 ? 0 : volume);
         };
         return {
             handleMouseEnter,
@@ -99,8 +106,6 @@ const VolumeRocker: React.FunctionComponent<VolumeRockerProps> = ({ onVolumeChan
 };
 
 interface VolumeRockerProps {
-    volume: number;
-
     onVolumeChange(percentage: number): void;
 }
 
