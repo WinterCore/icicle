@@ -52,11 +52,11 @@ export default function init(server: Server) {
         socket.on(SOCKET_ACTIONS.PLAY, () => play(socket));
         socket.on(SOCKET_ACTIONS.SEEK, data => seek(socket, data));
         socket.on(SOCKET_ACTIONS.CHECK, data => check(socket, data));
-        socket.on(SOCKET_ACTIONS.JOIN, data => join(socket, data));
+        socket.on(SOCKET_ACTIONS.JOIN, data => join(io, socket, data));
         socket.on(SOCKET_ACTIONS.SKIP, () => skip(socket));
         socket.on(SOCKET_ACTIONS.LEAVE, () => leave(socket));
-        socket.on(SOCKET_ACTIONS.END_STREAM, () => destroy(socket));
-        socket.on(SOCKET_ACTIONS.INVITE_JOIN, (token) => inviteJoin(socket, token))
+        socket.on(SOCKET_ACTIONS.END_STREAM, () => destroy(io, socket));
+        socket.on(SOCKET_ACTIONS.INVITE_JOIN, (token) => inviteJoin(io, socket, token))
         socket.on(SOCKET_ACTIONS.NEW_MESSAGE, (roomId, message) => sendMessage(socket, roomId, message));
 
         socket.on("disconnect", () => {

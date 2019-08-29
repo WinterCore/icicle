@@ -11,7 +11,7 @@ import logger from "../../../logger";
 
 import { terminateStream } from "../helpers";
 
-export default async function join(socket: socketio.Socket, streamerId: string, invite: boolean = false) {
+export default async function join(io: SocketIO.Server, socket: socketio.Socket, streamerId: string, invite: boolean = false) {
     try {
         const { type, id, currentRoomId } = Store.getSocketData(socket);
         if (currentRoomId === streamerId || id === streamerId) {
@@ -31,7 +31,7 @@ export default async function join(socket: socketio.Socket, streamerId: string, 
         }
         if (type === "USER") {
             // Terminate the socket's current stream
-            await terminateStream(socket, id);
+            await terminateStream(io, socket, id);
         }
 
         streamer.liveListeners += 1;
