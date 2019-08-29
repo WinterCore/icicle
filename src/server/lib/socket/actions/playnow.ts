@@ -56,7 +56,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             socket.in(id).emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData()); // Notify all the listeners
             Scheduler.emit("schedule-next", { user, socket, duration : data.duration });
         } else {
-            socket.emit(SOCKET_ACTIONS.PLAY_NOW, { ...data, url, startAt : 0, by : { _id : null, name : "Unknown" } });
+            socket.emit(SOCKET_ACTIONS.PLAY_NOW, { ...data.toObject(), url : AUDIO_URL(videoId), startAt : 0, by : { _id : null, name : "Unknown" } });
             Store.setSocketData(socket, { id, type, isProcessing : false, currentRoomId : null });
         }
     } catch(e) {
