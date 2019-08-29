@@ -1,5 +1,9 @@
 import { Schema, model } from "mongoose";
 
+import Queue from "./queue";
+
+import { AUDIO_URL } from "../../../../config/server";
+
 const UserSchema: Schema = new Schema({
     name          : String,
     googleId      : String,
@@ -49,6 +53,27 @@ UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.Use
         by            : this.getRoomData(),
         liveListeners : this.liveListeners
     };
+};
+
+UserSchema.methods.extractNextItemInQueue =
+    async function getNextItemInQueue(this: Database.User): Promise<Database.Queue | null> {
+        const [queueItem] = await Queue.find({ by : this._id }).sort({ _id : 1 }).limit(1);
+        if (!queueItem) return null;
+        await queueItem.remove();
+        return queueItem;
+    };
+
+UserSchema.methods.setNowPlayingData = async function setNowPlayingData(this: Database.User, song: Database.Song): Promise<void> {
+    this.nowPlaying = {
+        id        : `${this._id}${Date.now()}`,
+        title     : song.title,
+        duration  : song.duration,
+        thumbnail : song.thumbnail,
+        startedAt : new Date(),
+        url       : AUDIO_URL(song.videoId),
+        videoId   : song.videoId
+    };
+    await this.save();
 };
 
 export default model<Database.User>("user", UserSchema);

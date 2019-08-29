@@ -10,11 +10,13 @@ interface User extends Document {
     nowPlaying    : NowPlaying;
     settings      : { invisMode : boolean; };
 
-    getNowPlayingCurrentTime () : number;
-    getNowPlayingData        () : number;
-    isStreaming              () : boolean;
-    getRoomData              () : PlayerDataUser;
-    getNowPlayingData        () : PlayerData;
+    getNowPlayingCurrentTime ()           : number;
+    getNowPlayingData        ()           : number;
+    isStreaming              ()           : boolean;
+    getRoomData              ()           : PlayerDataUser;
+    getNowPlayingData        ()           : PlayerData;
+    setNowPlayingData        (song: Song) : void;
+    extractNextItemInQueue   ()           : Promise<Song | null>;
 }
 
 interface Video {

@@ -11,6 +11,7 @@ const dbCred = dbUser.length > 0 || dbPass.length > 0 ? `${dbUser}:${dbPass}@` :
 export const mongodbServerUrl = process.env.DB_URL || `mongodb://${dbCred}${dbHost}:${dbPort}/${dbName}${dbCred ? "?authSource=admin" : ""}`;
 
 export const DOMAIN = process.env.NODE_ENV === "development" ? "http://localhost:8081" : "https://icicle.wintercore.dev";
+export const AUDIO_URL = (id: string): string => `${DOMAIN}/audio/${id}.ogg`;
 export const GOOGLE_CONFIG = {
   clientId: "678441941517-30jpq0673jv9gqmm4n7tm8nsv4304acq.apps.googleusercontent.com",
   clientSecret: "RjG-37S3rIOSYrTissbf5xch",

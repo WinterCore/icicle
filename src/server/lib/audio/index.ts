@@ -4,7 +4,6 @@ import * as fs   from "fs";
 
 import { AUDIO_PATH } from "../../../../config/server";
 
-import { DOMAIN } from "../../../../config/server";
 import logger     from "../../logger";
 
 export const download = (id: string): Promise<string> => {
@@ -24,10 +23,10 @@ export const download = (id: string): Promise<string> => {
                         logger.error(err);
                     }
                     logger.info(`Youtube dl : ${id} ${stdout}`);
-                    resolve(`${DOMAIN}/audio/${id}.ogg`);
+                    resolve();
                 });
             } else {
-                resolve(`${DOMAIN}/audio/${id}.ogg`);
+                resolve();
             }
         });
     });

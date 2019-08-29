@@ -29,16 +29,16 @@ router.post("/:playlistId/song", [authenticated, validatePlaylistSong], co(async
     const { videoId }    = req.body;
 
     const playlist = await Playlist.findById(playlistId);
+    if (!playlist.songs.indexOf(videoId)) {
+        res.status(403);
+        return res.json({ errors : ["The song already exists in the specified playlist"] });
+    }
+
     const song = await Song.findOne({ videoId });
     if (song) {
-        if (playlist.songs.indexOf(videoId) === -1) {
             playlist.songs.push(videoId);
             await playlist.save();
         } else {
-            res.status(403);
-            return res.json({ errors : ["The song already exists in the specified playlist"] });
-        }
-    } else {
         const { items : [data] } = await info([videoId]);
         if (!data) {
             res.status(404);
@@ -70,9 +70,6 @@ router.post("/:playlistId/queue", authenticated, co(async (req: Request, res: Re
         by        : req.userId,
         thumbnail : song.thumbnail
     }));
-    if (!(await User.findById(req.userId)).isStreaming()) { // if the user is not streaming (don't add the first song because it will be played immediately)
-        songsToBeAdded.shift();
-    }
     Queue.create(songsToBeAdded);
     return res.json({ message : `${songs.length} ${songs.length > 1 ? "songs" : "song"} ${songs.length > 1 ? "were" : "was"} successfully added to the queue` });
 }));

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import Queue from "../../../database/models/queue";
 
 
 import ValidationError from "../../../errors/validation";

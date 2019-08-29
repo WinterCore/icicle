@@ -13,6 +13,7 @@ import Scheduler from "../scheduler";
 import { SOCKET_ACTIONS } from "../../../../constants";
 
 import logger from "../../../logger";
+import { AUDIO_URL } from "../../../../../config/server";
 
 
 export default async function playNow(socket: socketio.Socket, videoId: string) {
@@ -22,17 +23,18 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             return socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
         }
         Store.setSocketData(socket, { id, type, currentRoomId, isProcessing : true });
-        let data: any = await Song.findOne({ videoId });
+        let data: Database.Song = await Song.findOne({ videoId });
+        await download(videoId);
         if (!data) {
-            data = (await info([videoId])).items[0];
-                await Song.create([{
-                title     : data.title,
+            const youtubeData = (await info([videoId])).items[0];
+            const data = new Song({
+                title     : youtubeData.title,
                 videoId   : videoId,
-                thumbnail : data.thumbnail,
-                duration  : data.duration
-            }]);
+                thumbnail : youtubeData.thumbnail,
+                duration  : youtubeData.duration
+            });
+            data.save();
         }
-        const url = await download(videoId);
         socket.leaveAll();
         if (type === "USER") {
             if (currentRoomId && currentRoomId !== id) { // if the user is another room (remove him from the listeners list)
@@ -43,16 +45,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             if (!user.nowPlaying) { // if the user is creating a room make him join it
                 socket.join(user._id);
             }
-            user.nowPlaying = {
-                id        : `${Date.now()}`,
-                title     : data.title,
-                duration  : data.duration,
-                thumbnail : data.thumbnail,
-                startedAt : new Date(),
-                videoId,
-                url
-            };
-            await user.save();
+            await user.setNowPlayingData(data);
             Store.setSocketData(socket, {
                 isProcessing  : false,
                 currentRoomId : user._id,
