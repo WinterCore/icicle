@@ -27,6 +27,7 @@ export default async function join(socket: socketio.Socket, streamerId: string, 
             if (type === "USER") { // remove him from the listeners list
                 RoomStore.removeListener(currentRoomId, id);
             }
+            socket.leave(currentRoomId);
         }
         if (type === "USER") {
             // Terminate the socket's current stream
