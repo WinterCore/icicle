@@ -17,9 +17,8 @@ import api, { ADD_TO_QUEUE } from "../api";
 const Video: React.FunctionComponent<VideoProps> = (props) => {
     const { id, title, thumbnail }                      = props;
     const [isAddToQueueLoading, setIsAddToQueueLoading] = React.useState(false);
-    const [isAddToQueueDone, setIsAddToQueueDone]       = React.useState(false);
     const [isPlayNowLoading, setIsPlayNowLoading]       = React.useState(false);
-    const { startStream, nowPlaying }                   = usePlayer();
+    const { play, nowPlaying, startStream }             = usePlayer();
     const { addNotification }                           = useNotification();
     const { openModal }                                 = usePlaylists();
     const { user }                                      = useUser();
@@ -34,14 +33,10 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
         e.preventDefault();
         setIsAddToQueueLoading(true);
         try {
-            if (!nowPlaying || nowPlaying.by._id !== user._id) { // Start a stream if the user is not already in one or if the current stream is not the user's
-                startStream(id);
-                addNotification({ message : "Your queue is empty, the video will be played immediately." });
-            } else {
-                await api({ ...ADD_TO_QUEUE(), data : { id } });
-                addNotification({ message : `${title} has been added to the queue.` });
-            }
-            setIsAddToQueueDone(true);
+            await api({ ...ADD_TO_QUEUE(), data : { id } });
+            addNotification({ message : `${title} has been added to the queue.` });
+            setIsAddToQueueLoading(false);
+            play();
         } catch(e) {
             if (e.response && e.response.status === 422) {
                 addNotification({
@@ -49,7 +44,6 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                     type : "error"
                 });
             }
-            setIsAddToQueueDone(true);
         }
     };
 

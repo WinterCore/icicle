@@ -23,6 +23,7 @@ interface PlayerProvider {
     joinStream      (id: string)       : void;
     terminateStream ()                 : void;
     skip            ()                 : void;
+    play            ()                 : void;
     
     roomData   : RoomData;
     nowPlaying : PlayerData;
@@ -57,6 +58,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const handleSocketLeave = ()                 => setData(data => data && ({ ...data, liveListeners : data.liveListeners - 1 }));
     const handleError       = (message: string)  => addNotification({ message, type : "error" });
     const terminateStream   = ()                 => socket.emit(SOCKET_ACTIONS.END_STREAM);
+    const play              = ()                 => socket.emit(SOCKET_ACTIONS.PLAY);
 
     const startStream = (videoId: string) => {
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, videoId);
@@ -72,6 +74,7 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         roomData,
         skip,
         terminateStream,
+        play,
         nowPlaying : data
     };
 

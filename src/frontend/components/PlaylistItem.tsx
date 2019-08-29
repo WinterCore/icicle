@@ -24,10 +24,9 @@ const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
     const [isLoading, setIsLoading]                     = React.useState<boolean>(false);
     const [isAddToQueueLoading, setIsAddToQueueLoading] = React.useState<boolean>(false);
 
-    const { startStream, nowPlaying } = usePlayer();
-    const { user }                    = useUser();
-    const { addNotification }         = useNotification();
-    const { openModal }               = usePlaylists();
+    const { play, startStream } = usePlayer();
+    const { addNotification }   = useNotification();
+    const { openModal }         = usePlaylists();
 
     const deletePlaylistItem = () => {
         setIsLoading(true);
@@ -47,13 +46,9 @@ const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
         e.preventDefault();
         setIsAddToQueueLoading(true);
         try {
-            if (!nowPlaying || nowPlaying.by._id !== user._id) { // Start a stream if the user is not already in one or if the current stream is not the user's
-                startStream(videoId);
-                addNotification({ message : "Your queue is empty, the video will be played immediately." });
-            } else {
-                await api({ ...ADD_TO_QUEUE(), data : { id : videoId } });
-                addNotification({ message : `${title} has been added to the queue.` });
-            }
+            await api({ ...ADD_TO_QUEUE(), data : { id : videoId } });
+            addNotification({ message : `${title} has been added to the queue.` });
+            play();
             setIsAddToQueueLoading(false);
         } catch(e) {
             console.log(e);

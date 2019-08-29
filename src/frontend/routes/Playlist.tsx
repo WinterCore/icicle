@@ -13,7 +13,6 @@ import Button       from "../components/Button";
 import { useNotification } from "../contexts/notification";
 import { usePlaylists }    from "../contexts/playlists";
 import { usePlayer }       from "../contexts/player";
-import { useUser }         from "../contexts/user";
 
 import Input from "../components/Input";
 
@@ -33,10 +32,9 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
     const [confirmDelete, setConfirmDelete]                   = React.useState<boolean>(false);
     const [search, setSearch]                                 = React.useState<string>("");
 
-    const { addNotification }                                 = useNotification();
-    const { setPlaylists }                                    = usePlaylists();
-    const { nowPlaying, startStream }                         = usePlayer();
-    const { user }                                            = useUser();
+    const { addNotification } = useNotification();
+    const { setPlaylists }    = usePlaylists();
+    const { play }            = usePlayer();
 
     React.useEffect(() => {
         setIsLoading(true);
@@ -61,7 +59,7 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
     }, [id]);
 
     
-    const onSearchChange  = ({ target }: React.ChangeEvent<HTMLInputElement>) => setSearch(target.value);
+    const onSearchChange  = React.useCallback(({ target }: React.ChangeEvent<HTMLInputElement>) => setSearch(target.value), []);
     const onSearch = () => {
         if (search) {
             setFilteredData(data.filter(item => item.title.toLowerCase().indexOf(search.trim().toLowerCase()) > -1));
@@ -92,18 +90,15 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
     };
 
     const addToQueue = () => {
-        if (!data.length) {
-            return addNotification({ message : "There are no songs in this playlist to be added", type : "error" });
-        }
+        if (!data.length) return addNotification({ message : "There are no songs in this playlist to be added", type : "error" });
         setIsAddingToQueueLoading(true);
+
         api({
             ...QUEUE_PLAYLIST(id)
         }).then(({ data : { message } }) => {
             setIsAddingToQueueLoading(false);
             addNotification({ message });
-            if (!nowPlaying || nowPlaying.by._id !== user._id) { // Start a stream if the user is not already in one or if the current stream is not the user's
-                startStream(data[0].videoId);
-            }
+            play();
             history.push("/");
         }).catch((err) => {
             console.log(err);

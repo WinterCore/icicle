@@ -1,9 +1,9 @@
 export const SOCKET_ACTIONS = {
     END_STREAM    : "END_STREAM",
     PLAY_NOW      : "PLAY_NOW",
+    PLAY          : "PLAY", // this doesn't receive a song as an argument (it is used to play the next song in the queue)
     SEEK          : "SEEK",
     PAUSE         : "PAUSE",
-    PLAY          : "PLAY",
     CHECK         : "CHECK",
     JOIN          : "JOIN",
     INVITE_JOIN   : "INVITE_JOIN",

@@ -11,6 +11,7 @@ import { JWT_SECRET }     from "../../../../config/server";
 import { SOCKET_ACTIONS } from "../../../constants";
 
 import playNow     from "./actions/playnow";
+import play        from "./actions/play";
 import seek        from "./actions/seek";
 import check       from "./actions/check";
 import join        from "./actions/join";
@@ -48,6 +49,7 @@ export default function init(server: Server) {
         socket.on("error", (err) => logger.error(err));
 
         socket.on(SOCKET_ACTIONS.PLAY_NOW, data => playNow(socket, data));
+        socket.on(SOCKET_ACTIONS.PLAY, () => play(socket));
         socket.on(SOCKET_ACTIONS.SEEK, data => seek(socket, data));
         socket.on(SOCKET_ACTIONS.CHECK, data => check(socket, data));
         socket.on(SOCKET_ACTIONS.JOIN, data => join(socket, data));
