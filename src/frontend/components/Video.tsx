@@ -66,7 +66,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                 </div>
                 {
                     <div className="song-actions">
-                        { user ? (isAddToQueueDone ? <div /> : (!isAddToQueueLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />)) : <div /> }
+                        { user ? (!isAddToQueueLoading ? <WatchIcon onClick={ addToQueue } /> : <Loader />) : <div /> }
                         { isPlayNowLoading ? <Loader /> : <PlayIcon onClick={ onPlayNow } /> }
                         { user ? <AddToPlaylistIcon onClick={ () => openModal(id) } /> : <div /> }
                     </div>
