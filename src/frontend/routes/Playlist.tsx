@@ -52,8 +52,8 @@ const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : {
             setData(response.data.data);
             setFilteredData(response.data.data);
             setIsLoading(false);
-        }).catch((err) => {
-            console.log(err);
+        }).catch(({ message }) => {
+            if (message === "CANCELED") return;
             setError(true);
             setIsLoading(false);
         });
