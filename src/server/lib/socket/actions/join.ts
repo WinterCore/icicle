@@ -14,8 +14,8 @@ import { terminateStream } from "../helpers";
 export default async function join(io: SocketIO.Server, socket: socketio.Socket, streamerId: string, invite: boolean = false) {
     try {
         const { id, currentRoomId } = Store.getSocketData(socket);
-        if (currentRoomId === streamerId || id === streamerId) {
-            // check if the socket is trying to join the same stream it"s currently in or if a user is trying to join his own stream
+        if (id === streamerId) {
+            // if a user is trying to join his own stream
             return;
         }
         const streamer = await User.findOne({ _id : streamerId }) as Database.User;

@@ -15,11 +15,13 @@ export default async function check(socket: socketio.Socket, roomId: string) {
         if (roomId) {
             const user = await User.findById(roomId);
             if (user && user.isStreaming()) {
-                if (id === roomId) return; // the user is not joining his own stream
                 if (user.settings.invisMode) {
                     if (
                         !id // the user is not logged in
-                        || !RoomStore.doesRoomContainListener(roomId, id) // if the user is logged in, and doesn't have an invite
+                        || (
+                            id !== roomId
+                            && !RoomStore.doesRoomContainListener(roomId, id) // if the user is logged in, and doesn't have an invite
+                        )
                     ) { 
                         socket.emit(SOCKET_ACTIONS.ERROR, "You need an invite link to be able to join this room");
                         socket.emit(SOCKET_ACTIONS.END_STREAM);
