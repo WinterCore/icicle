@@ -24,11 +24,11 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             return;
         }
         Store.setSocketData(socket, { id, currentRoomId, isProcessing : true });
-        let data = await Song.findOne({ videoId }) as Database.Song;
+        let data = await Song.findOne({ videoId });
         await download(videoId);
         if (!data) {
             const youtubeData = (await info([videoId])).items[0];
-            const data = new Song({
+            data = new Song({
                 title     : youtubeData.title,
                 videoId   : videoId,
                 thumbnail : youtubeData.thumbnail,
