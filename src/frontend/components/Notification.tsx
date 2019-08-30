@@ -9,10 +9,10 @@ const Notification: React.FunctionComponent = () => {
     const { notifications, removeNotification, completeNotification } = useNotification();
 
     React.useEffect(() => {
-        notifications.forEach((not) => {
-            if (!not.done) {
-                completeNotification(not.id);
-                setTimeout(() => removeNotification(not.id), not.time || 5000);
+        notifications.forEach((notification) => {
+            if (!notification.done) {
+                completeNotification(notification.id);
+                setTimeout(() => removeNotification(notification.id), notification.time);
             }
         });
     });

@@ -51,7 +51,7 @@ const QueueItem: React.FunctionComponent<QueueItemProps> = (props) => {
                     { secondsToTime(duration) }
                 </div>
                 {
-                    user && nowPlaying.by._id === user._id
+                    user && nowPlaying && nowPlaying.by._id === user._id
                         ? (
                             <div className="song-actions">
                                 { isLoading ? <LoaderIcon /> : <CrossIcon onClick={ deleteQueueItem } /> }

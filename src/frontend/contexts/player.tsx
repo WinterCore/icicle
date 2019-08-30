@@ -6,14 +6,9 @@ import { useNotification } from "./notification";
 
 import { SOCKET_ACTIONS } from "../../constants";
 
-const { useContext, createContext, useState, useMemo, useEffect } = React;
+const { useContext, createContext, useState, useEffect } = React;
 
-const PlayerContext = createContext(null);
-
-type RoomData = {
-    _id  : string;
-    name : string;
-}
+const PlayerContext = createContext<PlayerProvider | null>(null);
 
 interface PlayerProvider {
     onRoomJoin      (data: PlayerData) : void;
@@ -25,13 +20,16 @@ interface PlayerProvider {
     skip            ()                 : void;
     play            ()                 : void;
     
-    roomData   : RoomData;
-    nowPlaying : PlayerData;
+    roomData   : PlayerDataUser | null;
+    nowPlaying : PlayerData | null;
 }
 
 const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [data, setData]         = useState<PlayerData | null>(null);
-    const [roomData, setRoomData] = useState<RoomData | null>(() => JSON.parse(window.localStorage.getItem("last_stream")));
+    const [roomData, setRoomData] = useState<PlayerDataUser | null>(() => {
+        const val = window.localStorage.getItem("last_stream");
+        return val ? JSON.parse(val) : null;
+    });
     const { socket }              = useSocket();
     const { addNotification }     = useNotification();
     const onRoomJoin  = (data: PlayerData) => {  
@@ -80,43 +78,29 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
 
 
     useEffect(() => {
-        const data = JSON.parse(window.localStorage.getItem("last_stream")) || {};
         socket.on(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
         socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
         socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
         socket.on(SOCKET_ACTIONS.SOCKET_LEFT, handleSocketLeave);
         socket.on(SOCKET_ACTIONS.DEAD_JOIN, handleDeadRoomJoin);
         socket.on(SOCKET_ACTIONS.ERROR, handleError);
-        socket.on(SOCKET_ACTIONS.END_STREAM, (notify: boolean) => {
+        socket.on(SOCKET_ACTIONS.END_STREAM, () => {
             setData(null);
             setRoomData(null);
-            if (notify)
-                addNotification({ message : "The stream has been terminated by the streamer." });
             window.localStorage.removeItem("last_stream");
         });
-        socket.emit(SOCKET_ACTIONS.CHECK, data._id);
-        return () => socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
+        socket.emit(SOCKET_ACTIONS.CHECK, roomData ? roomData._id : null);
+        return () => { socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin) };
     }, [
         socket
     ]);
-
-    const onReconnect = () => {
-        const data = JSON.parse(window.localStorage.getItem("last_stream")) || {};
-        socket.emit(SOCKET_ACTIONS.CHECK, data._id);
-    };
-
-    useEffect(() => {
-        socket.on("reconnect", onReconnect);
-        return () => socket.off("reconnect", onReconnect);
-    });
-
 
 
     return <PlayerContext.Provider value={ context } { ...props } />;
 };
 
 function usePlayer(): PlayerProvider {
-    const context = useContext<PlayerProvider>(PlayerContext);
+    const context = useContext(PlayerContext);
     if (!context) {
         throw new Error("usePlayer must be used within a component that's rendered within the PlayerProvider");
     }

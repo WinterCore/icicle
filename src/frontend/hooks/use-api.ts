@@ -4,9 +4,9 @@ import Axios, { AxiosRequestConfig } from "axios";
 import api from "../api";
 
 const useApi = (config: AxiosRequestConfig, deps = []) => {
-    const [data, setData]           = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError]         = useState(false);
+    const [data, setData]           = useState<any | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError]         = useState<boolean>(false);
 
     useEffect(() => {
         const cancelTokenSource = Axios.CancelToken.source();

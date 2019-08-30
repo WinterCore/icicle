@@ -51,11 +51,11 @@ router.get("/google/callback", co(async (req: Request, res: Response) => {
     const oauth2 = google.oauth2({ auth: conn, version: "v2" });
     const { data } = await oauth2.userinfo.get();
     
-    let user: Database.User = await User.findOne({ googleId : data.id });
+    let user: Database.User | null = await User.findOne({ googleId : data.id });
     if (user) {
-        user.email   = data.email;
-        user.name    = data.name;
-        user.picture = data.picture;
+        user.email   = data.email || "";
+        user.name    = data.name || "";
+        user.picture = data.picture || "";
         user.save();
     } else {
         user = new User({
@@ -71,8 +71,11 @@ router.get("/google/callback", co(async (req: Request, res: Response) => {
 }));
 
 router.post("/logout", authenticated, co(async (req: Request, res: Response) => {
-  Blacklist.insertMany([{ user : req.userId, token : req.header("Authorization").slice(7) }]);
-  res.json({});
+    Blacklist.insertMany([{
+        user : req.userId,
+        token : (req.header("Authorization") as string).slice(7)
+    }]);
+    res.json({});
 }));
 
 export default router;

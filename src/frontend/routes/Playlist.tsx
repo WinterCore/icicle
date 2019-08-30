@@ -1,6 +1,6 @@
-import * as React             from "react";
-import { RouteChildrenProps } from "react-router";
-import Axios                  from "axios";
+import * as React              from "react";
+import { RouteComponentProps } from "react-router";
+import Axios                   from "axios";
 
 
 import Loader     from "../icons/Loader";
@@ -22,7 +22,7 @@ type Params = {
     id: string;
 };
 
-const Search: React.FunctionComponent<RouteChildrenProps<Params>> = ({ match : { params : { id } }, history }) => {
+const Search: React.FunctionComponent<RouteComponentProps<Params>> = ({ match : { params : { id } }, history }) => {
     const [data, setData]                                     = React.useState<Entities.Song[]>([]);
     const [filteredData, setFilteredData]                     = React.useState<Entities.Song[]>([]);
     const [isLoading, setIsLoading]                           = React.useState<boolean>(true);

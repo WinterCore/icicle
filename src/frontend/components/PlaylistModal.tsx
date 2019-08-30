@@ -34,7 +34,7 @@ const PlaylistModal: React.FunctionComponent = () => {
         closeModal();
     };
 
-    const onCheckboxChange = ({ target : { checked } }, _id: string) => {
+    const onCheckboxChange = ({ target : { checked } } : React.ChangeEvent<HTMLInputElement>, _id: string) => {
         if (isLoading) return;
         setIsLoading(true);
         if (checked) {
@@ -54,7 +54,7 @@ const PlaylistModal: React.FunctionComponent = () => {
             });
         } else {
             api({
-                ...REMOVE_SONG_FROM_PLAYLIST(_id, videoId),
+                ...REMOVE_SONG_FROM_PLAYLIST(_id, videoId as string),
                 data : { videoId }
             }).then(() => {
                 setIsLoading(false)
@@ -80,7 +80,7 @@ const PlaylistModal: React.FunctionComponent = () => {
         }).then(({ data : { data } }) => {
             setIsCreateLoading(false);
             setName("");
-            setPlaylists(oldPlaylists => [...oldPlaylists, data].sort((a, b) => a.name.localeCompare(b.name)));
+            setPlaylists((oldPlaylists: Playlist[]) => [...oldPlaylists, data].sort((a, b) => a.name.localeCompare(b.name)));
             addNotification({ message : `${name} was created successfully` });
         }).catch((err) => {
             setIsCreateLoading(false);
@@ -116,7 +116,7 @@ const PlaylistModal: React.FunctionComponent = () => {
                                     <LoaderIcon />
                                 </div>
                             ) : (
-                                playlists.map(({ _id, name }) => (
+                                playlists.map(({ _id, name }: Playlist) => (
                                     <div key={ _id } className="playlist-modal-playlist">
                                         <input
                                             id={ `playlist-${_id}` }

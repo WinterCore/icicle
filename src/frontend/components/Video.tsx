@@ -29,7 +29,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
             startStream(id);
         }
     };
-    const addToQueue = async (e) => {
+    const addToQueue = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
         e.preventDefault();
         setIsAddToQueueLoading(true);
         try {

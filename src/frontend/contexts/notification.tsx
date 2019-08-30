@@ -2,28 +2,36 @@ import * as React    from "react";
 
 const { useContext, createContext, useState } = React;
 
-const NotificationContext = createContext(null);
+const NotificationContext = createContext<NotificationProvider | null>(null);
 
 type NotificationType = "error" | "success";
 
 type Notification = {
-    id     ?: string;
-    type   ?: NotificationType;
+    id      : string;
+    type    : NotificationType;
     message : string;
-    time   ?: number;
-    done   ?: boolean;
-}
+    time    : number;
+    done    : boolean;
+};
 
-type NotificationContext = {
+type AddNotificationParams = {
+    id?     : string;
+    type?   : NotificationType;
+    message : string;
+    time?   : number;
+};
+
+type NotificationProvider = {
     notifications        : Notification[];
-    addNotification      : {(data: Notification): void};
-    removeNotification   : {(id: string): void};
-    completeNotification : {(id: string): void};
+    addNotification      : (data: AddNotificationParams) => void;
+    removeNotification   : (id: string)                  => void;
+    completeNotification : (id: string)                  => void;
 };
 
 const NotificationProvider: React.FunctionComponent = (props): React.ReactElement => {
-    const [notifications, setNotifications] = useState([]);
-    const addNotification = (data: Notification) => setNotifications(notifications => [...notifications, { id : `${Date.now()}`, type : "success", ...data }]);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const addNotification = (data: AddNotificationParams) =>
+        setNotifications(notifications => [...notifications, { id : `${Date.now()}`, type : "success", ...data, time : 5000, done : false, ...data }]);
 
     const removeNotification = (id: string) => setNotifications(notifications => notifications.filter(item => item.id !== id));
 
@@ -42,7 +50,7 @@ const NotificationProvider: React.FunctionComponent = (props): React.ReactElemen
 }
 
 function useNotification() {
-    const context = useContext<NotificationContext>(NotificationContext);
+    const context = useContext(NotificationContext);
     if (!context) {
         throw new Error("useNotification must be used within a component that's rendered within the NotificationProvider");
     }

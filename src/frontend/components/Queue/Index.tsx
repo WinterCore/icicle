@@ -21,7 +21,7 @@ const Queue: React.FunctionComponent = () => {
 
     const [data, setData]                       = React.useState<QueueItem[]>([]);
     const [isLoading, setIsLoading]             = React.useState<boolean>(!!nowPlaying);
-    const [error, setError]                     = React.useState(null);
+    const [error, setError]                     = React.useState(false);
     const [isClearingQueue, setIsClearingQueue] = React.useState<boolean>(false);
 
     const clearQueue = () => {

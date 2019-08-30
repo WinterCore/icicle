@@ -10,8 +10,8 @@ import { terminateStream } from "../helpers";
 
 export default async function destroy(io: SocketIO.Server, socket: socketio.Socket) {
     try {
-        const { type, id } = Store.getSocketData(socket);
-        if (type === "USER") {
+        const { id } = Store.getSocketData(socket);
+        if (id) {
             await terminateStream(io, socket, id);
             socket.emit(SOCKET_ACTIONS.END_STREAM);
         }

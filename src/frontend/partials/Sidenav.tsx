@@ -1,7 +1,7 @@
-import * as React             from "react";
-import { Link, withRouter }   from "react-router-dom";
-import { RouteChildrenProps } from "react-router";
-import { parse }              from "query-string";
+import * as React              from "react";
+import { Link, withRouter }    from "react-router-dom";
+import { RouteComponentProps } from "react-router";
+import { parse }               from "query-string";
 
 
 import SearchIcon    from "../icons/Search";
@@ -18,7 +18,7 @@ import UserLoginCard    from "../components/UserLoginCard";
 import { usePlaylists } from "../contexts/playlists";
 import { useUser }      from "../contexts/user";
 
-const Sidenav: React.FunctionComponent<RouteChildrenProps> = ({ history, location : { search : query, pathname } }) => {
+const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search : query, pathname } }) => {
     const [search, setSearch]       = React.useState((parse(query).q || "") as string);
     const [isVisible, setIsVisible] = React.useState(false);
     const { playlists }             = usePlaylists();
@@ -61,7 +61,7 @@ const Sidenav: React.FunctionComponent<RouteChildrenProps> = ({ history, locatio
                             <div className="section-divider">Playlists</div>
                             <ul className="links">
                                 {
-                                    playlists.map(({ _id, name }) => (
+                                    playlists.map(({ _id, name }: Playlist) => (
                                         <li className={ pathname === `/playlist/${_id}` ? "active" : "" } key={ _id }>
                                             <Link to={ `/playlist/${_id}` }>{ name }</Link>
                                         </li>

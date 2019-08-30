@@ -13,7 +13,7 @@ function durationStrToSeconds(str: string): number {
 	return (+seconds) + (+minutes * 60) + (+hours * 60 * 60);
 }
 
-async function searchSnippet({ q, nextPageToken : token }) {
+async function searchSnippet({ q, nextPageToken : token }: SearchParams) {
     const params: any = {
         part       : "snippet",
         maxResults : 12,
@@ -23,34 +23,40 @@ async function searchSnippet({ q, nextPageToken : token }) {
 
     if (token) params.pageToken = token;
 
-    const { data : { items, nextPageToken } } = await youtube.search.list(params);
+    const { data : { items = [], nextPageToken } } = await youtube.search.list(params);
     return { items, nextPageToken };
 }
 
-async function search(params) {
+async function search(params : SearchParams) {
 	const { items : videosSnippet, nextPageToken } = await searchSnippet(params);
+	
 	return {
-		data : videosSnippet.map(snippetItem => ({
+		data : videosSnippet.map((snippetItem) => ({
+			// @ts-ignore
 			id        : snippetItem.id.videoId || snippetItem.id,
+			// @ts-ignore
 			thumbnail : snippetItem.snippet.thumbnails.default.url,
+			// @ts-ignore
 			title     : snippetItem.snippet.title
 		})),
 		nextPageToken
 	};
 }
 
-async function contentDetails(ids) {
+async function contentDetails(ids: string[]) {
 	const detailsParams = { part : "contentDetails", id : ids };
+	// @ts-ignore
 	const { data : { items } } = await youtube.videos.list(detailsParams);
 	return items;
 }
 
-async function snippet(ids) {
+async function snippet(ids: string[]) {
 	const detailsParams = { part : "snippet", id : ids };
+	// @ts-ignore
 	const { data : { items } } = await youtube.videos.list(detailsParams);
 	return items;
 }
-
+// @ts-ignore
 function mergeVideosInfo(snippet, details) {
 	const videos = [];
 	for (let i = 0; i < snippet.length; i += 1) {

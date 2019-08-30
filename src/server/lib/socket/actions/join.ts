@@ -13,23 +13,25 @@ import { terminateStream } from "../helpers";
 
 export default async function join(io: SocketIO.Server, socket: socketio.Socket, streamerId: string, invite: boolean = false) {
     try {
-        const { type, id, currentRoomId } = Store.getSocketData(socket);
+        const { id, currentRoomId } = Store.getSocketData(socket);
         if (currentRoomId === streamerId || id === streamerId) {
             // check if the socket is trying to join the same stream it"s currently in or if a user is trying to join his own stream
             return;
         }
-        const streamer: Database.User = await User.findOne({ _id : streamerId });
+        const streamer = await User.findOne({ _id : streamerId }) as Database.User;
+        if (!streamer.isStreaming()) return;
         if (streamer.settings.invisMode && !invite) {
-            return socket.emit(SOCKET_ACTIONS.ERROR, "You're trying to join a private room, You need an invite link to be able to join.");
+            socket.emit(SOCKET_ACTIONS.ERROR, "You're trying to join a private room, You need an invite link to be able to join.");
+            return;
         }
         if (currentRoomId) { // If the socket is already in another stream, decrement the stream's liveListeners (since the socket is leaving it)
             await User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } });
-            if (type === "USER") { // remove him from the listeners list
+            if (id) { // remove him from the listeners list
                 RoomStore.removeListener(currentRoomId, id);
             }
             socket.leave(currentRoomId);
         }
-        if (type === "USER") {
+        if (id) {
             // Terminate the socket's current stream
             await terminateStream(io, socket, id);
         }
@@ -37,10 +39,8 @@ export default async function join(io: SocketIO.Server, socket: socketio.Socket,
         streamer.liveListeners += 1;
         await streamer.save();
         socket.join(streamerId);
-        Store.setSocketData(socket, { id, type, currentRoomId : streamerId });
-        if (type === "USER") {
-            RoomStore.addListener(streamerId, id);
-        }
+        Store.setSocketData(socket, { id, currentRoomId : streamerId, isProcessing : false });
+        if (id) RoomStore.addListener(streamerId, id);
 
         // Notify the socket
         socket.in(streamerId).emit(SOCKET_ACTIONS.SOCKET_JOINED);

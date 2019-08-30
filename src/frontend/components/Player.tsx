@@ -46,29 +46,31 @@ const Placeholder: React.FunctionComponent = () => {
 
 
 const ActualPlayer: React.FunctionComponent = () => {
-    const { nowPlaying, seek, skip }                = usePlayer();
+    const player                                    = usePlayer();
+    const { seek, skip }                            = player;
+    const nowPlaying                                = player.nowPlaying as PlayerData;
     const { user }                                  = useUser();
     const { openModal }                             = usePlaylists();
     const playerRef                                 = React.useRef<HTMLAudioElement>(null);
     const [secondsPlayed, setSecondsPlayed]         = React.useState(nowPlaying.startAt);
     const [isPaused, setIsPaused]                   = React.useState<boolean>(true);
     const [isPausedOnPurpose, setIsPausedOnPurpose] = React.useState<boolean>(false);
-    const isOwner                                   = user ? nowPlaying.by._id === user._id : null;
+    const isOwner                                   = user ? nowPlaying.by._id === user._id : false;
     const handleSeek                                = (percentage: number) => {
         const currentTime = nowPlaying.duration * percentage;
         seek(currentTime);
-        playerRef.current.currentTime = currentTime;
+        playerRef.current!.currentTime = currentTime;
         setSecondsPlayed(currentTime);
     };
 
     const handlePlayPause = () => {
         if (isPaused) {
-            playerRef.current.play();
-            playerRef.current.currentTime = secondsPlayed;
+            playerRef.current!.play();
+            playerRef.current!.currentTime = secondsPlayed;
             setIsPaused(false);
             setIsPausedOnPurpose(false);
         } else {
-            playerRef.current.pause();
+            playerRef.current!.pause();
             setIsPaused(true);
             setIsPausedOnPurpose(true);
         }
@@ -85,12 +87,12 @@ const ActualPlayer: React.FunctionComponent = () => {
     });
 
     const onVolumeChange = (percentage: number) => {
-        playerRef.current.volume = percentage;
+        playerRef.current!.volume = percentage;
         window.localStorage.setItem("volume", `${percentage}`);
     };
 
     React.useEffect(() => {
-        let progressInterval: NodeJS.Timeout = setInterval(() => setSecondsPlayed(secondsPlayed => secondsPlayed + 1), 1000);
+        let progressInterval: number = window.setInterval(() => setSecondsPlayed(secondsPlayed => secondsPlayed + 1), 1000);
         return () => clearInterval(progressInterval);
     }, []);
     React.useEffect(() => {
@@ -118,17 +120,20 @@ const ActualPlayer: React.FunctionComponent = () => {
         }
     }, [nowPlaying.id, nowPlaying.startAt]);
 
-    React.useEffect(() => { playerRef.current.volume = +window.localStorage.getItem("volume") || 0.3; }, []);
+    React.useEffect(() => {
+        const val = window.localStorage.getItem("volume");
+        playerRef.current!.volume = val ? +val : 0.3;
+    }, []);
 
     useHotkeys(SHORTCUTS.PLAY_PAUSE, React.useCallback(() => {
         setIsPausedOnPurpose((isPausedOnPurpose) => {
             if (isPausedOnPurpose) {
-                playerRef.current.play();
-                playerRef.current.currentTime = secondsPlayed;
+                playerRef.current!.play();
+                playerRef.current!.currentTime = secondsPlayed;
                 setIsPaused(false);
                 return false;
             } else {
-                playerRef.current.pause();
+                playerRef.current!.pause();
                 setIsPaused(true);
                 return true;
             }

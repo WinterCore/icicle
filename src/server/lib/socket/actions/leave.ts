@@ -8,12 +8,12 @@ import logger from "../../../logger";
 
 export default async function leave(socket: socketio.Socket) {
     try {
-        const { type, id, currentRoomId } = Store.getSocketData(socket);
-        if (currentRoomId) {
+        const { id, currentRoomId } = Store.getSocketData(socket);
+        if (id && currentRoomId) {
             RoomStore.removeListener(currentRoomId, id);
             socket.leave(currentRoomId)
         }
-        Store.setSocketData(socket, { type, id, isProcessing : false, currentRoomId : null });
+        Store.setSocketData(socket, { id, isProcessing : false });
     } catch(e) {
         logger.error(e);
     }

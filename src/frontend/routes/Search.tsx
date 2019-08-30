@@ -24,9 +24,9 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
     const { q }                             = parse(search);
     const [nextPageToken, setNextPageToken] = React.useState(null);
     const [isLoadingMore, setIsLoadingMore] = React.useState(false);
-    const [data, setData]                   = React.useState(null);
+    const [data, setData]                   = React.useState<Video[]>([]);
     const [isLoading, setIsLoading]         = React.useState(true);
-    const [error, setError]                 = React.useState(null);
+    const [error, setError]                 = React.useState(false);
 
     const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -50,7 +50,7 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
     };
 
     const updatePosition = () => {
-        const { height } = containerRef.current.getBoundingClientRect();
+        const { height } = containerRef.current!.getBoundingClientRect();
         if (!isLoading && !isLoadingMore && nextPageToken && (height - window.scrollY + 100) < window.innerHeight)
             loadMore();
     };

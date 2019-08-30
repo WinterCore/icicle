@@ -10,8 +10,13 @@ import Error      from "../components/Error";
 
 import { GET_CHANGELOG } from "../api";
 
+type Changelog = {
+    version : string;
+    changes : string[];
+};
 
-const About: React.FunctionComponent<RouteChildrenProps> = ({ location }) => {
+
+const About: React.FunctionComponent<RouteChildrenProps> = () => {
     const { data, isLoading, error } = useApi({ ...GET_CHANGELOG() });
 
     return (
@@ -43,7 +48,7 @@ const About: React.FunctionComponent<RouteChildrenProps> = ({ location }) => {
                         ? <div className="flex-middle"><Error /></div>
                         : isLoading
                             ? <div className="flex-middle"><LoaderIcon /></div>
-                            : data.data.map(({ version, changes }, i) => (
+                            : (data.data as Changelog[]).map(({ version, changes }) => (
                                 <div key={ version }>
                                     <h4>{ version }</h4>
                                     <ul className="change-log-version washed-out">

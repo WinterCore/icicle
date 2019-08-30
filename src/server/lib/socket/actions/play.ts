@@ -12,19 +12,19 @@ import logger from "../../../logger";
 
 export default async function play(socket: socketio.Socket) {
     try {
-        const { type, id, currentRoomId } = Store.getSocketData(socket);
-        const user: Database.User = await User.findById(id);
+        const { id, currentRoomId } = Store.getSocketData(socket);
+        if (!id) return;
 
+        const user = await User.findById(id) as Database.User;
         if (user.isStreaming()) return;
+
 
         if (currentRoomId && currentRoomId !== id) { // If the socket is already in another stream, decrement the stream's liveListeners (since the socket is leaving it)
             await User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } });
-            if (type === "USER") { // remove him from the listeners list
-                RoomStore.removeListener(currentRoomId, id);
-            }
+            RoomStore.removeListener(currentRoomId, id);
             socket.leave(currentRoomId);
             socket.join(id);
-            Store.setSocketData(socket, { id, type, currentRoomId : id });
+            Store.setSocketData(socket, { id, currentRoomId : id, isProcessing : false });
         }
 
         Scheduler.emit("schedule-next", { user, socket, duration : 0 });

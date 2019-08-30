@@ -7,33 +7,28 @@ import { useUser } from "./user";
 
 const { useContext, createContext, useState, useEffect, useCallback } = React;
 
-const PlaylistContext = createContext(null);
-
-type Playlist = {
-    _id  : string;
-    name : string;
-};
+const PlaylistContext = createContext<PlaylistContext | null>(null);
 
 type PlaylistContext = {
     playlists              : Playlist[];
     isLoading              : boolean;
     isModalOpen            : boolean;
     songPlaylists          : string[];
-    videoId                : string;
+    videoId                : string | null;
     isLoadingSongPlaylists : boolean;
     
-    closeModal       ()                : void;
-    openModal        (videoId: string) : void;
-    setSongPlaylists (fn : Function)   : void;
-    setPlaylists     (fn : Function)   : void;
+    closeModal       ()                                            : void;
+    openModal        (videoId: string)                             : void;
+    setSongPlaylists (fn : (playlistIds: string[]) => string[])    : void;
+    setPlaylists     (fn : (playlists : Playlist[]) => Playlist[]) : void;
 };
 
-const PlaylistsProvider: React.FunctionComponent = (props): React.ReactElement => {
+const PlaylistsProvider: React.FC = (props): React.ReactElement => {
     const [playlists, setPlaylists]                           = useState<Playlist[]>([]);
     const [isLoading, setIsLoading]                           = useState<boolean>(true);
-    const [isLoadingSongPlaylists, setIsLoadingSongPlaylists] = useState<Boolean>(true);
+    const [isLoadingSongPlaylists, setIsLoadingSongPlaylists] = useState<boolean>(true);
     const [songPlaylists, setSongPlaylists]                   = useState<string[]>([]);
-    const [videoId, setVideoId]                               = useState<string>(null);
+    const [videoId, setVideoId]                               = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen]                       = useState<boolean>(false);
     const { addNotification }                                 = useNotification();
     const { user }                                            = useUser();
@@ -73,11 +68,25 @@ const PlaylistsProvider: React.FunctionComponent = (props): React.ReactElement =
     }, [!!user]);
 
 
-    return <PlaylistContext.Provider value={{ playlists, isLoadingSongPlaylists, setPlaylists, isLoading, isModalOpen, openModal, songPlaylists, closeModal, setSongPlaylists, videoId }} { ...props } />;
+    return <PlaylistContext.Provider
+        value={{
+            playlists,
+            isLoadingSongPlaylists,
+            setPlaylists,
+            isLoading,
+            isModalOpen,
+            openModal,
+            songPlaylists,
+            closeModal,
+            setSongPlaylists,
+            videoId
+        }} 
+        { ...props }
+    />;
 }
 
 function usePlaylists() {
-    const context = useContext<PlaylistContext>(PlaylistContext);
+    const context = useContext(PlaylistContext);
     if (!context) {
         throw new Error("usePlaylists must be used within a component that's rendered within the PlaylistsProvider");
     }

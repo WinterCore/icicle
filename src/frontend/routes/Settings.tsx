@@ -14,7 +14,7 @@ import { UPDATE_SETTINGS, GET_SETTINGS } from "../api";
 const Settings: React.FunctionComponent<RouteChildrenProps> = () => {
     const { user, update }                           = useUser();
     const [isLoadingSettings, setIsLoadingSettings]  = React.useState(true);
-    const { isLoading, state, success, updateState } = useBooleanSwitch(user.settings.invisMode, UPDATE_SETTINGS, "invisMode");
+    const { isLoading, state, success, updateState } = useBooleanSwitch(user!.settings.invisMode, UPDATE_SETTINGS, "invisMode");
     
     React.useEffect(() => {
         if (success) update({ settings : { invisMode : state } });

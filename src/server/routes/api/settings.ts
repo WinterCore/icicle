@@ -9,7 +9,7 @@ import authenticated from "../middleware/authenticated";
 const router = Router();
 
 router.get("/", authenticated, co(async (req: Request, res: Response) => {
-    const user = await User.findById(req.userId);
+    const user = await User.findById(req.userId) as Database.User;
     res.json({
         data :{
             invisMode : user.settings.invisMode
@@ -18,7 +18,7 @@ router.get("/", authenticated, co(async (req: Request, res: Response) => {
 }));
 
 router.post("/", authenticated, co(async (req: Request, res: Response) => {
-    const user = await User.findById(req.userId);
+    const user = await User.findById(req.userId) as Database.User;
     const { invisMode } = req.body;
     user.settings.invisMode = !!invisMode;
     await user.save();

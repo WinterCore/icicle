@@ -18,12 +18,13 @@ import { AUDIO_URL } from "../../../../../config/server";
 
 export default async function playNow(socket: socketio.Socket, videoId: string) {
     try {
-        const { type, id, currentRoomId, isProcessing } = Store.getSocketData(socket);
+        const { id, currentRoomId, isProcessing } = Store.getSocketData(socket);
         if (isProcessing) {
-            return socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
+            socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
+            return;
         }
-        Store.setSocketData(socket, { id, type, currentRoomId, isProcessing : true });
-        let data: Database.Song = await Song.findOne({ videoId });
+        Store.setSocketData(socket, { id, currentRoomId, isProcessing : true });
+        let data = await Song.findOne({ videoId }) as Database.Song;
         await download(videoId);
         if (!data) {
             const youtubeData = (await info([videoId])).items[0];
@@ -36,12 +37,12 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             data.save();
         }
         socket.leaveAll();
-        if (type === "USER") {
+        if (id) {
             if (currentRoomId && currentRoomId !== id) { // if the user is another room (remove him from the listeners list)
                 await User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } });
                 RoomStore.removeListener(currentRoomId, id);
             }
-            const user = await User.findOne({ _id : id });
+            const user = await User.findOne({ _id : id }) as Database.User;
             if (!user.nowPlaying) { // if the user is creating a room make him join it
                 socket.join(user._id);
             }
@@ -49,7 +50,6 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             Store.setSocketData(socket, {
                 isProcessing  : false,
                 currentRoomId : user._id,
-                type,
                 id
             });
             socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData()); // Notify the owner
@@ -57,7 +57,7 @@ export default async function playNow(socket: socketio.Socket, videoId: string) 
             Scheduler.emit("schedule-next", { user, socket, duration : data.duration });
         } else {
             socket.emit(SOCKET_ACTIONS.PLAY_NOW, { ...data.toObject(), url : AUDIO_URL(videoId), startAt : 0, by : { _id : null, name : "Unknown" } });
-            Store.setSocketData(socket, { id, type, isProcessing : false, currentRoomId : null });
+            Store.setSocketData(socket, { id, isProcessing : false });
         }
     } catch(e) {
         socket.emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play your video");

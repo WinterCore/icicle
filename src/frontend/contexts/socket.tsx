@@ -9,7 +9,12 @@ import { useUser } from "./user";
 
 const { useContext, createContext, useState } = React;
 
-const SocketContext = createContext(null);
+const SocketContext = createContext<SocketProvider | null>(null);
+
+interface SocketProvider {
+    socket    : SocketIOClient.Socket;
+    isLoading : boolean;
+}
 
 const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
     const { user }                  = useUser();
@@ -24,8 +29,10 @@ const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
             }
         })
     ));
+    console.log("Socket connecting");
     React.useLayoutEffect(() => {
         if (!!prevUser !== !!user) {
+            socket.disconnect();
             setSocket(socket => {
                 return SocketIo(DOMAIN, {
                     transportOptions : {
@@ -35,7 +42,6 @@ const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
                     }
                 });
             });
-            return () => socket.disconnect();
         }
     }, [!!user]);
 
@@ -43,7 +49,7 @@ const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
 }
 
 function useSocket() {
-    const context = useContext<{ socket : SocketIOClient.Socket, isLoading : boolean }>(SocketContext);
+    const context = useContext(SocketContext);
     if (!context) {
         throw new Error("useSocket must be used within a component that's rendered within the SocketProvider");
     }

@@ -28,11 +28,11 @@ const UserSchema: Schema = new Schema({
     }
 });
 
-UserSchema.methods.getNowPlayingCurrentTime = function getNowPlayingCurrentTime(this: Database.User): number {
+UserSchema.methods.getNowPlayingCurrentTime = function getNowPlayingCurrentTime(this: Database.StreamingUser): number {
     return (Date.now() - this.nowPlaying.startedAt.getTime()) / 1000;
 };
 
-UserSchema.methods.isStreaming = function isStreaming(this: Database.User): boolean {
+UserSchema.methods.isStreaming = function isStreaming(this: Database.User) { // I have no idea how to use a typeguard here
     return this.nowPlaying && !!this.nowPlaying.url;
 };
 
@@ -40,7 +40,7 @@ UserSchema.methods.getRoomData = function getRoomData(this: Database.User) {
     return { _id : this._id, name : this.name };
 };
 
-UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.User) {
+UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.StreamingUser) {
     if (!this.isStreaming()) return null;
     return {
         id            : this.nowPlaying.id,

@@ -2,26 +2,25 @@ import * as React from "react";
 
 
 
-const TextRoller: React.FunctionComponent<TextRollerProps> = ({ children, speed, uid }) => {
+const TextRoller: React.FunctionComponent<TextRollerProps> = ({ children, speed = 0.4, uid = 1 }) => {
     const containerRef    = React.useRef<HTMLDivElement>(null);
     const itemRef         = React.useRef<HTMLDivElement>(null);
-    // const [left, setLeft] = React.useState(0);
 
     React.useLayoutEffect(() => {
-        let textWidth, containerWidth, tempLeft = 0, tracker;
+        let textWidth: number, containerWidth: number, tempLeft = 0, tracker: number;
         const loop = () => {
             if (textWidth + tempLeft < 0) tempLeft = containerWidth
             tempLeft -= speed;
-            itemRef.current.style.transform = `translateX(${tempLeft - speed}px)`;
+            itemRef.current!.style.transform = `translateX(${tempLeft - speed}px)`;
             tracker = window.requestAnimationFrame(loop);
         };
         
         const init = () => {
             window.cancelAnimationFrame(tracker);
-            containerWidth = containerRef.current.getBoundingClientRect().width;
-            textWidth      = itemRef.current.getBoundingClientRect().width;
+            containerWidth = containerRef.current!.getBoundingClientRect().width;
+            textWidth      = itemRef.current!.getBoundingClientRect().width;
             tempLeft = 0;
-            itemRef.current.style.transform = "translateX(0px)";
+            itemRef.current!.style.transform = "translateX(0px)";
             if (textWidth > containerWidth) {
                 tracker = window.requestAnimationFrame(loop);
             }
@@ -50,7 +49,5 @@ interface TextRollerProps {
     uid     ?: string | number;
     speed   ?: number;
 }
-
-TextRoller.defaultProps = { speed : 0.4, uid : 1 };
 
 export default TextRoller;

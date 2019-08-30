@@ -11,9 +11,9 @@ import Scheduler from "../scheduler";
 
 export default async function seek(socket: socketio.Socket, currentTime: number) {
     try {
-        const { type, id } = Store.getSocketData(socket);
-        if (type === "USER") {
-            const user: Database.User = await User.findOne({ _id : id });
+        const { id } = Store.getSocketData(socket);
+        if (id) {
+            const user = await User.findOne({ _id : id }) as Database.StreamingUser;
             if (user.isStreaming()) {
                 const startedAt = new Date(Date.now() - (currentTime * 1000));
                 user.nowPlaying.startedAt = startedAt;

@@ -4,18 +4,21 @@ import api from "../api";
 
 const { useState, useContext, createContext, useMemo } = React;
 
-const UserContext = createContext(null);
+const UserContext = createContext<UserProvider | null>(null);
 
 interface UserProvider {
     login  (user: Entities.User) : void;
     logout ()                    : void;
     update (data: any)           : void;
 
-    user : Entities.User;
+    user : Entities.User | null;
 }
 
-const UserProvider: React.FunctionComponent = (props): React.ReactElement => {
-    const [user, setUser] = useState(JSON.parse(window.localStorage.getItem("user")) || null);
+const UserProvider: React.FunctionComponent = (props) => {
+    const [user, setUser] = useState<Entities.User | null>(() => {
+        const user = window.localStorage.getItem("user");
+        return user ? JSON.parse(user) : null;
+    });
     
     if (user) api.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
 
@@ -52,7 +55,7 @@ const UserProvider: React.FunctionComponent = (props): React.ReactElement => {
 }
 
 function useUser() {
-    const context = useContext<UserProvider>(UserContext);
+    const context = useContext(UserContext);
     if (!context) {
         throw new Error("useUser must be used within a component that's rendered within the UserProvider");
     }

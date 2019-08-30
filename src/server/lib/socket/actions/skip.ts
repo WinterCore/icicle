@@ -12,13 +12,14 @@ import { SOCKET_ACTIONS } from "../../../../constants";
 
 export default async function skip(socket: socketio.Socket) {
     try {
-        const { type, id, isProcessing, currentRoomId } = Store.getSocketData(socket);
-        if (type === "USER") {
+        const { id, isProcessing, currentRoomId } = Store.getSocketData(socket);
+        if (id) {
             if (isProcessing) {
-                return socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
+                socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
+                return;
             }
-            Store.setSocketData(socket, { id, type, isProcessing : true, currentRoomId });
-            const user = await User.findOne({ _id : id });
+            Store.setSocketData(socket, { id, isProcessing : true, currentRoomId });
+            const user = await User.findOne({ _id : id }) as Database.User;
             if (user.isStreaming()) {
                 Scheduler.emit("schedule-next", { user, socket, duration : 0 }); // Duration of 0 to make the schedular skip to the next song immediately
             }

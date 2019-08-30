@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { verify }            from "jsonwebtoken";
+import { Request, Response }    from "express";
+import { verify, VerifyErrors } from "jsonwebtoken";
 
 import Blacklist from "../../database/models/blacklist";
 
@@ -14,10 +14,10 @@ export default function authenticated(req: Request, res: Response, next: Functio
     Blacklist.countDocuments({ token })
         .then((count: number) => {
             if (count) return next(new Unauthenticated());
-            verify(token, JWT_SECRET, function verifyToken(err, decoded: JWTUser) {
+            verify(token, JWT_SECRET, function verifyToken(err : VerifyErrors, decoded: string | object) {
                 if (err) return next(new Unauthenticated());
                 if (decoded) {
-                    req.userId = decoded.id;
+                    req.userId = (decoded as JWTUser).id;
                     next();
                 } else {
                     next(new Unauthenticated());

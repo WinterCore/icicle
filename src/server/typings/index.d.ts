@@ -1,6 +1,9 @@
-
-
-
 type JWTUser = {
-    id : string
-}
+    id : string;
+};
+
+
+type SearchParams = {
+	q             : string;
+	nextPageToken : string;
+};

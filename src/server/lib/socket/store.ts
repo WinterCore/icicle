@@ -8,7 +8,7 @@ class Store {
     }
 
     getSocketData(socket: SocketIO.Socket): SocketData {
-        return this.connections.get(socket);
+        return this.connections.get(socket) as SocketData; // we're sure that all sockets exist on connections
     }
 
     deleteSocket(socket: SocketIO.Socket) {

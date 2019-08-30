@@ -10,9 +10,9 @@ import logger from "../../../logger";
 
 export default async function sendMessage(socket: socketio.Socket, roomId: string, message: string) {
     try {
-        const { type, id } = Store.getSocketData(socket);
-        if (type === "USER") {
-            const user: Database.User = await User.findOne({ _id : id });
+        const { id } = Store.getSocketData(socket);
+        if (id) {
+            const user = (await User.findOne({ _id : id }) as Database.User);
             const messageData: Message = {
                 message,
                 date : Date.now(),

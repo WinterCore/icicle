@@ -5,7 +5,7 @@ import Playlist from "../../../database/models/playlist";
 import ValidationError from "../../../errors/validation";
 import Unauthorized    from "../../../errors/unauthorized";
 
-export default function validatePlaylist(req: Request, res: Response, next) {
+export default function validatePlaylist(req: Request, res: Response, next: (err?: Error) => void) {
     const { playlistId } = req.params;
     const { videoId }    = req.body;
     if (!videoId) return next(new ValidationError(["The videoId parameter is required"]));

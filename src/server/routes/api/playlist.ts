@@ -29,6 +29,8 @@ router.post("/:playlistId/song", [authenticated, validatePlaylistSong], co(async
     const { videoId }    = req.body;
 
     const playlist = await Playlist.findById(playlistId);
+    if (!playlist) throw new NotFound();
+
     if (!playlist.songs.indexOf(videoId)) {
         res.status(403);
         return res.json({ errors : ["The song already exists in the specified playlist"] });
@@ -61,7 +63,9 @@ router.post("/:playlistId/song", [authenticated, validatePlaylistSong], co(async
 router.post("/:playlistId/queue", authenticated, co(async (req: Request, res: Response) => {
     const { playlistId } = req.params;
     
-    const playlist: Database.Playlist = await Playlist.findOne({ _id : playlistId, "user._id" : req.userId });
+    const playlist = await Playlist.findOne({ _id : playlistId, "user._id" : req.userId });
+    if (!playlist) throw new NotFound();
+
     const songs: Database.Song[] = await Song.find({ videoId : { $in : playlist.songs } }).sort({ title : 1 });
     const songsToBeAdded = songs.map(song => ({
         title     : song.title,
@@ -77,7 +81,9 @@ router.post("/:playlistId/queue", authenticated, co(async (req: Request, res: Re
 router.delete("/:playlistId/song/:videoId", [authenticated], co(async (req: Request, res: Response) => {
     const { playlistId, videoId } = req.params;
 
-    const playlist: Database.Playlist = await Playlist.findOne({ _id : playlistId, "user._id" : req.userId });
+    const playlist = await Playlist.findOne({ _id : playlistId, "user._id" : req.userId });
+    if (!playlist) throw new NotFound();
+
     if (playlist.songs.indexOf(videoId) === -1) throw new NotFound();
     const i = playlist.songs.indexOf(videoId);
     playlist.songs.splice(playlist.songs.indexOf(videoId), 1);
@@ -92,7 +98,9 @@ router.get("/", authenticated, co(async (req: Request, res: Response) => {
 
 router.get("/:playlistId/songs", authenticated, co(async (req: Request, res: Response) => {
     const { playlistId } = req.params;
-    const playlist: Database.Playlist = await Playlist.findOne({ _id : playlistId, "user._id" : req.userId });
+    const playlist = await Playlist.findOne({ _id : playlistId, "user._id" : req.userId });
+    if (!playlist) throw new NotFound();
+
     if (!playlist) throw new NotFound();
     const songs: Database.Song[] = await Song.find({ videoId : { $in : playlist.songs } }).sort({ title : 1 });
     return res.json({ data : songs.map(playlistSongResource(req)) });
@@ -101,7 +109,7 @@ router.get("/:playlistId/songs", authenticated, co(async (req: Request, res: Res
 router.post("/", [authenticated, validatePlaylist], co(async (req: Request, res: Response) => {
     const { name } = req.body;
     
-    const user = await User.findById(req.userId);
+    const user = await User.findById(req.userId) as Database.User;
     const playlist = new Playlist({ name, user : { _id : user._id, name : user.name, picture : user } });
 
     playlist.save();
@@ -112,10 +120,12 @@ router.post("/", [authenticated, validatePlaylist], co(async (req: Request, res:
 router.delete("/:playlistId", [authenticated], co(async (req: Request, res: Response) => {
     const { playlistId } = req.params;
 
-    const playlist: Database.Playlist = await Playlist.findOne({ "user._id" : req.userId, _id : playlistId });
-    playlist.remove();
-    
-    return res.json({ message : `${playlist.name} was deleted successfully` });
+    const playlist = await Playlist.findOne({ "user._id" : req.userId, _id : playlistId });
+    if (playlist) {
+        await playlist.remove();
+        return res.json({ message : `${playlist.name} has been deleted successfully` });
+    }
+    throw new NotFound();
 }));
 
 export default router;

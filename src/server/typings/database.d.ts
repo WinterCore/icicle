@@ -7,7 +7,7 @@ interface User extends Document {
     email         : string;
     following     : string[];
     liveListeners : number;
-    nowPlaying    : NowPlaying;
+    nowPlaying    : NowPlaying | null;
     settings      : { invisMode : boolean; };
 
     getNowPlayingCurrentTime ()           : number;
@@ -17,6 +17,10 @@ interface User extends Document {
     getNowPlayingData        ()           : PlayerData;
     setNowPlayingData        (song: Song) : void;
     extractNextItemInQueue   ()           : Promise<Song | null>;
+}
+
+interface StreamingUser extends User {
+    nowPlaying : NowPlaying;
 }
 
 interface Video {

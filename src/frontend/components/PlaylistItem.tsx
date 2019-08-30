@@ -42,7 +42,7 @@ const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
         });
     };
 
-    const addToQueue = async (e) => {
+    const addToQueue = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
         e.preventDefault();
         setIsAddToQueueLoading(true);
         try {

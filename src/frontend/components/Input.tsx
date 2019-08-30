@@ -8,8 +8,8 @@ const Input: React.FunctionComponent<InputProps> = ({
     onEnter,
     icon
 }: InputProps) => {
-    const onSubmit = ({ key }) => {
-        if (key === "Enter") onEnter();
+    const onSubmit = ({ key }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === "Enter" && onEnter) onEnter();
     };
 
     return (

@@ -11,37 +11,39 @@ import logger from "../../../logger";
 
 export default async function check(socket: socketio.Socket, roomId: string) {
     try {
-        const socketData = Store.getSocketData(socket);
+        const { id } = Store.getSocketData(socket);
         if (roomId) {
-            const user: Database.User = await User.findOne({ _id : roomId });
+            const user = await User.findById(roomId);
             if (user && user.isStreaming()) {
-                if (
-                    socketData.id !== roomId // the user is not joining his own stream
-                    && user.settings.invisMode // the user is using invis mode
-                    && !RoomStore.doesRoomContainListener(roomId, socketData.id) // the user does not exist in the room listeners
-                ) {
-                    socket.emit(SOCKET_ACTIONS.ERROR, "You need an invite link to be able to join this room");
-                    socket.emit(SOCKET_ACTIONS.END_STREAM);
-                    return;
+                if (id === roomId) return; // the user is not joining his own stream
+                if (user.settings.invisMode) {
+                    if (
+                        !id // the user is not logged in
+                        || !RoomStore.doesRoomContainListener(roomId, id) // if the user is logged in, and doesn't have an invite
+                    ) { 
+                        socket.emit(SOCKET_ACTIONS.ERROR, "You need an invite link to be able to join this room");
+                        socket.emit(SOCKET_ACTIONS.END_STREAM);
+                        return;
+                    }
                 }
-                if (socketData.id !== roomId) { // if the socket is not the owner of the stream (roomId) increment the stream's liveListeners
+                if (id !== roomId) { // if the socket is not the owner of the stream (roomId) increment the stream's liveListeners
                     await User.updateOne({ _id : roomId }, { $inc : { liveListeners : 1 }});
-                    if (socketData.type === "USER") { // add the user to the listeners list only if he's logged in
-                        RoomStore.addListener(roomId, socketData.id);
+                    if (id) { // add the user to the listeners list only if he's logged in
+                        RoomStore.addListener(roomId, id);
                     }
                     socket.in(roomId).emit(SOCKET_ACTIONS.SOCKET_JOINED);
                 }
                 socket.join(roomId);
-                Store.setSocketData(socket, { ...socketData, currentRoomId : roomId });
+                Store.setSocketData(socket, { id, currentRoomId : roomId, isProcessing : false });
                 socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
             }
         } else {
-            if (socketData.id) {
-                const user: Database.User = await User.findOne({ _id : socketData.id });
+            if (id) {
+                const user = await User.findById(id) as Database.User;
                 if (user && user.isStreaming()) {
                     socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
-                    Store.setSocketData(socket, { ...socketData, currentRoomId : socketData.id });
-                    socket.join(socketData.id);
+                    Store.setSocketData(socket, { id, currentRoomId : id, isProcessing : false });
+                    socket.join(id);
                 }
             }
         }

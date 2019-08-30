@@ -1,6 +1,6 @@
-import * as socketio from "socket.io";
-import { Server }    from "http";
-import { verify }    from "jsonwebtoken";
+import * as socketio            from "socket.io";
+import { Server }               from "http";
+import { verify, VerifyErrors } from "jsonwebtoken";
 
 import Blacklist from "../../database/models/blacklist";
 import Store     from "./store";
@@ -31,18 +31,18 @@ export default function init(server: Server) {
         if (token) {
             Blacklist.countDocuments({ token })
                 .then((count: number) => {
-                    if (count) Store.setSocketData(socket, { type : "GUEST" });
-                    verify(token, JWT_SECRET, function verifyToken(err, decoded: JWTUser) {
+                    if (count) Store.setSocketData(socket, { isProcessing : false });
+                    verify(token, JWT_SECRET, function verifyToken(err : VerifyErrors, decoded: string | object) {
                         if (decoded) {
-                            Store.setSocketData(socket, { type : "USER", id : decoded.id })
+                            Store.setSocketData(socket, { id : (decoded as JWTUser).id, isProcessing : false })
                         } else {
-                            Store.setSocketData(socket, { type : "GUEST" })
+                            Store.setSocketData(socket, { isProcessing : false })
                         }
                     });
                 }).catch(console.log);
             
         } else {
-            Store.setSocketData(socket, { type : "GUEST" });
+            Store.setSocketData(socket, { isProcessing : false });
         }
 
 

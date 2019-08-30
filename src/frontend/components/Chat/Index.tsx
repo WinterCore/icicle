@@ -27,6 +27,7 @@ const Chat: React.FunctionComponent = () => {
     const handleMessageReceived = React.useCallback((message: Message) => setMessages(messages => [...messages, message]), []);
 
     const sendMessage = () => {
+        if (!user || !roomData) return;
         setText("");
         setMessages(messages => [...messages, { message : text, date : Date.now(), by : { _id : user._id, name : user.name, picture : user.picture } }]);
         socket.emit(SOCKET_ACTIONS.NEW_MESSAGE, roomData._id, text);
@@ -34,12 +35,12 @@ const Chat: React.FunctionComponent = () => {
 
     React.useEffect(() => {
         socket.on(SOCKET_ACTIONS.NEW_MESSAGE, handleMessageReceived);
-        return () => socket.off(SOCKET_ACTIONS.NEW_MESSAGE, handleMessageReceived);
+        return () => { socket.off(SOCKET_ACTIONS.NEW_MESSAGE, handleMessageReceived) };
     }, []);
 
-    React.useLayoutEffect(() => {
-        const { height } = messagesContainerRef.current.getBoundingClientRect();
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight - height;
+    React.useEffect(() => {
+        const { height } = messagesContainerRef.current!.getBoundingClientRect();
+        messagesContainerRef.current!.scrollTop = messagesContainerRef.current!.scrollHeight - height;
     }, [messages.length]);
 
     return (
@@ -75,7 +76,8 @@ const IfChat: React.FunctionComponent = () => {
         </>
     );
 
-    return <Chat />
+
+    return <Chat />;
 };
 
 export default IfChat;

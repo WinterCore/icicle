@@ -12,7 +12,7 @@ interface UseBooleanSwitch {
     updateState(val: boolean) : void;
 }
 
-const useBooleanSwitch = (defaultValue: boolean, endpoint, name: string): UseBooleanSwitch => {
+const useBooleanSwitch = (defaultValue: boolean, endpoint: () => AxiosRequestConfig, name: string): UseBooleanSwitch => {
     const [state, setState]         = useState<boolean>(defaultValue);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError]         = useState<boolean>(false);

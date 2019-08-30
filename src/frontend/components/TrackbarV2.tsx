@@ -35,7 +35,7 @@ const TrackbarV2: React.FunctionComponent<TrackbarV2Props> = (props) => {
     const [tiles, setTiles] = React.useState<Tile[]>([]);
 
     const init = React.useMemo(() => () => {
-        const { width } = trackbarRef.current.getBoundingClientRect();
+        const { width } = trackbarRef.current!.getBoundingClientRect();
         setTiles(generateTiles(Math.floor(width / TILE_WIDTH)));
     }, []);
     
@@ -46,9 +46,9 @@ const TrackbarV2: React.FunctionComponent<TrackbarV2Props> = (props) => {
         return () => window.removeEventListener("resize", init);
     });
 
-    const handleSeek = ({ clientX }) => {
+    const handleSeek = ({ clientX }: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (seekable) {
-            const { left, width } = trackbarRef.current.getBoundingClientRect();
+            const { left, width } = trackbarRef.current!.getBoundingClientRect();
             onSeek((clientX - left) / width)
         }
     };
@@ -84,7 +84,7 @@ interface TrackbarV2Props {
     seekable   : boolean;
     uid        : number | string;
     disabled  ?: boolean;
-    onSeek    ?: {(current: number): void};
+    onSeek     : {(current: number): void};
 }
 
 TrackbarV2.defaultProps = {
