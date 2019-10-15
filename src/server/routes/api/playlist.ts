@@ -16,6 +16,7 @@ import * as PlaylistService from "../../services/playlist";
 import { co } from "../helpers";
 import NotFound from "../../errors/notfound";
 import ValidationError from "../../errors/validation";
+import logger from "../../logger";
 
 const router = Router();
 
@@ -27,7 +28,8 @@ router.post("/youtube/import", authenticated, co(async (req: Request, res: Respo
     if (user.limits.lastPlaylistImport.getTime() > Date.now() - 1000 * 60 * 60 * 24) {
         throw new ValidationError(["You can only import 1 playlist per day"]);
     }
-    PlaylistService.importYoutubePlaylist(req.body.playlistId, req.userId);
+    PlaylistService.importYoutubePlaylist(req.body.playlistId, req.userId)
+        .catch((err) => logger.error(`Playlist import error id: ${req.body.playlistId}`, err));
     user.limits.lastPlaylistImport = new Date();
     user.save();
     res.json({ message : "Your playlist has been added to the import queue and will be imported soon" });

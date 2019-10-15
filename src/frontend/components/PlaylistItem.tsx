@@ -9,7 +9,6 @@ import { secondsToTime } from "../helpers";
 
 import { usePlayer }       from "../contexts/player";
 import { useNotification } from "../contexts/notification";
-import { useUser }         from "../contexts/user";
 import { usePlaylists }    from "../contexts/playlists";
 
 import TextRoller from "./TextRoller";
