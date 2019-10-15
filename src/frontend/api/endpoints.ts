@@ -15,6 +15,7 @@ export const DELETE_QUEUE_ITEM         = (id: string): AxiosRequestConfig => ({ 
 export const GET_PLAYLISTS             = (): AxiosRequestConfig => ({ method : "GET", url : "/playlist" });
 export const DELETE_PLAYLIST           = (id: string): AxiosRequestConfig => ({ method : "DELETE", url : `/playlist/${id}` });
 export const QUEUE_PLAYLIST            = (id: string): AxiosRequestConfig => ({ method : "POST", url : `/playlist/${id}/queue` });
+export const IMPORT_YOUTUBE_PLAYLIST   = (): AxiosRequestConfig => ({ method : "POST", url : `/playlist/youtube/import` });
 export const GET_PLAYLISTS_ITEMS       = (id: string): AxiosRequestConfig => ({ method : "GET", url : `/playlist/${id}/songs` });
 export const DELETE_PLAYLIST_ITEM      = (id: string, videoId: string): AxiosRequestConfig => ({ method : "DELETE", url : `/playlist/${id}/song/${videoId}` });
 export const CREATE_PLAYLIST           = (): AxiosRequestConfig => ({ method : "POST", url : "/playlist" });

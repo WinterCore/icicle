@@ -7,6 +7,7 @@ declare namespace Entities {
         picture    : string;
         email      : string;
         token      : string;
+        premium    : boolean;
         settings   : {
             invisMode : boolean;
         };

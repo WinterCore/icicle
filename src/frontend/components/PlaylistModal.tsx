@@ -79,6 +79,7 @@ const PlaylistModal: React.FunctionComponent = () => {
             data : { name }
         }).then(({ data : { data } }) => {
             setIsCreateLoading(false);
+            setIsCreating(false);
             setName("");
             setPlaylists((oldPlaylists: Playlist[]) => [...oldPlaylists, data].sort((a, b) => a.name.localeCompare(b.name)));
             addNotification({ message : `${name} was created successfully` });

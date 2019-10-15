@@ -6,6 +6,8 @@ interface User extends Document {
     picture       : string;
     email         : string;
     following     : string[];
+    premium       : boolean;
+    limits        : { lastPlaylistImport : Date };
     liveListeners : number;
     nowPlaying    : NowPlaying | null;
     settings      : { invisMode : boolean; };
@@ -41,13 +43,8 @@ interface NowPlaying {
     videoId   : string;
 }
 
-interface Queue extends Document {
-    title     : string;
-    videoId   : string;
-    thumbnail : string;
-    duration  : number;
-    date      : Date;
-    by        : string | User;
+interface Queue extends Song {
+    by : string | User;
 }
 
 interface Setting extends Document {
@@ -57,7 +54,13 @@ interface Setting extends Document {
     }[]
 }
 
-interface Song extends Queue {}
+interface Song extends Document{
+    title     : string;
+    videoId   : string;
+    thumbnail : string;
+    duration  : number;
+    date      : Date;
+}
 
 interface BlacklistItem extends Document {
     user  : string | User;
@@ -72,7 +75,7 @@ interface BasicUser {
 
 interface Playlist extends Document {
     name  : string;
-    user  : BasicUser;
+    user  : User | string;
     songs : string[]
 }
 

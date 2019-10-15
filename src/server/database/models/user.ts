@@ -11,6 +11,10 @@ const UserSchema: Schema = new Schema({
     picture       : String,
     following     : [Schema.Types.ObjectId],
     liveListeners : { type : Number, default : 0 },
+    premium       : { type : Boolean, default : false },
+    limits        : {
+        lastPlaylistImport : { type : Date, default : new Date("2000-1-1") }
+    },
     settings      : {
         invisMode : {
             type    : Boolean,
