@@ -1,7 +1,7 @@
 export default class ValidationError extends Error {
-    errors: any
+    errors: string[]
 
-    constructor(errors : any) {
+    constructor(errors : string[]) {
         super();
         this.errors = errors;
 

@@ -11,22 +11,53 @@ import PersonIcon    from "../icons/Person";
 import IcicleIcon    from "../icons/Icicle";
 import InfoIcon      from "../icons/Info";
 import GearIcon      from "../icons/Gear";
+import PlusIcon      from "../icons/Plus";
 
 import Input            from "../components/Input";
 import UserLoginCard    from "../components/UserLoginCard";
 
-import { usePlaylists } from "../contexts/playlists";
-import { useUser }      from "../contexts/user";
+import { usePlaylists }    from "../contexts/playlists";
+import { useUser }         from "../contexts/user";
+import { useNotification } from "../contexts/notification";
+
+import api, { IMPORT_YOUTUBE_PLAYLIST } from "../api";
+import LoaderIcon from "../icons/Loader";
 
 const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search : query, pathname } }) => {
-    const [search, setSearch]       = React.useState((parse(query).q || "") as string);
-    const [isVisible, setIsVisible] = React.useState(false);
-    const { playlists }             = usePlaylists();
-    const { user }                  = useUser();
+    const [search, setSearch]                                   = React.useState((parse(query).q || "") as string);
+    const [playlistUrl, setPlaylistUrl]                         = React.useState("");
+    const [isImportPlaylistLoading, setIsImportPlaylistLoading] = React.useState(false);
+    const [isVisible, setIsVisible]                             = React.useState(false);
+    const { playlists }                                         = usePlaylists();
+    const { user }                                              = useUser();
+    const { addNotification }                                   = useNotification();
 
-    const setSearchInputValue  = ({ target }: React.ChangeEvent<HTMLInputElement>) => setSearch(target.value);
-    const onSearch             = () => search && history.push(`/search?q=${search}`);
-    const handleHamburgerClick = () => setIsVisible(!isVisible);
+    const setSearchInputValue         = ({ target }: React.ChangeEvent<HTMLInputElement>) => setSearch(target.value);
+    const setPlaylistImportInputValue = ({ target }: React.ChangeEvent<HTMLInputElement>) => setPlaylistUrl(target.value);
+    const onSearch                    = () => search && history.push(`/search?q=${search}`);
+    const handleHamburgerClick        = () => setIsVisible(!isVisible);
+
+    const onPlaylistImport = () => {
+        if (isImportPlaylistLoading) return;
+        const playlistId = playlistUrl.match(/&list=(.+)(?:&|$)/);
+        if (!playlistId) {
+            return addNotification({ type : "error", message: "Please enter a valid playlist url" })
+        }
+        setIsImportPlaylistLoading(true);
+        api({
+            ...IMPORT_YOUTUBE_PLAYLIST(),
+            data : { playlistId : playlistId[1] }
+        }).then((response) => {
+            addNotification({ message : response.data.message });
+            setIsImportPlaylistLoading(false);
+        }).catch((err) => {
+            setIsImportPlaylistLoading(false);
+            console.log(err);
+            if (err.response) {
+                addNotification({ type : "error", message : err.response.data.errors.join("<br />") });
+            }
+        });
+    };
 
     React.useEffect(() => {
         return history.listen(() => {
@@ -59,10 +90,24 @@ const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search :
                     user && (
                         <>
                             <div className="section-divider">Playlists</div>
+                            {
+                                user.premium && (
+                                    <div className="search-input">
+                                        <Input
+                                            onChange={ setPlaylistImportInputValue }
+                                            value={ playlistUrl }
+                                            disabled={ isImportPlaylistLoading }
+                                            onEnter={ onPlaylistImport }
+                                            icon={ isImportPlaylistLoading ? <LoaderIcon /> : <PlusIcon onClick={ onPlaylistImport } /> }
+                                            placeholder="Import youtube playlist by url"
+                                        />
+                                    </div>
+                                )
+                            }
                             <ul className="links">
                                 {
                                     playlists.map(({ _id, name }: Playlist) => (
-                                        <li className={ pathname === `/playlist/${_id}` ? "active" : "" } key={ _id }>
+                                        <li title={ name } style={{ whiteSpace : "nowrap" }} className={ pathname === `/playlist/${_id}` ? "active" : "" } key={ _id }>
                                             <Link to={ `/playlist/${_id}` }>{ name }</Link>
                                         </li>
                                     ))

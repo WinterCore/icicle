@@ -26,7 +26,7 @@ router.use(common);
 
 router.use((req: Request, res: Response) => {
     res.status(404);
-    res.json({ message : "Error : The route you're trying to reach doesn't exist" });
+    res.json({ errors : ["Error : The route you're trying to reach doesn't exist"] });
 });
 
 export default router;

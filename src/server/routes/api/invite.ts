@@ -1,8 +1,4 @@
 import { Router, Request, Response } from "express";
-
-import { createHash } from "crypto";
-
-import User   from "../../database/models/user";
 import Invite from "../../database/models/invite";
 
 import authenticated from "../middleware/authenticated";
@@ -19,7 +15,7 @@ router.post("/", authenticated, co(async (req: Request, res: Response) => {
     while (await Invite.countDocuments({ token }) > 0) {
         token = Buffer.from(`${Date.now()}${Math.random()}`).toString('base64');
     }
-    invite.token  = token;
+    invite.token = token;
     await invite.save();
 
     res.json({ data : `${DOMAIN}/invite/${token}` });

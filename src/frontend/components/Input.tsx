@@ -5,6 +5,7 @@ const Input: React.FunctionComponent<InputProps> = ({
     value,
     onChange,
     type,
+    disabled,
     onEnter,
     icon
 }: InputProps) => {
@@ -19,6 +20,7 @@ const Input: React.FunctionComponent<InputProps> = ({
                 value={ value }
                 onKeyDown={ onSubmit }
                 onChange={ onChange }
+                disabled={ disabled }
                 placeholder={ placeholder }
             />
             { icon ? icon : null }
@@ -32,12 +34,14 @@ interface InputProps {
     value        : string;
     type?        : string;
     placeholder? : string;
+    disabled?    : boolean;
     icon?        : React.ReactNode;
 }
 
 Input.defaultProps = {
     type        : "text",
-    placeholder : ""
+    placeholder : "",
+    disabled    : false,
 };
 
 export default Input;

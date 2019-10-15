@@ -7,11 +7,7 @@ const Playlist = new Schema({
         default : [],
         index   : true
 	},
-    user : {
-        _id     : Schema.Types.ObjectId,
-        name    : String,
-        picture : String
-    }
+	user : { type : Schema.Types.ObjectId, ref : "users", index : true }
 });
 
 export default model<Database.Playlist>("playlists", Playlist);

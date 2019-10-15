@@ -1,4 +1,5 @@
-import { google } from "googleapis";
+// @ts-ignore-file
+import { google, youtube_v3 } from "googleapis";
 
 import { YOUTUBE_API_KEY } from "../../../config/server";
 
@@ -44,14 +45,14 @@ async function search(params : SearchParams) {
 }
 
 async function contentDetails(ids: string[]) {
-	const detailsParams = { part : "contentDetails", id : ids };
+	const detailsParams = { part : "contentDetails", id : ids.join(","), maxResults : 50 };
 	// @ts-ignore
 	const { data : { items } } = await youtube.videos.list(detailsParams);
 	return items;
 }
 
 async function snippet(ids: string[]) {
-	const detailsParams = { part : "snippet", id : ids };
+	const detailsParams = { part : "snippet", id : ids.join(",") };
 	// @ts-ignore
 	const { data : { items } } = await youtube.videos.list(detailsParams);
 	return items;
@@ -62,9 +63,12 @@ function mergeVideosInfo(snippet, details) {
 	for (let i = 0; i < snippet.length; i += 1) {
 		const snippetItem = snippet[i];
 		const detailsItem = details[i];
+		if (!snippetItem.snippet.thumbnails) {
+			continue;
+		}
 		videos[i] = {
-			id        : snippetItem.id.videoId || snippetItem.id,
-			thumbnail : snippetItem.snippet.thumbnails.medium.url,
+			id        : snippetItem.snippet.resourceId ? snippetItem.snippet.resourceId.videoId : snippetItem.id,
+			thumbnail : snippetItem.snippet.thumbnails.default.url,
 			title     : snippetItem.snippet.title,
 			duration  : durationStrToSeconds(detailsItem.contentDetails.duration)
 		};
@@ -83,6 +87,43 @@ async function info(ids: string[]): Promise<{ items : Database.Video[] }> {
 	return { items };
 }
 
+
+async function getPlaylistItems(id: string): Promise<{ items : Database.Video[], data : { name : string } }|null> {
+	const rawData = await youtube.playlists.list({ part : "snippet", id, maxResults : 50 });
+	const playlists = rawData.data.items;
+	if (!playlists) {
+		return null;
+	}
+	const data = { name : playlists[0].snippet ? playlists[0].snippet.title as string : "" };
+	let snippetItems: youtube_v3.Schema$PlaylistItem[] = [];
+	let contentDetailsItems: youtube_v3.Schema$Video[] = [];
+	let token = "";
+	do {
+		const {
+			data : {
+				// @ts-ignore
+				nextPageToken,
+				items : videoItems,
+				// @ts-ignore
+				pageInfo : { totalResults }
+			}
+		} = await youtube.playlistItems.list({ part : "snippet", maxResults : 50, playlistId : id, pageToken : token });
+
+		
+		// @ts-ignore
+		const ids = videoItems.map(item => item.snippet.resourceId.videoId);
+		// @ts-ignore
+		const itemsContentDetails = await contentDetails(ids);
+		// @ts-ignore
+		token = nextPageToken;
+		// @ts-ignore
+		snippetItems = [...snippetItems, ...videoItems];
+		// @ts-ignore
+		contentDetailsItems = [...contentDetailsItems, ...itemsContentDetails];
+	} while(token);
+	return { items : mergeVideosInfo(snippetItems, contentDetailsItems), data };
+}
+
 export {
 	search,
 	info,
@@ -90,6 +131,8 @@ export {
 	searchSnippet,
 	snippet,
 	contentDetails,
+
+	getPlaylistItems,
 
 	durationStrToSeconds
 };

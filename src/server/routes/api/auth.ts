@@ -23,7 +23,8 @@ const userProperties = [
     "name",
     "email",
     "picture",
-    "settings"
+    "settings",
+    "premium"
 ];
 
 function createConnection() {
