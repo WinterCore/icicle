@@ -1,6 +1,7 @@
 const path              = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxPlugin     = require('workbox-webpack-plugin');
+const fs                = require("fs");
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
@@ -42,10 +43,18 @@ module.exports = {
         ]
     },
     devServer : {
+        host  : "icicle.dev",
+        port  : 443,
+        https : {
+            key: fs.readFileSync('./certs/server.key'),
+            cert: fs.readFileSync('./certs/server.crt'),
+            ca: fs.readFileSync('./certs/rootCA.pem'),
+        },
+        http2              : true,
         contentBase        : path.resolve("public"),
         hot                : true,
         historyApiFallback : true,
-        proxy : {
+        proxy              : {
             "/flexboxgrid.min.css" : { target : "http://localhost:8081" },
             "/socket.io"           : { target : "http://localhost:8081" }
         }
