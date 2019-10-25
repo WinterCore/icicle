@@ -56,7 +56,7 @@ module.exports = {
         historyApiFallback : true,
         proxy              : {
             "/flexboxgrid.min.css" : { target : "http://localhost:8081" },
-            "/socket.io"           : { target : "http://localhost:8081" }
+            "/socket.io"           : { target : "http://localhost:8081", ws : true }
         }
     },
     plugins : [
