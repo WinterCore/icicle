@@ -1,20 +1,18 @@
-import * as socketio from "socket.io";
-
-import Store     from "../store";
 import RoomStore from "../room-store";
+import { updateListenersCount } from "../helpers";
 
-import logger from "../../../logger";
 
-
-export default async function leave(socket: socketio.Socket) {
-    try {
-        const { id, currentRoomId } = Store.getSocketData(socket);
-        if (id && currentRoomId) {
-            RoomStore.removeListener(currentRoomId, id);
-            socket.leave(currentRoomId)
-        }
-        Store.setSocketData(socket, { id, isProcessing : false });
-    } catch(e) {
-        logger.error(e);
+export default async function leave(socket: IcicleSocket) {
+    const { id, currentRoomId } = socket.user;
+    if (!currentRoomId) {
+        return;
     }
+
+    if (id) {
+        RoomStore.removeListener(currentRoomId, id);
+    }
+
+    socket.leave(currentRoomId);
+    updateListenersCount(currentRoomId);
+    delete socket.user.currentRoomId;
 }

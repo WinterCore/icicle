@@ -1,6 +1,6 @@
 interface Window {
     socket : SocketIOClient.Socket;
-};
+}
 
 type QueueItem = {
     _id       : string;

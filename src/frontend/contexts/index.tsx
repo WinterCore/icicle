@@ -8,22 +8,22 @@ import { PlaylistsProvider }    from "./playlists";
 
 const AppProviders: React.SFC<AppProvidersProps> = ({ children }): React.ReactElement => {
     return (
-        <NotificationProvider>
-            <UserProvider>
-                <SocketProvider>
+        <UserProvider>
+            <SocketProvider>
+                <NotificationProvider>
                     <PlayerProvider>
                         <PlaylistsProvider>
                             { children }
                         </PlaylistsProvider>
                     </PlayerProvider>
-                </SocketProvider>
-            </UserProvider>
-        </NotificationProvider>
+                </NotificationProvider>
+            </SocketProvider>
+        </UserProvider>
     );
 };
 
 interface AppProvidersProps {
-    children : React.ReactNode[];
+    children : React.ReactNode;
 }
 
 export default AppProviders;

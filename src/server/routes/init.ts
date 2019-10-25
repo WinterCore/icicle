@@ -2,6 +2,7 @@ import * as express    from "express";
 import * as morgan     from "morgan";
 import * as path       from "path";
 import * as http       from "http";
+import * as helmet     from "helmet";
 
 import { Request, Response, Application } from "express";
 
@@ -9,12 +10,12 @@ import Api from "./api";
 
 import errorHandler from "../errors/handler";
 import initSocket   from "../lib/socket/init";
-import { download } from "../lib/audio";
 
 export default async function initializeServer() {
     const app: Application = express();
     const server           = http.createServer(app);
 
+    app.use(helmet());
     app.set("trust proxy", 1);
     app.use(morgan("tiny"));
     app.set("views", path.resolve("./src/server/views"));

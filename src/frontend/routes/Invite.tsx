@@ -9,11 +9,13 @@ type Params = {
 };
 
 const Invite: React.FunctionComponent<RouteComponentProps<Params>> = ({ match : { params : { token } }, history }) => {
-    const { socket } = useSocket();
+    const { isLoading } = useSocket();
     React.useEffect(() => {
-        socket.emit(SOCKET_ACTIONS.INVITE_JOIN, token);
-        history.push("/");
-    }, []);
+        if (!isLoading) {
+            window.socket.emit(SOCKET_ACTIONS.INVITE_JOIN, token);
+            history.push("/");
+        }
+    }, [isLoading]);
     return null;
 };
 

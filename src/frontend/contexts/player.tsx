@@ -30,8 +30,11 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         const val = window.localStorage.getItem("last_stream");
         return val ? JSON.parse(val) : null;
     });
-    const { socket }              = useSocket();
-    const { addNotification }     = useNotification();
+    const { isLoading }       = useSocket();
+    const { addNotification } = useNotification();
+
+    const socket = window.socket;
+
     const onRoomJoin  = (data: PlayerData) => {  
         setRoomData(roomData => data ? data.by : roomData);
         if (data) window.localStorage.setItem("last_stream", JSON.stringify(data.by));
@@ -49,14 +52,23 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         window.localStorage.setItem("last_stream", JSON.stringify(data));
     };
 
-    const seek              = (seconds: number)  => socket.emit(SOCKET_ACTIONS.SEEK, seconds);
-    const joinStream        = (id: string)       => socket.emit(SOCKET_ACTIONS.JOIN, id);
-    const skip              = ()                 => socket.emit(SOCKET_ACTIONS.SKIP);
-    const handleSocketJoin  = ()                 => setData(data => data && ({ ...data, liveListeners : data.liveListeners + 1 }));
-    const handleSocketLeave = ()                 => setData(data => data && ({ ...data, liveListeners : data.liveListeners - 1 }));
-    const handleError       = (message: string)  => addNotification({ message, type : "error" });
-    const terminateStream   = ()                 => socket.emit(SOCKET_ACTIONS.END_STREAM);
-    const play              = ()                 => socket.emit(SOCKET_ACTIONS.PLAY);
+    const {
+        seek,
+        joinStream,
+        skip,
+        handleError,
+        terminateStream,
+        play,
+        updateListeners
+    } = React.useMemo(() => ({
+        seek              : (seconds: number)       => socket.emit(SOCKET_ACTIONS.SEEK, seconds),
+        joinStream        : (id: string)            => socket.emit(SOCKET_ACTIONS.JOIN, id),
+        skip              : ()                      => socket.emit(SOCKET_ACTIONS.SKIP),
+        handleError       : (message: string)       => addNotification({ message, type : "error" }),
+        terminateStream   : ()                      => socket.emit(SOCKET_ACTIONS.END_STREAM),
+        play              : ()                      => socket.emit(SOCKET_ACTIONS.PLAY),
+        updateListeners   : (liveListeners: number) => setRoomData(roomData => roomData ? ({ ...roomData, liveListeners }) : roomData),
+    }), []);
 
     const startStream = (videoId: string) => {
         socket.emit(SOCKET_ACTIONS.PLAY_NOW, videoId);
@@ -76,24 +88,33 @@ const PlayerProvider: React.FunctionComponent = (props): React.ReactElement => {
         nowPlaying : data
     };
 
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            socket.emit(SOCKET_ACTIONS.PROBE_LISTENERS);
+        }, 15000);
+
+        return () => { clearInterval(intervalId); };
+    }, [roomData && roomData._id]);
+
 
     useEffect(() => {
         socket.on(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin);
-        socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
-        socket.on(SOCKET_ACTIONS.SOCKET_JOINED, handleSocketJoin);
-        socket.on(SOCKET_ACTIONS.SOCKET_LEFT, handleSocketLeave);
         socket.on(SOCKET_ACTIONS.DEAD_JOIN, handleDeadRoomJoin);
         socket.on(SOCKET_ACTIONS.ERROR, handleError);
+        socket.on(SOCKET_ACTIONS.UPDATE_LISTENERS, updateListeners);
         socket.on(SOCKET_ACTIONS.END_STREAM, () => {
             setData(null);
             setRoomData(null);
             window.localStorage.removeItem("last_stream");
         });
-        socket.emit(SOCKET_ACTIONS.CHECK, roomData ? roomData._id : null);
-        return () => { socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin) };
-    }, [
-        socket
-    ]);
+        return () => { socket.off(SOCKET_ACTIONS.PLAY_NOW, context.onRoomJoin); };
+    }, []);
+
+    useEffect(() => {
+        if (!isLoading) {
+            socket.emit(SOCKET_ACTIONS.CHECK, roomData ? roomData._id : null);
+        }
+    }, [isLoading]);
 
 
     return <PlayerContext.Provider value={ context } { ...props } />;

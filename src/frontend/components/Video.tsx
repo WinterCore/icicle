@@ -59,7 +59,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                     <div className="song-info">
                         <div className="song-name">
                             <TextRoller>
-                                { title }
+                                <span dangerouslySetInnerHTML={{ __html : title }} />
                             </TextRoller>
                         </div>
                     </div>

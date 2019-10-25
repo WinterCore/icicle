@@ -18,7 +18,8 @@ const Chat: React.FunctionComponent = () => {
 
     const messagesContainerRef = React.useRef<HTMLDivElement>(null);
 
-    const { socket }   = useSocket();
+    const socket = window.socket;
+
     const { user }     = useUser();
     const { roomData } = usePlayer();
 

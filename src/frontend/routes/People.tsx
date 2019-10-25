@@ -12,9 +12,9 @@ import PlayIcon from "../icons/Play";
 import { usePlayer } from "../contexts/player";
 
 const Person: React.FunctionComponent<PersonProps> = (props) => {
-    const { _id, name, picture, nowPlaying, liveListeners } = props;
+    const { _id, name, picture, nowPlaying, liveListeners: rawLiveListeners } = props;
     const { joinStream, roomData } = usePlayer();
-
+    const liveListeners = rawLiveListeners - 1;
     const onPlay = () => joinStream(_id);
 
     return (

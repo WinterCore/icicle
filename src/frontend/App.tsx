@@ -33,9 +33,14 @@ const Authenticated: React.FC<AuthenticatedProps> = ({ component: Component, ...
 };
 
 function App() {
+    if (!window.WebSocket) {
+        const $message = document.querySelector("#loader h3") as HTMLDivElement;
+        $message.innerHTML = "We're sorry, but your browser doesn't support websockets, you can't use this app";
+        return null;
+    }
     React.useEffect(() => {
-        const $root: HTMLDivElement   = document.querySelector("#root") as HTMLDivElement;
-        const $loader: HTMLDivElement = document.querySelector("#loader") as HTMLDivElement;
+        const $root   = document.querySelector("#root") as HTMLDivElement;
+        const $loader = document.querySelector("#loader") as HTMLDivElement;
         $loader.classList.add("loaded");
         $root.classList.add("loaded");
         setTimeout(() => {
@@ -44,24 +49,24 @@ function App() {
         }, 300);
     }, []);
     return (
-        <BrowserRouter>
-            <AppProviders>
-                    <Sidenav />
-                    <section className="main">
-                        <Route exact path="/" component={ Home } />
-                        <Route path="/search" component={ Search } />
-                        <Route path="/people" component={ People } />
-                        <Route path="/about" component={ About } />
-                        <Route path="/settings" render={ (props) => <Authenticated { ...props } component={ Settings } /> } />
-                        <Route path="/invite/:token" component={ Invite } />
-                        <Route path="/auth/google/callback" component={ ConfirmLogin } />
-                        <Route path="/playlist/:id" render={ (props) => <Authenticated { ...props } component={ Playlist } /> } />
-                    </section>
-                    <Player />
-                    <Notification />
-                    <PlaylistModal />
-            </AppProviders>
-        </BrowserRouter>
+        <AppProviders>
+            <BrowserRouter>
+                <Sidenav />
+                <section className="main">
+                    <Route exact path="/" component={ Home } />
+                    <Route path="/search" component={ Search } />
+                    <Route path="/people" component={ People } />
+                    <Route path="/about" component={ About } />
+                    <Route path="/settings" render={ (props) => <Authenticated { ...props } component={ Settings } /> } />
+                    <Route path="/invite/:token" component={ Invite } />
+                    <Route path="/auth/google/callback" component={ ConfirmLogin } />
+                    <Route path="/playlist/:id" render={ (props) => <Authenticated { ...props } component={ Playlist } /> } />
+                </section>
+                <Player />
+                <Notification />
+                <PlaylistModal />
+            </BrowserRouter>
+        </AppProviders>
     );
 }
 

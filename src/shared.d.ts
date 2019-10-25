@@ -9,8 +9,9 @@ type Message = {
 };
 
 type PlayerDataUser = {
-    name : string;
-    _id  : string;
+    name          : string;
+    _id           : string;
+    liveListeners : number;
 };
 
 type PlayerData = {
