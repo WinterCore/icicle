@@ -50,7 +50,6 @@ module.exports = {
             cert: fs.readFileSync('./certs/server.crt'),
             ca: fs.readFileSync('./certs/rootCA.pem'),
         },
-        http2              : true,
         contentBase        : path.resolve("public"),
         hot                : true,
         historyApiFallback : true,
