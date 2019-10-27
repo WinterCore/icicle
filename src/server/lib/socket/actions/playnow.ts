@@ -28,7 +28,7 @@ export default async function playNow(socket: IcicleSocket, videoId: string): Pr
         socket.emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play your video");
         return;
     }
-    if (currentRoomId) { // Leave the current room if exists
+    if (currentRoomId && currentRoomId !== id) { // Leave the current room if exists and doesn't belong to the user
         socket.leave(currentRoomId);
         updateListenersCount(currentRoomId);
     }
