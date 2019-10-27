@@ -28,13 +28,11 @@ export default async function playNow(socket: IcicleSocket, videoId: string): Pr
         socket.emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play your video");
         return;
     }
-    if (currentRoomId && currentRoomId !== id) { // Leave the current room if exists and doesn't belong to the user
-        socket.leave(currentRoomId);
-        updateListenersCount(currentRoomId);
-    }
     if (id) {
         if (currentRoomId && currentRoomId !== id) {
             RoomStore.removeListener(currentRoomId, id);
+            socket.leave(currentRoomId);
+            updateListenersCount(currentRoomId);
         }
         const user = await User.findOne({ _id : id }) as Database.User;
         if (!user.isStreaming()) { // if the user is creating a room make him join it
@@ -42,7 +40,7 @@ export default async function playNow(socket: IcicleSocket, videoId: string): Pr
         }
         await user.setNowPlayingData(data);
         socket.user.isProcessing = false;
-        socket.user.currentRoomId = user._id;
+        socket.user.currentRoomId = id;
         const nowPlayingData = user.getNowPlayingData();
 
         io.in(id).emit(SOCKET_ACTIONS.PLAY_NOW, nowPlayingData); // Notify all the listeners

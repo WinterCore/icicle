@@ -13,23 +13,24 @@ class Scheduler extends EventEmitter {
         super();
 
         this.on("schedule-next", ({ user, duration } : { user : Database.User, duration : number }) => {
-            this.cancel(user._id);
-            this.schedule(user._id, setTimeout(async () => {
+            const userId = user._id.toString();
+            this.cancel(userId);
+            this.schedule(userId, setTimeout(async () => {
                 const queueItem = await user.extractNextItemInQueue();
                 const io = IO.getInstance();
                 if (queueItem) {
                     download(queueItem.videoId).catch(() => {
-                        io.in(user._id).emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play the next video, skipping...");
+                        io.in(userId).emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play the next video, skipping...");
                         this.emit("schedule-next", { user, duration : 0 });
                     });
                     await user.setNowPlayingData(queueItem);
                     const nowPlayingData = user.getNowPlayingData();
-                    io.in(user._id).emit(SOCKET_ACTIONS.PLAY_NOW, nowPlayingData); 
+                    io.in(userId).emit(SOCKET_ACTIONS.PLAY_NOW, nowPlayingData); 
                     this.emit("schedule-next", { user, duration : queueItem.duration });
                 } else {
                     user.nowPlaying = null;
                     await user.save();
-                    io.in(user._id).emit(SOCKET_ACTIONS.PLAY_NOW, null);
+                    io.in(userId).emit(SOCKET_ACTIONS.PLAY_NOW, null);
                 }
             }, duration * 1000));
         });
