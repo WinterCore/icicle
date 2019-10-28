@@ -19,10 +19,13 @@ class Scheduler extends EventEmitter {
                 const queueItem = await user.extractNextItemInQueue();
                 const io = IO.getInstance();
                 if (queueItem) {
-                    download(queueItem.videoId).catch(() => {
+                    try {
+                        await download(queueItem.videoId)
+                    } catch (e) {
                         io.in(userId).emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play the next video, skipping...");
                         this.emit("schedule-next", { user, duration : 0 });
-                    });
+                        return;
+                    }
                     await user.setNowPlayingData(queueItem);
                     const nowPlayingData = user.getNowPlayingData();
                     io.in(userId).emit(SOCKET_ACTIONS.PLAY_NOW, nowPlayingData); 
