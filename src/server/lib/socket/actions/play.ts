@@ -19,9 +19,9 @@ export default async function play(socket: IcicleSocket) {
     if (currentRoomId && currentRoomId !== id) {
         RoomStore.removeListener(currentRoomId, id);
         socket.leave(currentRoomId);
-        socket.join(id);
-        socket.user.currentRoomId = id;
     }
+    socket.join(id);
+    socket.user.currentRoomId = id;
 
     Scheduler.emit("schedule-next", { user, duration : 0 });
 }
