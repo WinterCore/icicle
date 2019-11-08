@@ -20,7 +20,7 @@ class Scheduler extends EventEmitter {
                 const io = IO.getInstance();
                 if (queueItem) {
                     try {
-                        await download(queueItem.videoId)
+                        await download(queueItem.videoId);
                     } catch (e) {
                         io.in(userId).emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play the next video, skipping...");
                         this.emit("schedule-next", { user, duration : 0 });
@@ -40,7 +40,7 @@ class Scheduler extends EventEmitter {
     }
 
     private schedule(id: string, timeoutId: NodeJS.Timeout) {
-        this.jobs[id] = timeoutId;    
+        this.jobs[id] = timeoutId;
     }
 
     public cancel(id: string) {

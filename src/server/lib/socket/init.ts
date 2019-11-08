@@ -27,17 +27,21 @@ import { updateListenersCount } from "./helpers";
 
 function attachEvents(socket: IcicleSocket) {
     
+    const handleError = (err: Error) => {
+        socket.emit("error", "Something happened");
+        logger.error(err);
+    };
     socket.on("error", (err) => logger.error(err));
 
-    socket.on(SOCKET_ACTIONS.PLAY_NOW, data => playNow(socket, data).catch((err) => logger.error(err)));
-    socket.on(SOCKET_ACTIONS.PLAY, () => play(socket).catch((err) => logger.error(err)));
-    socket.on(SOCKET_ACTIONS.SEEK, data => seek(socket, data).catch((err) => logger.error(err)));
-    socket.on(SOCKET_ACTIONS.CHECK, data => check(socket, data).catch((err) => logger.error(err)));
-    socket.on(SOCKET_ACTIONS.JOIN, data => join(socket, data).catch((err) => logger.error(err)));
-    socket.on(SOCKET_ACTIONS.INVITE_JOIN, (token) => inviteJoin(socket, token).catch((err) => logger.error(err)))
-    socket.on(SOCKET_ACTIONS.SKIP, () => skip(socket).catch((err) => logger.error(err)));
-    socket.on(SOCKET_ACTIONS.LEAVE, () => leave(socket).catch((err) => logger.error(err)));
-    socket.on(SOCKET_ACTIONS.END_STREAM, () => destroy(socket).catch((err) => logger.error(err)));
+    socket.on(SOCKET_ACTIONS.PLAY_NOW, data => playNow(socket, data).catch(handleError));
+    socket.on(SOCKET_ACTIONS.PLAY, () => play(socket).catch(handleError));
+    socket.on(SOCKET_ACTIONS.SEEK, data => seek(socket, data).catch(handleError));
+    socket.on(SOCKET_ACTIONS.CHECK, data => check(socket, data).catch(handleError));
+    socket.on(SOCKET_ACTIONS.JOIN, data => join(socket, data).catch(handleError));
+    socket.on(SOCKET_ACTIONS.INVITE_JOIN, (token: string) => inviteJoin(socket, token).catch(handleError));
+    socket.on(SOCKET_ACTIONS.SKIP, () => skip(socket).catch(handleError));
+    socket.on(SOCKET_ACTIONS.LEAVE, () => leave(socket).catch(handleError));
+    socket.on(SOCKET_ACTIONS.END_STREAM, () => destroy(socket).catch(handleError));
     socket.on(SOCKET_ACTIONS.PROBE_LISTENERS, () => {
         const { currentRoomId } = socket.user;
         User.findById(currentRoomId)

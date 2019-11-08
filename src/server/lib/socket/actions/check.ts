@@ -9,7 +9,7 @@ export default async function check(socket: IcicleSocket, roomId: string) {
     const { id } = socket.user;
     if (roomId) {
         const user = await User.findById(roomId);
-        if (user && user.isStreaming()) {
+        if (user) {
             if (user.settings.invisMode) {
                 if (
                     !id // the user is not logged in
@@ -26,7 +26,9 @@ export default async function check(socket: IcicleSocket, roomId: string) {
             socket.join(roomId);
             socket.user.currentRoomId = roomId;
             updateListenersCount(roomId);
-            socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
+            if (user.isStreaming()) {
+                socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData());
+            }
         }
     } else {
         if (id) {
