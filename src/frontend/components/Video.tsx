@@ -24,6 +24,13 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
     const { user }                                      = useUser();
 
     const onPlayNow = () => {
+        if (!user) {
+            addNotification({
+                message : "You need to login before you can start your own stream and play videos.",
+                type : "error"
+            });
+            return;
+        }
         if (nowPlaying ? nowPlaying.title !== title : true) {
             setIsPlayNowLoading(true);
             startStream(id);
