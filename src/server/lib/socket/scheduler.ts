@@ -35,6 +35,7 @@ class Scheduler extends EventEmitter {
                     socket.user.isProcessing = false;
                     this.emit("schedule-next", { socket, user, duration : queueItem.duration });
                 } else {
+                    socket.user.isProcessing = false;
                     user.nowPlaying = null;
                     await user.save();
                     io.in(userId).emit(SOCKET_ACTIONS.PLAY_NOW, null);
