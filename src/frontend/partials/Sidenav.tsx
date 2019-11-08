@@ -62,7 +62,6 @@ const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search :
     React.useEffect(() => {
         return history.listen(() => {
             setIsVisible(false);
-            setSearch("");
         });
     }, []);
 
