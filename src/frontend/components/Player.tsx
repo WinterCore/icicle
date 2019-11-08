@@ -83,6 +83,8 @@ const ActualPlayer: React.FunctionComponent = () => {
             navigator.mediaSession.setActionHandler("play", handlePlayPause);
             // @ts-ignore
             navigator.mediaSession.setActionHandler("pause", handlePlayPause);
+            // @ts-ignore
+            navigator.mediaSession.setActionHandler("nexttrack", skip);
         }
     });
 
@@ -125,7 +127,7 @@ const ActualPlayer: React.FunctionComponent = () => {
         playerRef.current!.volume = val ? +val : 0.3;
     }, []);
 
-    useHotkeys(SHORTCUTS.PLAY_PAUSE, React.useCallback(() => {
+    useHotkeys(SHORTCUTS.PLAY_PAUSE, () => {
         setIsPausedOnPurpose((isPausedOnPurpose) => {
             if (isPausedOnPurpose) {
                 playerRef.current!.play();
@@ -138,7 +140,7 @@ const ActualPlayer: React.FunctionComponent = () => {
                 return true;
             }
         });
-    }, [secondsPlayed]));
+    }, [secondsPlayed]);
 
     useHotkeys(SHORTCUTS.SKIP, skip);
     useHotkeys(SHORTCUTS.ADD_CURRENT_SONG_TO_PLAYLIST, () => openModal(nowPlaying.videoId));
