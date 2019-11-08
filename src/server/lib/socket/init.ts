@@ -72,15 +72,17 @@ export default function init(server: Server) {
                         verify(token, JWT_SECRET, function verifyToken(err : VerifyErrors, decoded: string | object) {
                             if (decoded) {
                                 socket.user = { id : (decoded as JWTUser).id, isProcessing : false };
+                                socket.emit(SOCKET_ACTIONS.AUTHENTICATED, true);
                             } else {
                                 socket.user = { isProcessing : false };
+                                socket.emit(SOCKET_ACTIONS.AUTHENTICATED, false);
                             }
                         });
                     }).catch(console.log);            
             } else {
                 socket.user = { isProcessing : false };
+                socket.emit(SOCKET_ACTIONS.AUTHENTICATED, false);
             }
-            socket.emit(SOCKET_ACTIONS.AUTHENTICATED);
         });
         attachEvents(socket);
     });
