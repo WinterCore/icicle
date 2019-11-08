@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
-import { download } from "../audio";
+import VideoDownloader from "../audio";
+import { getSong } from "../../services/song";
 
 import { SOCKET_ACTIONS } from "../../../constants";
 
@@ -12,24 +13,27 @@ class Scheduler extends EventEmitter {
     constructor() {
         super();
 
-        this.on("schedule-next", ({ user, duration } : { user : Database.User, duration : number }) => {
+        this.on("schedule-next", ({ socket, user, duration } : { socket : IcicleSocket, user : Database.User, duration : number }) => {
             const userId = user._id.toString();
             this.cancel(userId);
             this.schedule(userId, setTimeout(async () => {
                 const queueItem = await user.extractNextItemInQueue();
                 const io = IO.getInstance();
+                socket.user.isProcessing = true;
                 if (queueItem) {
                     try {
-                        await download(queueItem.videoId);
+                        await getSong(queueItem.videoId);
                     } catch (e) {
                         io.in(userId).emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play the next video, skipping...");
                         this.emit("schedule-next", { user, duration : 0 });
+                        socket.user.isProcessing = false;
                         return;
                     }
                     await user.setNowPlayingData(queueItem);
                     const nowPlayingData = user.getNowPlayingData();
                     io.in(userId).emit(SOCKET_ACTIONS.PLAY_NOW, nowPlayingData); 
-                    this.emit("schedule-next", { user, duration : queueItem.duration });
+                    socket.user.isProcessing = false;
+                    this.emit("schedule-next", { socket, user, duration : queueItem.duration });
                 } else {
                     user.nowPlaying = null;
                     await user.save();

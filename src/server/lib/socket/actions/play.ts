@@ -23,5 +23,5 @@ export default async function play(socket: IcicleSocket) {
     socket.join(id);
     socket.user.currentRoomId = id;
 
-    Scheduler.emit("schedule-next", { user, duration : 0 });
+    Scheduler.emit("schedule-next", { socket, user, duration : 0 });
 }
