@@ -43,13 +43,6 @@ module.exports = {
         ]
     },
     devServer : {
-        host  : "icicle.dev",
-        port  : 443,
-        https : {
-            key: fs.readFileSync('./certs/server.key'),
-            cert: fs.readFileSync('./certs/server.crt'),
-            ca: fs.readFileSync('./certs/rootCA.pem'),
-        },
         contentBase        : path.resolve("public"),
         hot                : true,
         historyApiFallback : true,

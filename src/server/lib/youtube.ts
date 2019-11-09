@@ -60,17 +60,23 @@ async function snippet(ids: string[]) {
 // @ts-ignore
 function mergeVideosInfo(snippet, details) {
 	const videos = [];
+	// @ts-ignore
+	const detailsMap = details.reduce((acc, item) => {
+		acc[item.id] = { duration : durationStrToSeconds(item.contentDetails.duration) };
+		return acc;
+	}, {});
+
 	for (let i = 0; i < snippet.length; i += 1) {
 		const snippetItem = snippet[i];
-		const detailsItem = details[i];
-		if (!snippetItem.snippet.thumbnails) {
+		const videoId = snippetItem.snippet.resourceId ? snippetItem.snippet.resourceId.videoId : snippetItem.id;
+		if (!snippetItem.snippet.thumbnails || !detailsMap[videoId]) {
 			continue;
 		}
 		videos[i] = {
-			id        : snippetItem.snippet.resourceId ? snippetItem.snippet.resourceId.videoId : snippetItem.id,
+			id        : videoId,
 			thumbnail : snippetItem.snippet.thumbnails.default.url,
 			title     : snippetItem.snippet.title,
-			duration  : durationStrToSeconds(detailsItem.contentDetails.duration)
+			...detailsMap[videoId]
 		};
 	}
 	return videos;

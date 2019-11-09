@@ -39,7 +39,7 @@ const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search :
 
     const onPlaylistImport = () => {
         if (isImportPlaylistLoading) return;
-        const playlistId = playlistUrl.match(/&list=(.+)(?:&|$)/);
+        const playlistId = playlistUrl.match(/&|\?list=(.+)(?:&|$)/);
         if (!playlistId) {
             return addNotification({ type : "error", message: "Please enter a valid playlist url" })
         }
