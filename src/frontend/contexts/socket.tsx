@@ -24,13 +24,20 @@ const options = {
 const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
     const { user }                  = useUser();
     const [isLoading, setIsLoading] = useState(true);
+
     if (!window.socket) {
         window.socket = SocketIo(DOMAIN, options);
         window.socket.on(SOCKET_ACTIONS.AUTHENTICATED, () => setIsLoading(false));
+        window.socket.on("reconnect", () => {
+            window.socket.emit(SOCKET_ACTIONS.AUTHENTICATE, user ? user.token : null);
+        });
+        window.socket.on("disconnect", () => setIsLoading(true));
     }
+    
     React.useLayoutEffect(() => {
         setIsLoading(true);
         window.socket.emit(SOCKET_ACTIONS.AUTHENTICATE, user ? user.token : null);
+        
     }, [!!user]);
 
     return <SocketContext.Provider value={{ isLoading }} { ...props } />;
