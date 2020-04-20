@@ -3,3 +3,4 @@ dist
 .vscode
 logs/*
 public/audio
+certs

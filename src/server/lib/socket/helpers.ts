@@ -8,7 +8,11 @@ import Scheduler from "./scheduler";
 
 import { SOCKET_ACTIONS } from "../../../constants";
 
-export const terminateStream = async (io: SocketIO.Server, socket: socketio.Socket, id: string) => {
+import IO from "./io";
+import logger from "../../logger";
+
+export const terminateStream = async (socket: socketio.Socket, id: string) => {
+    const io = IO.getInstance();
     await User.updateOne({ _id : id }, { $set : { nowPlaying : null, liveListeners : 0 } });
     await Queue.deleteMany({ by : id }); // Clear his queue
     Scheduler.cancel(id);
@@ -22,4 +26,16 @@ export const terminateStream = async (io: SocketIO.Server, socket: socketio.Sock
             });
         }
     });
+};
+
+
+export const updateListenersCount = async (streamerId: string): Promise<void> => {
+    const io = IO.getInstance();
+    io.in(streamerId).clients((err: Error, clients: string[]) => {
+        if (!err) {
+            const liveListeners = clients.length;
+            User.updateOne({ _id : streamerId }, { $set : { liveListeners } }).catch((err) => logger.error(err));
+        }
+    });
+
 };

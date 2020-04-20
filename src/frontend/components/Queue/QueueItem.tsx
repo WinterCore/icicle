@@ -44,7 +44,6 @@ const QueueItem: React.FunctionComponent<QueueItemProps> = (props) => {
                                 { title }
                             </TextRoller>
                         </div>
-                        {/* <div className="song-time-remaining washed-out">Plays in 5 mins</div> */}
                     </div>
                 </div>
                 <div className="song-duration">

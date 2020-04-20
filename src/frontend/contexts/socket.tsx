@@ -6,46 +6,41 @@ import { DOMAIN } from "../../../config/frontend";
 import usePrevious from "../hooks/use-previous";
 
 import { useUser } from "./user";
+import { SOCKET_ACTIONS } from "../../constants";
 
 const { useContext, createContext, useState } = React;
 
 const SocketContext = createContext<SocketProvider | null>(null);
 
 interface SocketProvider {
-    socket    : SocketIOClient.Socket;
     isLoading : boolean;
 }
+
+const options = {
+    transports: ["websocket"],
+    upgrade : false
+};
 
 const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
     const { user }                  = useUser();
     const [isLoading, setIsLoading] = useState(true);
-    const prevUser                  = usePrevious(user);
-    const [socket, setSocket]       = useState(() => (
-        SocketIo(DOMAIN, {
-            transportOptions : {
-                polling : {
-                    extraHeaders : { Authorization : `Bearer ${user && user.token}` }
-                }
-            }
-        })
-    ));
-    console.log("Socket connecting");
+
+    if (!window.socket) {
+        window.socket = SocketIo(DOMAIN, options);
+        window.socket.on(SOCKET_ACTIONS.AUTHENTICATED, () => setIsLoading(false));
+        window.socket.on("reconnect", () => {
+            window.socket.emit(SOCKET_ACTIONS.AUTHENTICATE, user ? user.token : null);
+        });
+        window.socket.on("disconnect", () => setIsLoading(true));
+    }
+    
     React.useLayoutEffect(() => {
-        if (!!prevUser !== !!user) {
-            socket.disconnect();
-            setSocket(socket => {
-                return SocketIo(DOMAIN, {
-                    transportOptions : {
-                        polling : {
-                            extraHeaders : { Authorization : `Bearer ${user && user.token}` }
-                        }
-                    }
-                });
-            });
-        }
+        setIsLoading(true);
+        window.socket.emit(SOCKET_ACTIONS.AUTHENTICATE, user ? user.token : null);
+        
     }, [!!user]);
 
-    return <SocketContext.Provider value={{ socket, isLoading }} { ...props } />;
+    return <SocketContext.Provider value={{ isLoading }} { ...props } />;
 }
 
 function useSocket() {

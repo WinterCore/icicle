@@ -41,7 +41,7 @@ UserSchema.methods.isStreaming = function isStreaming(this: Database.User) { // 
 };
 
 UserSchema.methods.getRoomData = function getRoomData(this: Database.User) {
-    return { _id : this._id, name : this.name };
+    return { _id : this._id, name : this.name, liveListeners : this.liveListeners };
 };
 
 UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.StreamingUser) {
@@ -55,7 +55,6 @@ UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.Str
         url           : this.nowPlaying.url,
         videoId       : this.nowPlaying.videoId,
         by            : this.getRoomData(),
-        liveListeners : this.liveListeners
     };
 };
 

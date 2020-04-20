@@ -39,10 +39,11 @@ const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search :
 
     const onPlaylistImport = () => {
         if (isImportPlaylistLoading) return;
-        const playlistId = playlistUrl.match(/&list=(.+)(?:&|$)/);
+        const playlistId = playlistUrl.match(/(?:\&|\?)list=(.+)(?:&|$)/);
         if (!playlistId) {
             return addNotification({ type : "error", message: "Please enter a valid playlist url" })
         }
+        console.log(playlistId);
         setIsImportPlaylistLoading(true);
         api({
             ...IMPORT_YOUTUBE_PLAYLIST(),
@@ -62,7 +63,6 @@ const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search :
     React.useEffect(() => {
         return history.listen(() => {
             setIsVisible(false);
-            setSearch("");
         });
     }, []);
 

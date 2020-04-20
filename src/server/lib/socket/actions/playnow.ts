@@ -1,66 +1,51 @@
-import * as socketio from "socket.io";
-
-import { info }     from "../../youtube";
-import { download } from "../../audio";
-
 import User  from "../../../database/models/user";
-import Song  from "../../../database/models/song";
 
-import Store     from "../store";
 import RoomStore from "../room-store";
 import Scheduler from "../scheduler";
 
 import { SOCKET_ACTIONS } from "../../../../constants";
 
-import logger from "../../../logger";
 import { AUDIO_URL } from "../../../../../config/server";
+import { getSong } from "../../../services/song";
+
+import IO from "../io";
+import { updateListenersCount } from "../helpers";
 
 
-export default async function playNow(socket: socketio.Socket, videoId: string) {
-    try {
-        const { id, currentRoomId, isProcessing } = Store.getSocketData(socket);
+export default async function playNow(socket: IcicleSocket, videoId: string): Promise<void> {
+    const { id, currentRoomId, isProcessing } = socket.user;
+    if (id) {
+        const io = IO.getInstance();
         if (isProcessing) {
             socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");
             return;
         }
-        Store.setSocketData(socket, { id, currentRoomId, isProcessing : true });
-        let data = await Song.findOne({ videoId });
-        await download(videoId);
-        if (!data) {
-            const youtubeData = (await info([videoId])).items[0];
-            data = new Song({
-                title     : youtubeData.title,
-                videoId   : videoId,
-                thumbnail : youtubeData.thumbnail,
-                duration  : youtubeData.duration
-            });
-            data.save();
+        socket.user.isProcessing = true;
+
+        let data = null;
+        try {
+            data = await getSong(videoId);
+        } catch(e) {
+            socket.emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play your video");
+            return;
         }
-        socket.leaveAll();
-        if (id) {
-            if (currentRoomId && currentRoomId !== id) { // if the user is another room (remove him from the listeners list)
-                await User.updateOne({ _id : currentRoomId }, { $inc : { liveListeners : -1 } });
-                RoomStore.removeListener(currentRoomId, id);
-            }
-            const user = await User.findOne({ _id : id }) as Database.User;
-            if (!user.nowPlaying) { // if the user is creating a room make him join it
-                socket.join(user._id);
-            }
-            await user.setNowPlayingData(data);
-            Store.setSocketData(socket, {
-                isProcessing  : false,
-                currentRoomId : user._id,
-                id
-            });
-            socket.emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData()); // Notify the owner
-            socket.in(id).emit(SOCKET_ACTIONS.PLAY_NOW, user.getNowPlayingData()); // Notify all the listeners
-            Scheduler.emit("schedule-next", { user, socket, duration : data.duration });
-        } else {
-            socket.emit(SOCKET_ACTIONS.PLAY_NOW, { ...data.toObject(), url : AUDIO_URL(videoId), startAt : 0, by : { _id : null, name : "Unknown" } });
-            Store.setSocketData(socket, { id, isProcessing : false });
+        if (currentRoomId && currentRoomId !== id) {
+            RoomStore.removeListener(currentRoomId, id);
+            socket.leave(currentRoomId);
+            updateListenersCount(currentRoomId);
         }
-    } catch(e) {
-        socket.emit(SOCKET_ACTIONS.ERROR, "Something happened while trying to play your video");
-        logger.error(e);
+        const user = await User.findOne({ _id : id }) as Database.User;
+        if (!user.isStreaming()) { // if the user is creating a room make him join it
+            socket.join(id);
+        }
+        await user.setNowPlayingData(data);
+        socket.user.isProcessing = false;
+        socket.user.currentRoomId = id;
+        const nowPlayingData = user.getNowPlayingData();
+
+        io.in(id).emit(SOCKET_ACTIONS.PLAY_NOW, nowPlayingData); // Notify all the listeners
+        Scheduler.emit("schedule-next", { user, socket, duration : data.duration });
+    } else {
+        socket.emit(SOCKET_ACTIONS.ERROR, "Playing videos is only available for logged in users");
     }
 }

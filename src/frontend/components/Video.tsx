@@ -24,6 +24,13 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
     const { user }                                      = useUser();
 
     const onPlayNow = () => {
+        if (!user) {
+            addNotification({
+                message : "You need to login before you can start your own stream and play videos.",
+                type : "error"
+            });
+            return;
+        }
         if (nowPlaying ? nowPlaying.title !== title : true) {
             setIsPlayNowLoading(true);
             startStream(id);
@@ -59,7 +66,7 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
                     <div className="song-info">
                         <div className="song-name">
                             <TextRoller>
-                                { title }
+                                <span dangerouslySetInnerHTML={{ __html : title }} />
                             </TextRoller>
                         </div>
                     </div>

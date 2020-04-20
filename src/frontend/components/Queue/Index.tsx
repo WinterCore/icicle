@@ -50,7 +50,9 @@ const Queue: React.FunctionComponent = () => {
             setIsLoading(false);
         }).catch((err) => {
             console.log(err);
-            setError(true);
+            if (err.response) {
+                setError(true);
+            }
             setIsLoading(false);
         });
         return cancelTokenSource;
