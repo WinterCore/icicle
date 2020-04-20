@@ -27,8 +27,8 @@ export default async function join(socket: IcicleSocket, streamerId: string, inv
         await terminateStream(socket, id);
     }
     
-    updateListenersCount(streamerId);
     socket.join(streamerId);
+    updateListenersCount(streamerId);
     socket.user.currentRoomId = streamerId;
     if (id) {
         RoomStore.addListener(streamerId, id);
