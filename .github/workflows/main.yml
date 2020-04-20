@@ -1,0 +1,42 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+    - name: Install dependencies
+      run: npm install
+    - name: Build
+      env:
+        CLIENT_DOMAIN: https://icicle.media
+        API_URL: https://icicle.media
+      run: npm run build
+    - name: Setup Deployment
+      env:
+        SERVER_PRIVATE_KEY: ${{ secrets.SERVER_PRIVATE_KEY }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SERVER_PRIVATE_KEY" >> ~/.ssh/server
+        chmod 600 ~/.ssh/server
+        echo -e "Host server $SERVER_IP\n\tHostName $SERVER_IP\n\tIdentityFile ~/.ssh/server\n\tUser $SERVER_USER" >> ~/.ssh/config
+        ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts
+        chmod 600 ~/.ssh/config
+        sudo apt-get update -y
+        sudo apt-get -y install rsync
+    - name: Deploy
+      env:
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+        PROJECT_PATH: ${{ secrets.PROJECT_PATH }}
+      run: |
+        rsync -a dist public package.json package-lock.json $SERVER_USER@$SERVER_IP:$PROJECT_PATH
+        ssh $SERVER_IP -f "cd $PROJECT_PATH && npm install"
