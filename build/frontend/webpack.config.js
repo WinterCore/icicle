@@ -1,9 +1,11 @@
 const path              = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const WorkboxPlugin     = require('workbox-webpack-plugin');
-const fs                = require("fs");
+const WorkboxPlugin     = require("workbox-webpack-plugin");
+const webpack           = require("webpack");
 
 const isDevelopment = process.env.NODE_ENV === "development";
+
+console.log(process.env.API_URL);
 
 module.exports = {
     entry  : "./src/frontend/index.tsx",
@@ -12,7 +14,7 @@ module.exports = {
         publicPath : "/",
         path       : path.resolve("./dist/frontend")
     },
-    mode    : "development",
+    mode    : isDevelopment ? "development" : "production",
     devtool : "source-map",
     resolve : {
         extensions: [".ts", ".tsx", ".js", ".json"],
@@ -59,7 +61,8 @@ module.exports = {
         new WorkboxPlugin.GenerateSW({
             clientsClaim : true,
             skipWaiting  : true
-        })
+        }),
+        new webpack.EnvironmentPlugin(['API_URL', 'DOMAIN'])
     ]
     // externals: {
     //     "react"     : "React",
