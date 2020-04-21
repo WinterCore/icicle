@@ -65,14 +65,11 @@ export default function init(server: Server) {
     io.on("connection", (socket: IcicleSocket) => {
         socket.user = { isProcessing : false };
         socket.on(SOCKET_ACTIONS.AUTHENTICATE, (token) => {
-            logger.info("token", token);
             if (token) {
                 Blacklist.countDocuments({ token })
                     .then((count: number) => {
-                        logger.info("Blacklist count" + count);
                         if (count) Store.setSocketData(socket, { isProcessing : false });
                         verify(token, JWT_SECRET, function verifyToken(err : VerifyErrors | null, decoded: object | undefined) {
-                            logger.info("Verify output " + err + "  " + decoded + "  " + JWT_SECRET);
                             if (decoded) {
                                 socket.user = { id : (decoded as JWTUser).id, isProcessing : false };
                                 socket.emit(SOCKET_ACTIONS.AUTHENTICATED, true);
