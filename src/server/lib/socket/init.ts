@@ -69,7 +69,7 @@ export default function init(server: Server) {
                 Blacklist.countDocuments({ token })
                     .then((count: number) => {
                         if (count) Store.setSocketData(socket, { isProcessing : false });
-                        verify(token, JWT_SECRET, function verifyToken(err : VerifyErrors, decoded: string | object) {
+                        verify(token, JWT_SECRET, function verifyToken(err : VerifyErrors | null, decoded: object | undefined) {
                             if (decoded) {
                                 socket.user = { id : (decoded as JWTUser).id, isProcessing : false };
                                 socket.emit(SOCKET_ACTIONS.AUTHENTICATED, true);

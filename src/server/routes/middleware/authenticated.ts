@@ -14,7 +14,7 @@ export default function authenticated(req: Request, res: Response, next: Functio
     Blacklist.countDocuments({ token })
         .then((count: number) => {
             if (count) return next(new Unauthenticated());
-            verify(token, JWT_SECRET, function verifyToken(err : VerifyErrors, decoded: string | object) {
+            verify(token, JWT_SECRET, function verifyToken(err : VerifyErrors | null, decoded: object | undefined) {
                 if (err) return next(new Unauthenticated());
                 if (decoded) {
                     req.userId = (decoded as JWTUser).id;
