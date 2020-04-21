@@ -10,6 +10,7 @@ import Api from "./api";
 
 import errorHandler from "../errors/handler";
 import initSocket   from "../lib/socket/init";
+import { PORT } from "../../../config/server";
 
 export default async function initializeServer() {
     const app: Application = express();
@@ -32,7 +33,7 @@ export default async function initializeServer() {
     
     app.use(errorHandler);
 
-    server.listen(8081, () => {
-        console.log("The server is running on port 8081");
+    server.listen(PORT, () => {
+        console.log("The server is running on port " + PORT);
     });
 };
