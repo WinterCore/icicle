@@ -5,6 +5,8 @@
 ## The code for the app [https://icicle.wintercore.dev/](https://icicle.wintercore.dev/)
 ### Enjoy listening to podcasts/music/etc through youtube with your friends in real time
 
+[![Actions Status](https://github.com/WinterCore/icicle/workflows/Deploy/badge.svg)](https://github.com/WinterCore/icicle/actions)
+
 
 ## How to run locally
 
