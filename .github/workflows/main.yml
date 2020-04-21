@@ -40,4 +40,5 @@ jobs:
         PROJECT_PATH: ${{ secrets.PROJECT_PATH }}
       run: |
         rsync -a dist public package.json package-lock.json $SERVER_USER@$SERVER_IP:$PROJECT_PATH
-        ssh $SERVER_IP -f "cd $PROJECT_PATH && npm install && pm2 restart Icicle"
+        ssh $SERVER_IP -f "cd $PROJECT_PATH && npm install"
+        ssh $SERVER_IP -f "pm2 restart Icicle"

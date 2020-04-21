@@ -8,8 +8,8 @@ const router = Router();
 
 router.get("/", co(async (req: Request, res: Response) => {
     const query: SearchParams = {
-        nextPageToken : req.query.nextPageToken.toString(),
-        q             : req.query.q.toString()
+        nextPageToken : req.query.nextPageToken?.toString(),
+        q             : req.query.q?.toString()
     };
     const data = await search(query);
     res.json(data);

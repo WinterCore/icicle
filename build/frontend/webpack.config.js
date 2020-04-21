@@ -5,8 +5,6 @@ const webpack           = require("webpack");
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
-console.log(process.env.API_URL);
-
 module.exports = {
     entry  : "./src/frontend/index.tsx",
     output : {
@@ -62,7 +60,7 @@ module.exports = {
             clientsClaim : true,
             skipWaiting  : true
         }),
-        new webpack.EnvironmentPlugin(['API_URL', 'DOMAIN'])
+        new webpack.EnvironmentPlugin(['API_URL', 'CLIENT_DOMAIN'])
     ]
     // externals: {
     //     "react"     : "React",
