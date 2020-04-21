@@ -15,6 +15,7 @@ export const download = (id: string): Promise<string> => {
         const output = path.resolve(AUDIO_PATH, `${id}.ogg`);
 
         ytdl.exec(`https://www.youtube.com/watch?v=${id}`, [
+            "--force-ipv4",
             "--extract-audio",
             "--audio-format",
             "vorbis",
