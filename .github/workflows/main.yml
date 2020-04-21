@@ -19,6 +19,17 @@ jobs:
         API_URL: https://icicle.media/api
         CI: false
       run: npm run build
+    - name: Cleanup
+      run: rm -rf node_modules
+    - name: Upload artificats
+      uses: actions/upload-artifact@v1
+      with:
+        name: code
+        path: .
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
     - name: Setup Deployment
       env:
         SERVER_PRIVATE_KEY: ${{ secrets.SERVER_PRIVATE_KEY }}
@@ -33,12 +44,16 @@ jobs:
         chmod 600 ~/.ssh/config
         sudo apt-get update -y
         sudo apt-get -y install rsync
-    - name: Deploy
+    - name: Download Artifacts
+      uses: actions/download-artifact@v1
+      with:
+        name: code
+    - name: Deploy & Restart PM2
       env:
         SERVER_USER: ${{ secrets.SERVER_USER }}
         SERVER_IP: ${{ secrets.SERVER_IP }}
         PROJECT_PATH: ${{ secrets.PROJECT_PATH }}
       run: |
-        rsync -a dist public package.json package-lock.json $SERVER_USER@$SERVER_IP:$PROJECT_PATH
+        rsync -a code/dist code/public code/package.json code/package-lock.json $SERVER_USER@$SERVER_IP:$PROJECT_PATH
         ssh $SERVER_IP -f "cd $PROJECT_PATH && npm install"
         ssh $SERVER_IP -f "pm2 restart Icicle"
