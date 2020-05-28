@@ -1,4 +1,4 @@
-import * as ytdl from "youtube-dl";
+import { spawn } from "child_process";
 import * as path from "path";
 import * as fs   from "fs";
 import { promisify } from "util";
@@ -14,20 +14,32 @@ export const download = (id: string): Promise<string> => {
     return new Promise((resolve, reject) => {
         const output = path.resolve(AUDIO_PATH, `${id}.ogg`);
 
-        ytdl.exec(`https://www.youtube.com/watch?v=${id}`, [
+        const ytdl = spawn("youtube-dl", [
             "--force-ipv4",
             "--extract-audio",
             "--audio-format",
             "vorbis",
             "-o",
-            output
-        ], {}, (err, stdout) => {
-            if (err) {
+            output,
+            `https://www.youtube.com/watch?v=${id}`
+        ]);
+
+        ytdl.stdout.on("data", (data) => {
+            logger.info(`youtube-dl[${id}]: ${data.toString()}`);
+        });
+
+        ytdl.stderr.on("data", (data) => {
+            logger.error(`youtube-dl[${id}]: ${data.toString()}`);
+        });
+        
+        ytdl.on("close", (code) => {
+            if (code === 0) {
+                logger.info(`youtube-dl[${id}]: downloaded successfully`);
+                resolve();
+            } else {
+                logger.error(`youtube-dl[${id}] video download failed`);
                 reject();
-                logger.error(err);
             }
-            logger.info(`Youtube dl : ${id} ${stdout} ${err}`);
-            resolve();
         });
     });
 };
@@ -47,7 +59,7 @@ class VideoDownloader extends EventEmitter {
     static STATES = {
         READY      : Symbol('ready'),
         PROCESSING : Symbol('processing')
-    }
+    };
 
     private jobs: Job[] = [];
 
