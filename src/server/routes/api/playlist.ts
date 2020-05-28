@@ -59,7 +59,7 @@ router.post("/:playlistId/song", [authenticated, validatePlaylistSong], co(async
  */
 router.post("/:playlistId/queue", authenticated, co(async (req: Request, res: Response) => {
     const { playlistId } = req.params;
-    
+
     const count = await PlaylistService.addToQueue(playlistId, req.userId);
 
     return res.json({ message : `${count} ${count > 1 ? "songs" : "song"} ${count > 1 ? "were" : "was"} successfully added to the queue` });
@@ -68,7 +68,7 @@ router.post("/:playlistId/queue", authenticated, co(async (req: Request, res: Re
 /**
  * Remove a song from a playlist
  */
-router.delete("/:playlistId/song/:videoId", [authenticated, validatePlaylistSong], co(async (req: Request, res: Response) => {
+router.delete("/:playlistId/song/:videoId", [authenticated], co(async (req: Request, res: Response) => {
     const { playlistId, videoId } = req.params;
 
     PlaylistService.removeSong(playlistId, videoId);
