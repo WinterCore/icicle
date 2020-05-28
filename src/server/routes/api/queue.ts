@@ -15,13 +15,13 @@ const router = Router();
 
 router.get("/:room", co(async (req: Request, res: Response) => {
     const { room } = req.params;
-    const queueItems: Database.Queue[] = await Queue.find({ by : room }).sort({ date : 1 }).limit(8);
+    const queueItems: Database.Queue[] = await Queue.find({ by : room }).sort({ date : 1, order : -1 }).limit(8);
     return res.json({ data : queueItems.map(queueResource(req)) });
 }));
 
 router.post("/", [authenticated, validateQueue], co(async (req: Request, res: Response) => {
     const { id } = req.body;
-    
+
     const { items : [data] } = await info([id]);
 
     const queueItem = new Queue({
@@ -32,7 +32,7 @@ router.post("/", [authenticated, validateQueue], co(async (req: Request, res: Re
         by        : req.userId
     });
 
-    queueItem.save(); 
+    queueItem.save();
 
     return res.json({ message : "Added successfully" });
 }));
@@ -43,7 +43,7 @@ router.delete("/:id", [authenticated], co(async (req: Request, res: Response) =>
 
     await Queue.deleteOne({ by : req.userId, _id : id });
 
-    const queueItems: Database.Queue[] = await Queue.find({ by : req.userId }).sort({ date : 1 }).limit(8);
+    const queueItems: Database.Queue[] = await Queue.find({ by : req.userId }).sort({ date : 1, order : -1 }).limit(8);
     return res.json({ data : queueItems.map(queueResource(req)) });
 }));
 

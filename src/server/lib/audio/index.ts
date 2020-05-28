@@ -26,7 +26,7 @@ export const download = (id: string): Promise<string> => {
                 reject();
                 logger.error(err);
             }
-            logger.info(`Youtube dl : ${id} ${stdout}`);
+            logger.info(`Youtube dl : ${id} ${stdout} ${err}`);
             resolve();
         });
     });

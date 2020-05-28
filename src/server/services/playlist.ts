@@ -70,12 +70,13 @@ export const addToQueue = async (playlistId: string, userId: string): Promise<nu
     }
 
     const songs: Database.Song[] = await Song.find({ videoId : { $in : playlist.songs } });
-    const songsToBeAdded = songs.map(song => ({
+    const songsToBeAdded = songs.map((song, i) => ({
         title     : song.title,
         videoId   : song.videoId,
         duration  : song.duration,
         by        : userId,
-        thumbnail : song.thumbnail
+        thumbnail : song.thumbnail,
+        order     : i
     }));
     Queue.create(songsToBeAdded);
     return songs.length;

@@ -60,7 +60,7 @@ UserSchema.methods.getNowPlayingData = function getPlayerData(this: Database.Str
 
 UserSchema.methods.extractNextItemInQueue =
     async function getNextItemInQueue(this: Database.User): Promise<Database.Queue | null> {
-        const [queueItem] = await Queue.find({ by : this._id }).sort({ _id : 1 }).limit(1);
+        const [queueItem] = await Queue.find({ by : this._id }).sort({ date : 1, order : -1 }).limit(1);
         if (!queueItem) return null;
         await queueItem.remove();
         return queueItem;

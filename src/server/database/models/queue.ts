@@ -6,6 +6,7 @@ const Queue = new Schema({
 	videoId   : { type : String },
 	duration  : { type : Number },
 	thumbnail : String,
+    order     : Number,
 	by        : { type : Schema.Types.ObjectId, ref : "users", index : true }
 });
 
