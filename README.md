@@ -7,7 +7,6 @@
 
 [![Actions Status](https://github.com/WinterCore/icicle/workflows/Deploy/badge.svg)](https://github.com/WinterCore/icicle/actions)
 
-
 ## How to run locally
 
 * Install [Node](https://nodejs.org/en/)
