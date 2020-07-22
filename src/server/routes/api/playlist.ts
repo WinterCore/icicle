@@ -99,9 +99,9 @@ router.get("/:playlistId/songs", authenticated, co(async (req: Request, res: Res
 /**
  * Create a new playlist for the logged in user
  */
-router.post("/", [authenticated, validatePlaylist], co(async (req: Request, res: Response) => {
+router.post("/", [authenticated, validatePlaylist], co(async (req: Request<{}, {}, { name: string }>, res: Response) => {
     const { name } = req.body;
-    const playlist = await Playlist.create({ name, user : req.userId });
+    const playlist = await Playlist.create({ name, user : req.userId, songs: [] });
     return res.json({ data : playlistResource(req)(playlist) });
 }));
 

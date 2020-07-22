@@ -59,7 +59,7 @@ interface Song extends Document{
     videoId   : string;
     thumbnail : string;
     duration  : number;
-    date      : Date;
+    date     ?: Date;
 }
 
 interface BlacklistItem extends Document {

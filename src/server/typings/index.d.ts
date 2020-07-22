@@ -5,7 +5,7 @@ type JWTUser = {
 
 type SearchParams = {
 	q             : string;
-	nextPageToken : string;
+	nextPageToken ?: string;
 };
 
 interface IcicleSocket extends SocketIO.Socket 

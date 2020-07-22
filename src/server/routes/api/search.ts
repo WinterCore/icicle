@@ -7,12 +7,16 @@ import { co } from "../helpers";
 const router = Router();
 
 router.get("/", co(async (req: Request, res: Response) => {
-    const query: SearchParams = {
-        nextPageToken : req.query.nextPageToken?.toString(),
-        q             : req.query.q?.toString()
-    };
-    const data = await search(query);
-    res.json(data);
+    if (!req.query.q) {
+        res.sendStatus(400);
+    } else {
+        const query: SearchParams = {
+            nextPageToken : req.query.nextPageToken?.toString(),
+            q             : req.query.q.toString()
+        };
+        const data = await search(query);
+        res.json(data);
+    }
 }));
 
 export default router;

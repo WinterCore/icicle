@@ -47,7 +47,7 @@ router.post("/google", co(async (req: Request, res: Response) => {
 
 router.get("/google/callback", co(async (req: Request, res: Response) => {
     const conn = createConnection();
-    const { tokens } = await conn.getToken(req.query.code.toString());
+    const { tokens } = await conn.getToken(req.query.code!.toString());
     conn.setCredentials(tokens);
     const oauth2 = google.oauth2({ auth: conn, version: "v2" });
     const { data } = await oauth2.userinfo.get();

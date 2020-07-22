@@ -95,7 +95,7 @@ async function info(ids: string[]): Promise<{ items : Database.Video[] }> {
 
 
 async function getPlaylistItems(id: string): Promise<{ items : Database.Video[], data : { name : string } }|null> {
-	const rawData = await youtube.playlists.list({ part : "snippet", id, maxResults : 50 });
+	const rawData = await youtube.playlists.list({ part : ["snippet"], id: [id], maxResults : 50 });
 	const playlists = rawData.data.items;
 	if (!playlists) {
 		return null;
@@ -113,7 +113,7 @@ async function getPlaylistItems(id: string): Promise<{ items : Database.Video[],
 				// @ts-ignore
 				pageInfo : { totalResults }
 			}
-		} = await youtube.playlistItems.list({ part : "snippet", maxResults : 50, playlistId : id, pageToken : token });
+		} = await youtube.playlistItems.list({ part : ["snippet"], maxResults : 50, playlistId : id, pageToken : token });
 
 		
 		// @ts-ignore
