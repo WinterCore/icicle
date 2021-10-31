@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -15,8 +15,8 @@ jobs:
       run: npm install
     - name: Build
       env:
-        CLIENT_DOMAIN: https://icicle.media
-        API_URL: https://icicle.media/api
+        CLIENT_DOMAIN: https://icicle.wintercore.dev
+        API_URL: https://icicle.wintercore.dev/api
         CI: false
       run: npm run build
     - name: Cleanup
