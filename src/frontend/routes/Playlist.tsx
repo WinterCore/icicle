@@ -1,5 +1,4 @@
 import * as React              from "react";
-import { RouteComponentProps } from "react-router";
 import Axios                   from "axios";
 
 
@@ -17,12 +16,13 @@ import { usePlayer }       from "../contexts/player";
 import Input from "../components/Input";
 
 import api, { GET_PLAYLISTS_ITEMS, DELETE_PLAYLIST, QUEUE_PLAYLIST } from "../api";
+import {useNavigate, useParams} from "react-router";
 
-type Params = {
-    id: string;
-};
+type Params = 'id';
 
-const Search: React.FunctionComponent<RouteComponentProps<Params>> = ({ match : { params : { id } }, history }) => {
+const Search: React.FC = () => {
+    const params = useParams<Params>();
+    const id = params.id!;
     const [data, setData]                                     = React.useState<Entities.Song[]>([]);
     const [filteredData, setFilteredData]                     = React.useState<Entities.Song[]>([]);
     const [isLoading, setIsLoading]                           = React.useState<boolean>(true);
@@ -31,6 +31,7 @@ const Search: React.FunctionComponent<RouteComponentProps<Params>> = ({ match : 
     const [error, setError]                                   = React.useState<boolean>(false);
     const [confirmDelete, setConfirmDelete]                   = React.useState<boolean>(false);
     const [search, setSearch]                                 = React.useState<string>("");
+    const navigate = useNavigate();
 
     const { addNotification } = useNotification();
     const { setPlaylists }    = usePlaylists();
@@ -82,7 +83,7 @@ const Search: React.FunctionComponent<RouteComponentProps<Params>> = ({ match : 
             setIsDeleteLoading(false);
             addNotification({ message });
             setPlaylists(playlists => playlists.filter(playlist => playlist._id !== id));
-            history.push("/");
+            navigate("/");
         }).catch((err) => {
             console.log(err);
             setIsDeleteLoading(false);
@@ -99,7 +100,7 @@ const Search: React.FunctionComponent<RouteComponentProps<Params>> = ({ match : 
             setIsAddingToQueueLoading(false);
             addNotification({ message });
             play();
-            history.push("/");
+            navigate("/");
         }).catch((err) => {
             console.log(err);
             setIsAddingToQueueLoading(false);

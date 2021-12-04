@@ -22,7 +22,7 @@ router.get("/", co(async (req: Request, res: Response) => {
         .sort({ liveListeners : -1 })
         .skip((page - 1) * 12)
         .limit(12);
-    return res.json({ data : streamers.map(streamerResource(req)) });
+    return res.json({ data : streamers.map(item => streamerResource(req)(item)) });
 }));
 
 export default router;

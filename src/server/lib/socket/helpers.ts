@@ -19,23 +19,17 @@ export const terminateStream = async (socket: socketio.Socket, id: string) => {
     socket.in(id).emit(SOCKET_ACTIONS.END_STREAM); // Notify all the listeners to the socket that the stream has ended
     socket.in(id).emit(SOCKET_ACTIONS.ERROR, "The stream has been terminated by the streamer.");
     RoomStore.purgeRoom(id);
-    io.of("/").in(id).clients(function(error: Error, clients: string[]) {
-        if (clients.length > 0) {
-            clients.forEach(function (socket_id) {
-                io.sockets.sockets[socket_id].leave(id);
-            });
-        }
+    const sockets = await io.of("/").in(id).allSockets()
+
+    sockets.forEach(function (socket_id) {
+        io.in(socket_id).socketsLeave(id);
     });
 };
 
 
 export const updateListenersCount = async (streamerId: string): Promise<void> => {
     const io = IO.getInstance();
-    io.in(streamerId).clients((err: Error, clients: string[]) => {
-        if (!err) {
-            const liveListeners = clients.length;
-            User.updateOne({ _id : streamerId }, { $set : { liveListeners } }).catch((err) => logger.error(err));
-        }
-    });
-
+    const sockets = await io.in(streamerId).allSockets();
+    const liveListeners = sockets.size;
+    User.updateOne({ _id : streamerId }, { $set : { liveListeners } }).catch((err) => logger.error(err));
 };

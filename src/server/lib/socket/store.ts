@@ -1,17 +1,18 @@
+import {Socket} from "socket.io";
 
 
 class Store {
-    connections: Map<SocketIO.Socket, SocketData> = new Map();
+    connections: Map<Socket, SocketData> = new Map();
 
-    setSocketData(socket: SocketIO.Socket, data: SocketData) {
+    setSocketData(socket: Socket, data: SocketData) {
         this.connections.set(socket, data);
     }
 
-    getSocketData(socket: SocketIO.Socket): SocketData {
+    getSocketData(socket: Socket): SocketData {
         return this.connections.get(socket) as SocketData; // we're sure that all sockets exist on connections
     }
 
-    deleteSocket(socket: SocketIO.Socket) {
+    deleteSocket(socket: Socket) {
         this.connections.delete(socket);
     }
 }

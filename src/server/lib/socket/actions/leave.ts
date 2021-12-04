@@ -1,5 +1,6 @@
 import RoomStore from "../room-store";
 import { updateListenersCount } from "../helpers";
+import {IcicleSocket} from "../../../typings";
 
 
 export default async function leave(socket: IcicleSocket) {

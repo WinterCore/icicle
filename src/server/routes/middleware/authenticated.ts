@@ -6,6 +6,7 @@ import Blacklist from "../../database/models/blacklist";
 import Unauthenticated from "../../errors/unauthenticated";
 
 import { JWT_SECRET } from "../../../../config/server";
+import {JWTUser} from "../../typings";
 
 export default function authenticated(req: Request, res: Response, next: Function) {
     let token = (req.header("Authorization") || "").slice(7);

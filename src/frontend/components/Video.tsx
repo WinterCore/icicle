@@ -45,8 +45,10 @@ const Video: React.FunctionComponent<VideoProps> = (props) => {
             setIsAddToQueueLoading(false);
             play();
         } catch(e) {
+            // @ts-ignore
             if (e.response && e.response.status === 422) {
                 addNotification({
+                    // @ts-ignore
                     message : e.response.data.errors,
                     type : "error"
                 });

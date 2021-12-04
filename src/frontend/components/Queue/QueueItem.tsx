@@ -12,6 +12,7 @@ import TextRoller from "../TextRoller";
 import api, { DELETE_QUEUE_ITEM } from "../../api";
 
 import LoaderIcon from "../../icons/Loader";
+import {QueueItem} from "../../typings/index";
 
 const QueueItem: React.FunctionComponent<QueueItemProps> = (props) => {
     const { _id, thumbnail, title, duration, videoId, onDelete } = props;

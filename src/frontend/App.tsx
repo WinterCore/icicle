@@ -1,7 +1,5 @@
 import * as React                         from "react";
-import { Route, BrowserRouter, Redirect } from "react-router-dom";
-import { RouteChildrenProps }             from "react-router";
-import { hot }                            from "react-hot-loader/root";
+import { Route, BrowserRouter, Navigate, Routes } from "react-router-dom";
 
 import AppProviders from "./contexts";
 
@@ -23,13 +21,12 @@ import "./styles/main.styl";
 
 import { useUser } from "./contexts/user";
 
-interface AuthenticatedProps extends RouteChildrenProps {
-    component : any
-}
-const Authenticated: React.FC<AuthenticatedProps> = ({ component: Component, ...props }) => {
+const Authenticated: React.FC = ({ children }) => {
     const { user } = useUser();
-    if (!user) return <Redirect to="/home" />
-    return <Component { ...props } />
+
+    if (!user) return <Navigate to="/home" />
+
+    return <>{children}</>;
 };
 
 function App() {
@@ -38,6 +35,7 @@ function App() {
         $message.innerHTML = "We're sorry, but your browser doesn't support websockets, you can't use this app";
         return null;
     }
+
     React.useEffect(() => {
         const $root   = document.querySelector("#root") as HTMLDivElement;
         const $loader = document.querySelector("#loader") as HTMLDivElement;
@@ -48,19 +46,22 @@ function App() {
             $loader.style.display = "none";
         }, 300);
     }, []);
+
     return (
         <AppProviders>
             <BrowserRouter>
                 <Sidenav />
                 <section className="main">
-                    <Route exact path="/" component={ Home } />
-                    <Route path="/search" component={ Search } />
-                    <Route path="/people" component={ People } />
-                    <Route path="/about" component={ About } />
-                    <Route path="/settings" render={ (props) => <Authenticated { ...props } component={ Settings } /> } />
-                    <Route path="/invite/:token" component={ Invite } />
-                    <Route path="/auth/google/callback" component={ ConfirmLogin } />
-                    <Route path="/playlist/:id" render={ (props) => <Authenticated { ...props } component={ Playlist } /> } />
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/search" element={ <Search /> } />
+                        <Route path="/people" element={ <People /> } />
+                        <Route path="/about" element={ <About /> } />
+                        <Route path="/settings" element={ <Authenticated><Settings /></Authenticated> } />
+                        <Route path="/invite/:token" element={ <Invite /> } />
+                        <Route path="/auth/google/callback" element={ <ConfirmLogin /> } />
+                        <Route path="/playlist/:id" element={<Authenticated><Playlist /></Authenticated>} />
+                    </Routes>
                 </section>
                 <Player />
                 <Notification />
@@ -70,4 +71,4 @@ function App() {
     );
 }
 
-export default hot(App);
+export default App;

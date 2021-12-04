@@ -1,3 +1,5 @@
+import {Socket} from "socket.io";
+
 type JWTUser = {
     id : string;
 };
@@ -8,7 +10,7 @@ type SearchParams = {
 	nextPageToken ?: string;
 };
 
-interface IcicleSocket extends SocketIO.Socket 
+interface IcicleSocket extends Socket 
 {
     user: {
         id?            : string;

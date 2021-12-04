@@ -4,6 +4,7 @@ import RoomStore from "../room-store";
 
 import { SOCKET_ACTIONS } from "../../../../constants";
 import { updateListenersCount } from "../helpers";
+import {IcicleSocket} from "../../../typings";
 
 export default async function check(socket: IcicleSocket, roomId: string) {
     const { id } = socket.user;

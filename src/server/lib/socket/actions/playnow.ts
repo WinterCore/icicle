@@ -5,11 +5,11 @@ import Scheduler from "../scheduler";
 
 import { SOCKET_ACTIONS } from "../../../../constants";
 
-import { AUDIO_URL } from "../../../../../config/server";
 import { getSong } from "../../../services/song";
 
 import IO from "../io";
 import { updateListenersCount } from "../helpers";
+import {IcicleSocket} from "../../../typings";
 
 
 export default async function playNow(socket: IcicleSocket, videoId: string): Promise<void> {

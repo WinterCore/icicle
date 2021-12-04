@@ -2,6 +2,7 @@ import User   from "../../../database/models/user";
 
 import Scheduler from "../scheduler";
 import RoomStore from "../room-store";
+import {IcicleSocket} from "../../../typings";
 
 export default async function play(socket: IcicleSocket) {
     const { id, currentRoomId } = socket.user;

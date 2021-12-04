@@ -1,8 +1,12 @@
-interface Window {
-    socket : SocketIOClient.Socket;
+import {Socket} from "socket.io-client";
+
+declare global {
+    interface Window {
+        socket : Socket;
+    }
 }
 
-type QueueItem = {
+export type QueueItem = {
     _id       : string;
     title     : string;
     videoId   : string;
@@ -12,7 +16,7 @@ type QueueItem = {
 
 
 
-type Playlist = {
+export type Playlist = {
     _id  : string;
     name : string;
 };

@@ -1,5 +1,4 @@
 import * as React             from "react";
-import { RouteChildrenProps } from "react-router";
 
 import useApi from "../hooks/use-api";
 
@@ -16,7 +15,7 @@ type Changelog = {
 };
 
 
-const About: React.FunctionComponent<RouteChildrenProps> = () => {
+const About: React.FC = () => {
     const { data, isLoading, error } = useApi({ ...GET_CHANGELOG() });
 
     return (

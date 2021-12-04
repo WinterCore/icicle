@@ -17,7 +17,7 @@ interface User extends Document {
     isStreaming              ()           : boolean;
     getRoomData              ()           : PlayerDataUser;
     getNowPlayingData        ()           : PlayerData;
-    setNowPlayingData        (song: Song) : void;
+    setNowPlayingData        (song: Song) : Promise<void>;
     extractNextItemInQueue   ()           : Promise<Song | null>;
 }
 

@@ -1,17 +1,15 @@
-import * as socketio from "socket.io";
-
 import User  from "../../../database/models/user";
 
-import Store     from "../store";
 import Scheduler from "../scheduler";
 
-import logger from "../../../logger";
 
 import { SOCKET_ACTIONS } from "../../../../constants";
+import {IcicleSocket} from "../../../typings";
 
 
 export default async function skip(socket: IcicleSocket) {
-    const { id, isProcessing, currentRoomId } = socket.user;
+    const { id, isProcessing } = socket.user;
+
     if (id) {
         if (isProcessing) {
             socket.emit(SOCKET_ACTIONS.ERROR, "Another action is being processed, please wait.");

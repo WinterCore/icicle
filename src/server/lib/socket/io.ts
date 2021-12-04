@@ -2,15 +2,15 @@ import * as socketio from "socket.io";
 import { Server }    from "http";
 
 class IO {
-    public instance: SocketIO.Server|null = null;
+    public instance: socketio.Server | null = null;
 
     init(server: Server) {
-        this.instance = socketio(server, { transports : ["websocket"] });
+        this.instance = new socketio.Server(server, { transports : ["websocket"] });
         return this.instance;
     }
 
     getInstance() {
-        return this.instance as SocketIO.Server;
+        return this.instance as socketio.Server;
     }
 }
 

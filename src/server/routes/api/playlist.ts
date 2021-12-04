@@ -80,7 +80,7 @@ router.delete("/:playlistId/song/:videoId", [authenticated], co(async (req: Requ
  */
 router.get("/", authenticated, co(async (req: Request, res: Response) => {
     const playlists: Database.Playlist[] = await Playlist.find({ user : req.userId }).sort({ name : 1 });
-    return res.json({ data : playlists.map(playlistResource(req)) });
+    return res.json({ data : playlists.map(item => playlistResource(req)(item)) });
 }));
 
 /**
@@ -93,7 +93,7 @@ router.get("/:playlistId/songs", authenticated, co(async (req: Request, res: Res
         throw new NotFound("The specified playlist doesn't exist");
     }
     const songs: Database.Song[] = await Song.find({ videoId : { $in : playlist.songs } }).sort({ title : 1 });
-    return res.json({ data : songs.map(playlistSongResource(req)) });
+    return res.json({ data : songs.map(item => playlistSongResource(req)(item)) });
 }))
 
 /**

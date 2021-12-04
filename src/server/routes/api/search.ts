@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 
 import { search } from "../../lib/youtube";
+import {SearchParams} from "../../typings";
 
 import { co } from "../helpers";
 

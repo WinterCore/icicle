@@ -24,6 +24,7 @@ import sendMessage from "./actions/send-message";
 import logger from "../../logger";
 import User from "../../database/models/user";
 import { updateListenersCount } from "./helpers";
+import {IcicleSocket, JWTUser} from "../../typings";
 
 function attachEvents(socket: IcicleSocket) {
     
@@ -31,7 +32,7 @@ function attachEvents(socket: IcicleSocket) {
         socket.emit("error", "Something happened");
         logger.error(err);
     };
-    socket.on("error", (err) => logger.error(err));
+    socket.on("error", (err: Error) => logger.error(err));
 
     socket.on(SOCKET_ACTIONS.PLAY_NOW, data => playNow(socket, data).catch(handleError));
     socket.on(SOCKET_ACTIONS.PLAY, () => play(socket).catch(handleError));
@@ -52,7 +53,6 @@ function attachEvents(socket: IcicleSocket) {
 
     socket.on("disconnect", () => {
         const { currentRoomId } = socket.user;
-        socket.leaveAll();
         if (currentRoomId) {
             updateListenersCount(currentRoomId);
         }
@@ -62,6 +62,7 @@ function attachEvents(socket: IcicleSocket) {
 export default function init(server: Server) {
     const io = IO.init(server);
 
+    // @ts-ignore
     io.on("connection", (socket: IcicleSocket) => {
         socket.user = { isProcessing : false };
         socket.on(SOCKET_ACTIONS.AUTHENTICATE, (token) => {

@@ -1,6 +1,7 @@
 import * as React    from "react";
 
 import api, { GET_SONG_PLAYLISTS, GET_PLAYLISTS } from "../api";
+import {Playlist} from "../typings";
 
 import { useNotification } from "./notification";
 import { useUser } from "./user";

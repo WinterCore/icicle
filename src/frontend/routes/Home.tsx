@@ -1,6 +1,5 @@
 import * as React             from "react";
 import Axios                  from "axios";
-import { RouteChildrenProps } from "react-router";
 
 import Queue  from "../components/Queue/Index";
 import Button from "../components/Button";
@@ -16,7 +15,7 @@ import { copyTextToClipboard } from "../helpers";
 
 import Chat from "../components/Chat/Index";
 
-const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
+const Home: React.FunctionComponent = () => {
     const { roomData, nowPlaying, leaveStream, terminateStream } = usePlayer();
     const { user }                                               = useUser();
     const { openModal }                                          = usePlaylists();
@@ -93,9 +92,6 @@ const Home: React.FunctionComponent<RouteChildrenProps> = ({  }) => {
                         </div>
                     ) : <h2 className="col-xs-12">Please join a room to start listening to music</h2>
             }
-            {/* <div className="col-xs-12 col-md-6 chat-section">
-                <Chat />
-            </div> */}
             <div className="col-xs-12 col-md-6 queue-section">
                 <Queue />
             </div>

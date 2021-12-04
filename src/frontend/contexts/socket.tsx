@@ -3,8 +3,6 @@ import * as SocketIo from "socket.io-client";
 
 import { DOMAIN } from "../../../config/frontend";
 
-import usePrevious from "../hooks/use-previous";
-
 import { useUser } from "./user";
 import { SOCKET_ACTIONS } from "../../constants";
 
@@ -26,7 +24,7 @@ const SocketProvider: React.FunctionComponent = (props): React.ReactElement => {
     const [isLoading, setIsLoading] = useState(true);
 
     if (!window.socket) {
-        window.socket = SocketIo(DOMAIN, options);
+        window.socket = SocketIo.connect(DOMAIN, options);
         window.socket.on(SOCKET_ACTIONS.AUTHENTICATED, () => setIsLoading(false));
         window.socket.on("reconnect", () => {
             window.socket.emit(SOCKET_ACTIONS.AUTHENTICATE, user ? user.token : null);

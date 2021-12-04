@@ -1,7 +1,6 @@
 import * as React              from "react";
-import { Link, withRouter }    from "react-router-dom";
-import { RouteComponentProps } from "react-router";
-import { parse }               from "query-string";
+import { Link, useSearchParams }    from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 
 
 import SearchIcon    from "../icons/Search";
@@ -22,19 +21,24 @@ import { useNotification } from "../contexts/notification";
 
 import api, { IMPORT_YOUTUBE_PLAYLIST } from "../api";
 import LoaderIcon from "../icons/Loader";
+import {Playlist} from "../typings";
 
-const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search : query, pathname } }) => {
-    const [search, setSearch]                                   = React.useState((parse(query).q || "") as string);
+const Sidenav: React.FC = () => {
+    const { pathname } = useLocation();
+    const [params] = useSearchParams();
+    const searchParam = params.get('search') || '';
+    const navigate = useNavigate();
     const [playlistUrl, setPlaylistUrl]                         = React.useState("");
     const [isImportPlaylistLoading, setIsImportPlaylistLoading] = React.useState(false);
     const [isVisible, setIsVisible]                             = React.useState(false);
     const { playlists }                                         = usePlaylists();
     const { user }                                              = useUser();
     const { addNotification }                                   = useNotification();
+    const [search, setSearch] = React.useState(searchParam);
 
     const setSearchInputValue         = ({ target }: React.ChangeEvent<HTMLInputElement>) => setSearch(target.value);
     const setPlaylistImportInputValue = ({ target }: React.ChangeEvent<HTMLInputElement>) => setPlaylistUrl(target.value);
-    const onSearch                    = () => search && history.push(`/search?q=${search}`);
+    const onSearch                    = () => search && navigate(`/search?q=${search}`);
     const handleHamburgerClick        = () => setIsVisible(!isVisible);
 
     const onPlaylistImport = () => {
@@ -59,12 +63,6 @@ const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search :
             }
         });
     };
-
-    React.useEffect(() => {
-        return history.listen(() => {
-            setIsVisible(false);
-        });
-    }, []);
 
     return (
         <>
@@ -123,4 +121,4 @@ const Sidenav: React.FC<RouteComponentProps> = ({ history, location : { search :
     );
 }
 
-export default withRouter(Sidenav);
+export default Sidenav;

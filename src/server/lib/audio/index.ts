@@ -10,7 +10,7 @@ import logger from "../../logger";
 
 const stat = promisify(fs.stat);
 
-export const download = (id: string): Promise<string> => {
+export const download = (id: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         const output = path.resolve(AUDIO_PATH, `${id}.ogg`);
 

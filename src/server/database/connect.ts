@@ -9,12 +9,7 @@ async function ConnectToDatabase() {
         const connection = mongoose.connection;
         mongoose
             .connect(
-                mongodbServerUrl,
-                {
-                    useNewUrlParser: true,
-                    useCreateIndex: true,
-                    useUnifiedTopology: true
-                }
+                mongodbServerUrl
             )
             .catch(reject);
         connection.once("open", () => {

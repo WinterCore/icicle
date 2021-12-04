@@ -4,6 +4,7 @@ import RoomStore from "../room-store";
 import { SOCKET_ACTIONS } from "../../../../constants";
 
 import { terminateStream, updateListenersCount } from "../helpers";
+import {IcicleSocket} from "../../../typings";
 
 export default async function join(socket: IcicleSocket, streamerId: string, invite: boolean = false) {
     const { id, currentRoomId } = socket.user;

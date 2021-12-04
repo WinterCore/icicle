@@ -14,6 +14,7 @@ import Button from "./Button";
 import api, { ADD_SONG_TO_PLAYLIST, REMOVE_SONG_FROM_PLAYLIST, CREATE_PLAYLIST } from "../api";
 
 import { SHORTCUTS } from "../helpers";
+import {Playlist} from "../typings";
 
 const PlaylistModal: React.FunctionComponent = () => {
     const { playlists, songPlaylists, isModalOpen, closeModal, videoId, setSongPlaylists, setPlaylists, isLoadingSongPlaylists } = usePlaylists();

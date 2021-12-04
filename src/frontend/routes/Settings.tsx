@@ -1,5 +1,5 @@
 import * as React             from "react";
-import { RouteChildrenProps } from "react-router";
+import { PathRouteProps }     from "react-router";
 
 import useBooleanSwitch    from "../hooks/use-boolean-switch";
 
@@ -11,7 +11,7 @@ import api from "../api";
 
 import { UPDATE_SETTINGS, GET_SETTINGS } from "../api";
 
-const Settings: React.FunctionComponent<RouteChildrenProps> = () => {
+const Settings: React.FC = () => {
     const { user, update }                           = useUser();
     const [isLoadingSettings, setIsLoadingSettings]  = React.useState(true);
     const { isLoading, state, success, updateState } = useBooleanSwitch(user!.settings.invisMode, UPDATE_SETTINGS, "invisMode");

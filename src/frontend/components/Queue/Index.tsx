@@ -10,9 +10,10 @@ import Loader from "../../icons/Loader";
 import Error  from "../Error";
 import Button from "../Button";
 
-import QueueItem from "./QueueItem";
+import {QueueItem} from "../../typings/index";
 
 import api, { GET_QUEUE_ITEMS, CLEAR_QUEUE } from "../../api";
+import QueueItemComponent from "./QueueItem";
 
 const Queue: React.FunctionComponent = () => {
     const { nowPlaying, roomData } = usePlayer();
@@ -84,7 +85,7 @@ const Queue: React.FunctionComponent = () => {
                                                     <Button disabled={ isClearingQueue } onClick={ clearQueue }>{ isClearingQueue ? "Clearing..." : "Clear queue" }</Button>
                                                 </div>
                                         }
-                                        { data.map((item: QueueItem) => <QueueItem onDelete={ setData } key={ item._id } { ...item } />) }
+                                        { data.map((item: QueueItem) => <QueueItemComponent onDelete={ setData } key={ item._id } { ...item } />) }
                                     </>
                                 ) : <h4>There are no items in the queue</h4>
                         )

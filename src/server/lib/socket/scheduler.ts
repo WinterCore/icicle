@@ -5,6 +5,7 @@ import { getSong } from "../../services/song";
 import { SOCKET_ACTIONS } from "../../../constants";
 
 import IO from "./io";
+import {IcicleSocket} from "../../typings";
 
 class Scheduler extends EventEmitter {
     // Using maps so I can run into memory leaks and learn how to deal with them

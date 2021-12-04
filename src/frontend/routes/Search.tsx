@@ -1,12 +1,11 @@
-import { parse } from "query-string";
 import * as React from "react";
-import { RouteChildrenProps } from "react-router";
 import Axios from "axios";
 import Error from "../components/Error";
 import Video from "../components/Video";
 import Loader from "../icons/Loader";
 
 import api, { SEARCH } from "../api";
+import {useSearchParams} from "react-router-dom";
 
 const PLAYER_HEIGHT = 100;
 
@@ -18,10 +17,10 @@ type Video = {
     duration  : number;
 };
 
-const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
+const Search: React.FC = () => {
 
-    const { location : { search } }         = props;
-    const { q }                             = parse(search);
+    const [params] = useSearchParams();
+    const q = params.get('q');
     const [nextPageToken, setNextPageToken] = React.useState(null);
     const [isLoadingMore, setIsLoadingMore] = React.useState(false);
     const [data, setData]                   = React.useState<Video[]>([]);
@@ -70,7 +69,7 @@ const Search: React.FunctionComponent<RouteChildrenProps> = (props) => {
         const cancelTokenSource = Axios.CancelToken.source();
         api({
             ...SEARCH(),
-            params : { q },
+            params : { q: params.get('q') || '' },
             cancelToken : cancelTokenSource.token
         }).then((response) => {
             setData(response.data.data);

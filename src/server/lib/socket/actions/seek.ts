@@ -2,6 +2,7 @@ import User from "../../../database/models/user";
 
 import { SOCKET_ACTIONS } from "../../../../constants";
 import Scheduler from "../scheduler";
+import {IcicleSocket} from "../../../typings";
 
 export default async function seek(socket: IcicleSocket, currentTime: number) {
     const { id } = socket.user;

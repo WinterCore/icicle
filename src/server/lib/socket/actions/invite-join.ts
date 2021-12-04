@@ -3,6 +3,7 @@ import Invite from "../../../database/models/invite";
 import join from "./join";
 
 import { SOCKET_ACTIONS } from "../../../../constants";
+import {IcicleSocket} from "../../../typings";
 
 export default async function inviteJoin(socket: IcicleSocket, token: string) {
     const invite = await Invite.findOne({ token });

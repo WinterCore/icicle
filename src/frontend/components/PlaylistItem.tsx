@@ -17,7 +17,7 @@ import api, { DELETE_PLAYLIST_ITEM, ADD_TO_QUEUE } from "../api";
 import AddToPlaylistIcon from "../icons/AddToPlaylist";
 
 
-const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
+const PlaylistItem: React.FC<PlaylistItemProps> = (props) => {
     const { thumbnail, title, duration, videoId, playlistId, onDelete } = props;
 
     const [isLoading, setIsLoading]                     = React.useState<boolean>(false);
@@ -53,7 +53,9 @@ const PlaylistItem: React.FunctionComponent<PlaylistItemProps> = (props) => {
             console.log(e);
             
             setIsAddToQueueLoading(false);
+            // @ts-ignore
             if (e.response && e.response.status === 422) {
+                // @ts-ignore
                 addNotification({ message : e.response.data.errors, type : "error" });
             }
         }

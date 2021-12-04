@@ -2,6 +2,7 @@
 import { google, youtube_v3 } from "googleapis";
 
 import { YOUTUBE_API_KEY } from "../../../config/server";
+import {SearchParams} from "../typings";
 
 const youtube = google.youtube({
     auth    : YOUTUBE_API_KEY,

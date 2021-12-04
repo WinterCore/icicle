@@ -16,9 +16,6 @@ module.exports = {
     devtool : "source-map",
     resolve : {
         extensions: [".ts", ".tsx", ".js", ".json"],
-        alias: {
-            "react-dom": "@hot-loader/react-dom"
-        }
     },
 
     module: {
@@ -43,8 +40,10 @@ module.exports = {
         ]
     },
     devServer : {
-        contentBase        : path.resolve("public"),
-        hot                : true,
+        client: { overlay: false },
+        static: {
+            directory: path.resolve("public"),
+        },
         historyApiFallback : true,
         proxy              : {
             "/flexboxgrid.min.css" : { target : "http://localhost:8081" },

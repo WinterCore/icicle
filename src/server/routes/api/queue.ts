@@ -16,7 +16,7 @@ const router = Router();
 router.get("/:room", co(async (req: Request, res: Response) => {
     const { room } = req.params;
     const queueItems: Database.Queue[] = await Queue.find({ by : room }).sort({ date : 1, order : -1 }).limit(8);
-    return res.json({ data : queueItems.map(queueResource(req)) });
+    return res.json({ data : queueItems.map(item => queueResource(req)(item)) });
 }));
 
 router.post("/", [authenticated, validateQueue], co(async (req: Request, res: Response) => {
@@ -44,7 +44,7 @@ router.delete("/:id", [authenticated], co(async (req: Request, res: Response) =>
     await Queue.deleteOne({ by : req.userId, _id : id });
 
     const queueItems: Database.Queue[] = await Queue.find({ by : req.userId }).sort({ date : 1, order : -1 }).limit(8);
-    return res.json({ data : queueItems.map(queueResource(req)) });
+    return res.json({ data : queueItems.map(item => queueResource(req)(item)) });
 }));
 
 router.post("/clear", [authenticated], co(async (req: Request, res: Response) => {
